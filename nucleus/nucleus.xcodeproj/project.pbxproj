@@ -1,0 +1,397 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		444B2B80162E497F00C938AD /* CellTalkService.m in Sources */ = {isa = PBXBuildFile; fileRef = 444B2B7F162E497F00C938AD /* CellTalkService.m */; };
+		444B2B86162E60F400C938AD /* CellSpeaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 444B2B85162E60F400C938AD /* CellSpeaker.m */; };
+		445296181620347200C2750B /* CellLoggerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 445296171620347200C2750B /* CellLoggerManager.m */; };
+		4452961E16208CBD00C2750B /* CellUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4452961D16208CBD00C2750B /* CellUtil.m */; };
+		4471363D162408A20058667E /* CellMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4471363C162408A20058667E /* CellMessageService.m */; };
+		448404891615F9CB00D94AB5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448404881615F9CB00D94AB5 /* Foundation.framework */; };
+		448404A01615FAB700D94AB5 /* CellNucleus.m in Sources */ = {isa = PBXBuildFile; fileRef = 4484049D1615FAB700D94AB5 /* CellNucleus.m */; };
+		448404A11615FAB700D94AB5 /* CellNucleusConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 4484049E1615FAB700D94AB5 /* CellNucleusConfig.m */; };
+		448404A21615FAB700D94AB5 /* CellNucleusTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 4484049F1615FAB700D94AB5 /* CellNucleusTag.m */; };
+		4486E90B1625063A004C11C8 /* CellSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 4486E90A1625063A004C11C8 /* CellSession.m */; };
+		4486E91116251714004C11C8 /* CellInetAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 4486E91016251714004C11C8 /* CellInetAddress.m */; };
+		4486E917162525E7004C11C8 /* CellMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4486E916162525E7004C11C8 /* CellMessage.m */; };
+		4498EAEB1621D91100AA47AF /* CellVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 4498EAEA1621D91100AA47AF /* CellVersion.m */; };
+		44BEF6451647BE2100AFD75B /* CellCryptology.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BEF6441647BE2100AFD75B /* CellCryptology.m */; };
+		44CAE9C3162BAF0E0048E04B /* CellMessageConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CAE9C2162BAF0E0048E04B /* CellMessageConnector.m */; };
+		44CAE9C9162BE5180048E04B /* CellNonblockingConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CAE9C8162BE5180048E04B /* CellNonblockingConnector.m */; };
+		44CAE9CC162BFA860048E04B /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CAE9CB162BFA860048E04B /* GCDAsyncSocket.m */; };
+		44CAE9D6162C031C0048E04B /* CellLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CAE9D5162C031C0048E04B /* CellLogger.m */; };
+		44CE237D1638EF7E00DDE0F3 /* CellPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CE237C1638EF7E00DDE0F3 /* CellPacket.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		448404831615F9CB00D94AB5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		444B2B7E162E497700C938AD /* CellTalkService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellTalkService.h; path = include/CellTalkService.h; sourceTree = "<group>"; };
+		444B2B7F162E497F00C938AD /* CellTalkService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellTalkService.m; path = src/CellTalkService.m; sourceTree = "<group>"; };
+		444B2B84162E60EE00C938AD /* CellSpeaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellSpeaker.h; path = include/CellSpeaker.h; sourceTree = "<group>"; };
+		444B2B85162E60F400C938AD /* CellSpeaker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellSpeaker.m; path = src/CellSpeaker.m; sourceTree = "<group>"; };
+		445296161620346A00C2750B /* CellLoggerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellLoggerManager.h; path = include/CellLoggerManager.h; sourceTree = "<group>"; };
+		445296171620347200C2750B /* CellLoggerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellLoggerManager.m; path = src/CellLoggerManager.m; sourceTree = "<group>"; };
+		4452961C16208CB300C2750B /* CellUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellUtil.h; path = include/CellUtil.h; sourceTree = "<group>"; };
+		4452961D16208CBD00C2750B /* CellUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellUtil.m; path = src/CellUtil.m; sourceTree = "<group>"; };
+		4471363B1624089A0058667E /* CellMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellMessageService.h; path = include/CellMessageService.h; sourceTree = "<group>"; };
+		4471363C162408A20058667E /* CellMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellMessageService.m; path = src/CellMessageService.m; sourceTree = "<group>"; };
+		448404851615F9CB00D94AB5 /* libnucleus.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnucleus.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		448404881615F9CB00D94AB5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4484048C1615F9CB00D94AB5 /* nucleus-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "nucleus-Prefix.pch"; sourceTree = "<group>"; };
+		448404981615FA8A00D94AB5 /* Cell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cell.h; path = include/Cell.h; sourceTree = "<group>"; };
+		448404991615FA8A00D94AB5 /* CellPrerequisites.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellPrerequisites.h; path = include/CellPrerequisites.h; sourceTree = "<group>"; };
+		4484049A1615FAA700D94AB5 /* CellNucleus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellNucleus.h; path = include/CellNucleus.h; sourceTree = "<group>"; };
+		4484049B1615FAA700D94AB5 /* CellNucleusConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellNucleusConfig.h; path = include/CellNucleusConfig.h; sourceTree = "<group>"; };
+		4484049C1615FAA700D94AB5 /* CellNucleusTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellNucleusTag.h; path = include/CellNucleusTag.h; sourceTree = "<group>"; };
+		4484049D1615FAB700D94AB5 /* CellNucleus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellNucleus.m; path = src/CellNucleus.m; sourceTree = "<group>"; };
+		4484049E1615FAB700D94AB5 /* CellNucleusConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellNucleusConfig.m; path = src/CellNucleusConfig.m; sourceTree = "<group>"; };
+		4484049F1615FAB700D94AB5 /* CellNucleusTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellNucleusTag.m; path = src/CellNucleusTag.m; sourceTree = "<group>"; };
+		4486E90816250634004C11C8 /* CellSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellSession.h; path = include/CellSession.h; sourceTree = "<group>"; };
+		4486E90A1625063A004C11C8 /* CellSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellSession.m; path = src/CellSession.m; sourceTree = "<group>"; };
+		4486E90F1625170D004C11C8 /* CellInetAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellInetAddress.h; path = include/CellInetAddress.h; sourceTree = "<group>"; };
+		4486E91016251714004C11C8 /* CellInetAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellInetAddress.m; path = src/CellInetAddress.m; sourceTree = "<group>"; };
+		4486E915162525E0004C11C8 /* CellMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellMessage.h; path = include/CellMessage.h; sourceTree = "<group>"; };
+		4486E916162525E7004C11C8 /* CellMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellMessage.m; path = src/CellMessage.m; sourceTree = "<group>"; };
+		4498EAE91621D90B00AA47AF /* CellVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellVersion.h; path = include/CellVersion.h; sourceTree = "<group>"; };
+		4498EAEA1621D91100AA47AF /* CellVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellVersion.m; path = src/CellVersion.m; sourceTree = "<group>"; };
+		44BEF63E164791AF00AFD75B /* CellTalkPacketDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellTalkPacketDefinition.h; path = include/CellTalkPacketDefinition.h; sourceTree = "<group>"; };
+		44BEF6431647BE1A00AFD75B /* CellCryptology.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellCryptology.h; path = include/CellCryptology.h; sourceTree = "<group>"; };
+		44BEF6441647BE2100AFD75B /* CellCryptology.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellCryptology.m; path = src/CellCryptology.m; sourceTree = "<group>"; };
+		44CAE9C1162BAF080048E04B /* CellMessageConnector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellMessageConnector.h; path = include/CellMessageConnector.h; sourceTree = "<group>"; };
+		44CAE9C2162BAF0E0048E04B /* CellMessageConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellMessageConnector.m; path = src/CellMessageConnector.m; sourceTree = "<group>"; };
+		44CAE9C7162BE5120048E04B /* CellNonblockingConnector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellNonblockingConnector.h; path = include/CellNonblockingConnector.h; sourceTree = "<group>"; };
+		44CAE9C8162BE5180048E04B /* CellNonblockingConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellNonblockingConnector.m; path = src/CellNonblockingConnector.m; sourceTree = "<group>"; };
+		44CAE9CA162BFA7F0048E04B /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = include/GCDAsyncSocket.h; sourceTree = "<group>"; };
+		44CAE9CB162BFA860048E04B /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncSocket.m; path = src/GCDAsyncSocket.m; sourceTree = "<group>"; };
+		44CAE9D4162C03140048E04B /* CellLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellLogger.h; path = include/CellLogger.h; sourceTree = "<group>"; };
+		44CAE9D5162C031C0048E04B /* CellLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellLogger.m; path = src/CellLogger.m; sourceTree = "<group>"; };
+		44CE237B1638EF7600DDE0F3 /* CellPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellPacket.h; path = include/CellPacket.h; sourceTree = "<group>"; };
+		44CE237C1638EF7E00DDE0F3 /* CellPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellPacket.m; path = src/CellPacket.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		448404821615F9CB00D94AB5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				448404891615F9CB00D94AB5 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		444B2B79162E48C200C938AD /* Talk */ = {
+			isa = PBXGroup;
+			children = (
+				444B2B84162E60EE00C938AD /* CellSpeaker.h */,
+				444B2B85162E60F400C938AD /* CellSpeaker.m */,
+				44BEF63E164791AF00AFD75B /* CellTalkPacketDefinition.h */,
+				444B2B7E162E497700C938AD /* CellTalkService.h */,
+				444B2B7F162E497F00C938AD /* CellTalkService.m */,
+			);
+			name = Talk;
+			sourceTree = "<group>";
+		};
+		4484047A1615F9CB00D94AB5 = {
+			isa = PBXGroup;
+			children = (
+				4484048A1615F9CB00D94AB5 /* nucleus */,
+				448404871615F9CB00D94AB5 /* Frameworks */,
+				448404861615F9CB00D94AB5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		448404861615F9CB00D94AB5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				448404851615F9CB00D94AB5 /* libnucleus.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		448404871615F9CB00D94AB5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				448404881615F9CB00D94AB5 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4484048A1615F9CB00D94AB5 /* nucleus */ = {
+			isa = PBXGroup;
+			children = (
+				448404981615FA8A00D94AB5 /* Cell.h */,
+				448404991615FA8A00D94AB5 /* CellPrerequisites.h */,
+				44928C051622B5850000344C /* Common */,
+				448404961615FA4600D94AB5 /* Core */,
+				444B2B79162E48C200C938AD /* Talk */,
+				44928C031622B53C0000344C /* Util */,
+				448404971615FA6700D94AB5 /* Dependence */,
+				4484048B1615F9CB00D94AB5 /* Supporting Files */,
+			);
+			path = nucleus;
+			sourceTree = "<group>";
+		};
+		4484048B1615F9CB00D94AB5 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4484048C1615F9CB00D94AB5 /* nucleus-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		448404961615FA4600D94AB5 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				44CAE9D4162C03140048E04B /* CellLogger.h */,
+				44CAE9D5162C031C0048E04B /* CellLogger.m */,
+				445296161620346A00C2750B /* CellLoggerManager.h */,
+				445296171620347200C2750B /* CellLoggerManager.m */,
+				4484049A1615FAA700D94AB5 /* CellNucleus.h */,
+				4484049D1615FAB700D94AB5 /* CellNucleus.m */,
+				4484049B1615FAA700D94AB5 /* CellNucleusConfig.h */,
+				4484049E1615FAB700D94AB5 /* CellNucleusConfig.m */,
+				4484049C1615FAA700D94AB5 /* CellNucleusTag.h */,
+				4484049F1615FAB700D94AB5 /* CellNucleusTag.m */,
+				4498EAE91621D90B00AA47AF /* CellVersion.h */,
+				4498EAEA1621D91100AA47AF /* CellVersion.m */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		448404971615FA6700D94AB5 /* Dependence */ = {
+			isa = PBXGroup;
+			children = (
+				44CAE9CA162BFA7F0048E04B /* GCDAsyncSocket.h */,
+				44CAE9CB162BFA860048E04B /* GCDAsyncSocket.m */,
+			);
+			name = Dependence;
+			sourceTree = "<group>";
+		};
+		44928C031622B53C0000344C /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				4452961C16208CB300C2750B /* CellUtil.h */,
+				4452961D16208CBD00C2750B /* CellUtil.m */,
+			);
+			name = Util;
+			sourceTree = "<group>";
+		};
+		44928C051622B5850000344C /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				44BEF6431647BE1A00AFD75B /* CellCryptology.h */,
+				44BEF6441647BE2100AFD75B /* CellCryptology.m */,
+				4486E90F1625170D004C11C8 /* CellInetAddress.h */,
+				4486E91016251714004C11C8 /* CellInetAddress.m */,
+				4486E915162525E0004C11C8 /* CellMessage.h */,
+				4486E916162525E7004C11C8 /* CellMessage.m */,
+				44CAE9C1162BAF080048E04B /* CellMessageConnector.h */,
+				44CAE9C2162BAF0E0048E04B /* CellMessageConnector.m */,
+				4471363B1624089A0058667E /* CellMessageService.h */,
+				4471363C162408A20058667E /* CellMessageService.m */,
+				44CAE9C7162BE5120048E04B /* CellNonblockingConnector.h */,
+				44CAE9C8162BE5180048E04B /* CellNonblockingConnector.m */,
+				44CE237B1638EF7600DDE0F3 /* CellPacket.h */,
+				44CE237C1638EF7E00DDE0F3 /* CellPacket.m */,
+				4486E90816250634004C11C8 /* CellSession.h */,
+				4486E90A1625063A004C11C8 /* CellSession.m */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		448404841615F9CB00D94AB5 /* nucleus */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 448404931615F9CB00D94AB5 /* Build configuration list for PBXNativeTarget "nucleus" */;
+			buildPhases = (
+				448404811615F9CB00D94AB5 /* Sources */,
+				448404821615F9CB00D94AB5 /* Frameworks */,
+				448404831615F9CB00D94AB5 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = nucleus;
+			productName = nucleus;
+			productReference = 448404851615F9CB00D94AB5 /* libnucleus.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4484047C1615F9CB00D94AB5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = Ambrose;
+			};
+			buildConfigurationList = 4484047F1615F9CB00D94AB5 /* Build configuration list for PBXProject "nucleus" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4484047A1615F9CB00D94AB5;
+			productRefGroup = 448404861615F9CB00D94AB5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				448404841615F9CB00D94AB5 /* nucleus */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		448404811615F9CB00D94AB5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				448404A01615FAB700D94AB5 /* CellNucleus.m in Sources */,
+				448404A11615FAB700D94AB5 /* CellNucleusConfig.m in Sources */,
+				448404A21615FAB700D94AB5 /* CellNucleusTag.m in Sources */,
+				445296181620347200C2750B /* CellLoggerManager.m in Sources */,
+				4452961E16208CBD00C2750B /* CellUtil.m in Sources */,
+				4498EAEB1621D91100AA47AF /* CellVersion.m in Sources */,
+				4471363D162408A20058667E /* CellMessageService.m in Sources */,
+				4486E90B1625063A004C11C8 /* CellSession.m in Sources */,
+				4486E91116251714004C11C8 /* CellInetAddress.m in Sources */,
+				4486E917162525E7004C11C8 /* CellMessage.m in Sources */,
+				44CAE9C3162BAF0E0048E04B /* CellMessageConnector.m in Sources */,
+				44CAE9C9162BE5180048E04B /* CellNonblockingConnector.m in Sources */,
+				44CAE9CC162BFA860048E04B /* GCDAsyncSocket.m in Sources */,
+				44CAE9D6162C031C0048E04B /* CellLogger.m in Sources */,
+				444B2B80162E497F00C938AD /* CellTalkService.m in Sources */,
+				444B2B86162E60F400C938AD /* CellSpeaker.m in Sources */,
+				44CE237D1638EF7E00DDE0F3 /* CellPacket.m in Sources */,
+				44BEF6451647BE2100AFD75B /* CellCryptology.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		448404911615F9CB00D94AB5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				"HEADER_SEARCH_PATHS[arch=*]" = ./nucleus/include;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		448404921615F9CB00D94AB5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				"HEADER_SEARCH_PATHS[arch=*]" = ./nucleus/include;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		448404941615F9CB00D94AB5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/nucleus.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "nucleus/nucleus-Prefix.pch";
+				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		448404951615F9CB00D94AB5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/nucleus.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "nucleus/nucleus-Prefix.pch";
+				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4484047F1615F9CB00D94AB5 /* Build configuration list for PBXProject "nucleus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				448404911615F9CB00D94AB5 /* Debug */,
+				448404921615F9CB00D94AB5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		448404931615F9CB00D94AB5 /* Build configuration list for PBXNativeTarget "nucleus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				448404941615F9CB00D94AB5 /* Debug */,
+				448404951615F9CB00D94AB5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4484047C1615F9CB00D94AB5 /* Project object */;
+}
