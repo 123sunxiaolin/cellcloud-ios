@@ -24,44 +24,35 @@
  ------------------------------------------------------------------------------
  */
 
-#import "CellNucleusTag.h"
+#import "CellSubjectStuff.h"
 
-@implementation CCNucleusTag
+@implementation CCSubjectStuff
 
 //------------------------------------------------------------------------------
-- (id)initWithRandom
+- (void)willInitType
 {
-    if ((self = [super init]))
-    {
-        CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
-        _uuidString = (NSString *)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, uuid));
-        CFRelease(uuid);
-    }
+    self.type = CCStuffTypeSubject;
+}
 
-    return self;
+//------------------------------------------------------------------------------
++ (CCSubjectStuff *)stuffWithString:(NSString *)value
+{
+    return [[CCSubjectStuff alloc] initWithString:value];
 }
 //------------------------------------------------------------------------------
-- (id)initWithString:(NSString *)uuid
++ (CCSubjectStuff *)stuffWithInt:(int)value
 {
-    if (self = [super init])
-    {
-        _uuidString = uuid;
-    }
-
-    return self;
+    return [[CCSubjectStuff alloc] initWithInt:value];
 }
 //------------------------------------------------------------------------------
-- (void)dealloc
++ (CCSubjectStuff *)stuffWithLong:(long)value
 {
-    if (nil != _uuidString)
-    {
-        _uuidString = nil;
-    }
+    return [[CCSubjectStuff alloc] initWithLong:value];
 }
 //------------------------------------------------------------------------------
-- (NSString *)getAsString
++ (CCSubjectStuff *)stuffWithBool:(BOOL)value
 {
-    return _uuidString;
+    return [[CCSubjectStuff alloc] initWithBool:value];
 }
 
 @end

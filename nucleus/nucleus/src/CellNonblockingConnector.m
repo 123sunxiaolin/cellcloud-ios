@@ -46,7 +46,7 @@
 /** 消息已发送。 */
 - (void)fireMessageSent:(CCMessage *)message;
 /** 发生错误。 */
-- (void)fireErrorOccurred:(int)errorCode;
+- (void)fireErrorOccurred:(CCMessageErrorCode)errorCode;
 
 /** 处理接收数据。 */
 - (void)processReceived:(NSData *)data;
@@ -109,7 +109,7 @@
         [CCLogger e:@"Error connecting: %@", error];
         _asyncSocket = nil;
 
-        [self fireErrorOccurred:CCEC_SOCK_FAILED];
+        [self fireErrorOccurred:CCMessageErrorSocketFailed];
     }
     else
     {
@@ -156,17 +156,17 @@
 
     if ([self existDataMark])
     {
-        char *buf = malloc(message.length);
+        char *buf = malloc(message.length + _headLength + _tailLength);
         memcpy(buf, _headMark, _headLength);
         memcpy(buf + _headLength, message.data.bytes, message.length);
         memcpy(buf + _headLength + message.length, _tailMark, _tailLength);
         NSData *data = [NSData dataWithBytes:buf length:_headLength + _tailLength + message.length];
-        [_asyncSocket writeData:data withTimeout:-1.0 tag:0];
         free(buf);
+        [_asyncSocket writeData:data withTimeout:60 tag:0];
     }
     else
     {
-        [_asyncSocket writeData:message.data withTimeout:-1.0 tag:0];
+        [_asyncSocket writeData:message.data withTimeout:60 tag:0];
     }
 }
 
@@ -222,7 +222,7 @@
     }
 }
 //------------------------------------------------------------------------------
-- (void)fireErrorOccurred:(int)errorCode
+- (void)fireErrorOccurred:(CCMessageErrorCode)errorCode
 {
     if (nil != _delegate)
     {
@@ -311,6 +311,7 @@
     {
     case 3:
         // Connecting timeout
+        [self fireErrorOccurred:CCMessageErrorConnectFailed];
         [self fireSessionDestroyed];
         _session = nil;
         _asyncSocket = nil;
@@ -326,14 +327,14 @@
 
     case 60:
         // Operation timeout
-        [self fireErrorOccurred:CCEC_STATE_ERROR];
+        [self fireErrorOccurred:CCMessageErrorStateError];
         [self fireSessionDestroyed];
         _session = nil;
         _asyncSocket = nil;
         break;
 
     default:
-        [self fireErrorOccurred:CCEC_UNKNOWN];
+        [self fireErrorOccurred:CCMessageErrorUnknown];
         [self fireSessionDestroyed];
         _session = nil;
         _asyncSocket = nil;
@@ -341,9 +342,20 @@
     }
 }
 //------------------------------------------------------------------------------
-- (void)socket:(GCDAsyncSocket *)sock didReadPartialDataOfLength:(NSUInteger)partialLength tag:(long)tag
+- (NSTimeInterval)socket:(GCDAsyncSocket *)sock
+shouldTimeoutReadWithTag:(long)tag
+                 elapsed:(NSTimeInterval)elapsed
+               bytesDone:(NSUInteger)length
 {
-    [CCLogger d:@"didReadPartialDataOfLength"];
+    return 0;
+}
+//------------------------------------------------------------------------------
+- (NSTimeInterval)socket:(GCDAsyncSocket *)sock
+shouldTimeoutWriteWithTag:(long)tag
+                 elapsed:(NSTimeInterval)elapsed
+               bytesDone:(NSUInteger)length
+{
+    return 0;
 }
 
 @end

@@ -26,6 +26,16 @@
 
 #import "CellTalkService.h"
 #import "CellSpeaker.h"
+#import "CellPrimitive.h"
+
+// Private
+@interface CCTalkService (Private)
+
+// 守护定时器处理器。
+- (void)handleDaemonTimer:(NSTimer *) timer;
+
+@end
+
 
 @implementation CCTalkService
 
@@ -46,7 +56,9 @@ static CCTalkService *sharedInstance = nil;
 {
     if ((self = [super init]))
     {
+        _monitor = [[NSObject alloc] init];
         _speakers = [[NSMutableArray alloc] init];
+        _hbCounts = 0;
     }
 
     return self;
@@ -62,25 +74,64 @@ static CCTalkService *sharedInstance = nil;
 //------------------------------------------------------------------------------
 - (BOOL)startup
 {
-    return FALSE;
+    [self startDaemon];
+
+    return TRUE;
 }
 //------------------------------------------------------------------------------
 - (void)shutdown
 {
-    
+    [self stopDaemon];
 }
 
 #pragma mark -
 
 //------------------------------------------------------------------------------
-- (void)startSchedule
+- (void)startDaemon
 {
-    
+    if (nil != _daemonTimer)
+    {
+        [_daemonTimer invalidate];
+        _daemonTimer = nil;
+    }
+
+    _daemonTimer = [NSTimer scheduledTimerWithTimeInterval:2
+                                                    target:self
+                                                    selector:@selector(handleDaemonTimer:)
+                                                    userInfo:nil
+                                                    repeats:TRUE];
 }
 //------------------------------------------------------------------------------
-- (void)stopSchedule
+- (void)stopDaemon
 {
-    
+    if (nil != _daemonTimer)
+    {
+        [_daemonTimer invalidate];
+        _daemonTimer = nil;
+    }
+}
+//------------------------------------------------------------------------------
+- (void)handleDaemonTimer:(NSTimer *)timer
+{
+    NSDate *date = [NSDate date];
+    _tickTime = date.timeIntervalSince1970;
+
+    ++_hbCounts;
+    if (_hbCounts >= 10)
+    {
+        // 20 秒一次心跳，计数器周期是 2 秒
+        if (_speakers.count > 0)
+        {
+            for (CCSpeaker *spr in _speakers)
+            {
+                [spr heartbeat];
+            }
+        }
+
+        _hbCounts = 0;
+    }
+
+    date = nil;
 }
 
 #pragma mark Client Interfaces
@@ -105,13 +156,67 @@ static CCTalkService *sharedInstance = nil;
     }
 
     BOOL ret = [current call:address];
-
     return ret;
 }
 //------------------------------------------------------------------------------
 - (void)hangup:(NSString *)identifier
 {
+    CCSpeaker *current = nil;
+    for (CCSpeaker *speaker in _speakers)
+    {
+        if ([speaker.identifier isEqualToString:identifier])
+        {
+            current = speaker;
+            break;
+        }
+    }
+
+    if (nil != current)
+    {
+        [current hangup];
+        [_speakers removeObject:current];
+    }
+}
+//------------------------------------------------------------------------------
+- (BOOL)talk:(NSString *)identifier primitive:(CCPrimitive *)primitive
+{
+    CCSpeaker *speaker = nil;
+    for (CCSpeaker *s in _speakers)
+    {
+        if ([s.identifier isEqualToString:identifier])
+        {
+            speaker = s;
+            break;
+        }
+    }
     
+    if (nil == speaker)
+    {
+        return FALSE;
+    }
+    
+    // 发送原语
+    [speaker speak:primitive];
+    
+    return TRUE;
+}
+//------------------------------------------------------------------------------
+- (void)markLostSpeaker:(CCSpeaker *)speaker
+{
+    @synchronized(_monitor) {
+        if (nil != _lostSpeakers)
+        {
+            if (![_lostSpeakers containsObject:speaker])
+            {
+                [_lostSpeakers addObject:speaker];
+            }
+        }
+        else
+        {
+            _lostSpeakers = [[NSMutableArray alloc] init];
+            [_lostSpeakers addObject:speaker];
+        }
+    }
 }
 
 #pragma mark Server Interfaces

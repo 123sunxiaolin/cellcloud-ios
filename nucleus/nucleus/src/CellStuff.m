@@ -24,121 +24,97 @@
  ------------------------------------------------------------------------------
  */
 
-#import "CellNucleus.h"
-#import "CellNucleusConfig.h"
-#import "CellNucleusTag.h"
-#import "CellTalkService.h"
-#import "CellLogger.h"
-#import "CellVersion.h"
+#import "CellStuff.h"
 
-@interface CCNucleus (Private)
+@implementation CCStuff
 
-/** 使用配置参数初始化 */
-- (id)initWithConfig:(CCNucleusConfig *)config;
-
-@end
-
-
-@implementation CCNucleus
-
-@synthesize tag = _tag;
-
-/// 实例
-static CCNucleus *sharedInstance = nil;
+@synthesize type;
+@synthesize literalBase;
 
 //------------------------------------------------------------------------------
-+ (CCNucleus *)sharedSingleton
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[CCNucleus alloc] init];
-    });
-    return sharedInstance;
-}
-//------------------------------------------------------------------------------
- + (CCNucleus *)sharedSingletonWithConfig:(CCNucleusConfig *)config
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[CCNucleus alloc] initWithConfig:config];
-    });
-    return sharedInstance;
-}
-//------------------------------------------------------------------------------
-- (id)init
+- (id)initWithString:(NSString *)value
 {
     if ((self = [super init]))
     {
-        _tag = [[CCNucleusTag alloc] initWithRandom];
-        _config = [[CCNucleusConfig alloc] init];
+        _value = value;
+        self.literalBase = CCLiteralBaseString;
+        [self willInitType];
     }
     
     return self;
 }
 //------------------------------------------------------------------------------
-- (id)initWithConfig:(CCNucleusConfig *)config
+- (id)initWithInt:(int)value
 {
     if ((self = [super init]))
     {
-        _tag = [[CCNucleusTag alloc] initWithRandom];
-        _config = [[CCNucleusConfig alloc] init];
-        
-        _config.role = config.role;
-        _config.device = config.device;
+        _value = [[NSString alloc] initWithFormat:@"%d", value];
+        self.literalBase = CCLiteralBaseInt;
+        [self willInitType];
+    }
 
-        [CCLogger i:@"Cell Cloud %d.%d.%d (Build iOS - %@)"
-            , [CCVersion major]
-            , [CCVersion minor]
-            , [CCVersion revision]
-            , [CCVersion name]];
-        [CCLogger i:@"Nucleus Tag : %@", [_tag getAsString]];
+    return self;
+}
+//------------------------------------------------------------------------------
+- (id)initWithLong:(long)value
+{
+    if ((self = [super init]))
+    {
+        _value = [[NSString alloc] initWithFormat:@"%ld", value];
+        self.literalBase = CCLiteralBaseLong;
+        [self willInitType];
     }
     
     return self;
 }
 //------------------------------------------------------------------------------
-- (void)dealloc
+- (id)initWithBool:(BOOL)value
 {
-}
-//------------------------------------------------------------------------------
-- (NSString *)getTagAsString
-{
-    return [_tag getAsString];
-}
-//------------------------------------------------------------------------------
-- (BOOL)startup
-{
-    [CCLogger i:@"*-*-* Cell Initializing *-*-*"];
-
-    CCTalkService *talkService = [CCTalkService sharedSingleton];
-
-    // 节点角色
-    if ((_config.role & NODE) != 0)
+    if ((self = [super init]))
     {
-        // 启动 Talk Service
-        if ([talkService startup])
-        {
-            // TODO
-        }
-        else
-        {
-            // TODO
-        }
+        _value = [[NSString alloc] initWithFormat:@"%@", value ? @"true" : @"false"];
+        self.literalBase = CCLiteralBaseBool;
+        [self willInitType];
     }
 
-    // 消费角色
-    if ((_config.role & CONSUMER) != 0)
-    {
-        [talkService startDaemon];
-    }
-
-    return TRUE;
+    return self;
 }
 //------------------------------------------------------------------------------
-- (void)shutdown
+- (id)initWithData:(NSData *)data literal:(CCLiteralBase)literal
 {
-    [CCLogger i:@"*-*-* Cell Finalizing *-*-*"];
-    // TODO
+    if ((self = [super init]))
+    {
+        _value = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        self.literalBase = literal;
+        [self willInitType];
+    }
+    
+    return self;
+}
+//------------------------------------------------------------------------------
+- (void)willInitType
+{
+    // Nothing
+}
+//------------------------------------------------------------------------------
+- (NSString *)getValueAsString
+{
+    return _value;
+}
+//------------------------------------------------------------------------------
+- (int)getValueAsInt
+{
+    return [_value intValue];
+}
+//------------------------------------------------------------------------------
+- (long)getValueAsLong
+{
+    return [_value longLongValue];
+}
+//------------------------------------------------------------------------------
+- (BOOL)getValueAsBoolean
+{
+    return [_value isEqualToString:@"true"] ? TRUE : FALSE;
 }
 
 @end

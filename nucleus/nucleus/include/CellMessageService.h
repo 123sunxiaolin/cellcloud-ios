@@ -26,24 +26,41 @@
 
 #include "CellPrerequisites.h"
 
-/// 未知的错误类型。
-#define CCEC_UNKNOWN 0
-/// 无效的网络地址。
-#define CCEC_ADDRESS_INVALID 1
-/// 错误的状态。
-#define CCEC_STATE_ERROR 2
-/// Socket 函数发生错误。
-#define CCEC_SOCK_FAILED 3
-/// 绑定服务时发生错误。
-#define CCEC_BIND_FAILED 4
-/// 监听连接时发生错误。
-#define CCEC_LISTEN_FAILED 5
-/// Accept 发生错误。
-#define CCEC_ACCEPT_FAILED 6
-/// 写入数据时发生错误。
-#define CCEC_WRITE_FAILED 7
-/// 连接超时
-#define CCEC_CONNECT_TIMEOUT 9
+
+/** 消息错误码定义。
+ * @author Jiangwei Xu
+ */
+typedef enum _CCMessageErrorCode
+{
+    /// 未知的错误类型。
+    CCMessageErrorUnknown = 100,
+    /// 无效的网络地址。
+    CCMessageErrorAddressInvalid = 101,
+    /// 错误的状态。
+    CCMessageErrorStateError = 102,
+    
+    /// Socket 函数发生错误。
+    CCMessageErrorSocketFailed = 200,
+    /// 绑定服务时发生错误。
+    CCMessageErrorBindFailed = 201,
+    /// 监听连接时发生错误。
+    CCMessageErrorListenFailed = 202,
+    /// Accept 发生错误。
+    CCMessageErrorAcceptFailed = 203,
+
+    /// 连接失败。
+    CCMessageErrorConnectFailed = 300,
+
+    /// 写数据超时。
+    CCMessageErrorWriteTimeout = 401,
+    /// 读数据超时。
+    CCMessageErrorReadTiemout = 402,
+    /// 写入数据时发生错误。
+    CCMessageErrorWriteFailed = 403,
+    /// 读取数据时发生错误。
+    CCMessageErrorReadFailed = 404
+
+} CCMessageErrorCode;
 
 
 /** 消息服务处理监听器。
@@ -64,7 +81,7 @@
 /** 消息已发送。 */
 - (void)messageSent:(CCSession *)session message:(CCMessage *)message;
 /** 发生错误。 */
-- (void)errorOccurred:(int)errorCode session:(CCSession *)session;
+- (void)errorOccurred:(CCMessageErrorCode)errorCode session:(CCSession *)session;
 
 @end
 

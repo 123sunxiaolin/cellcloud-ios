@@ -24,44 +24,71 @@
  ------------------------------------------------------------------------------
  */
 
-#import "CellNucleusTag.h"
+#include "CellPrerequisites.h"
+#include "CellLiteralBase.h"
 
-@implementation CCNucleusTag
+/** 语素类型。
+ */
+typedef enum _CCStuffType
+{
+    /// 主语
+    CCStuffTypeSubject = 1,
+    /// 谓语
+    CCStuffTypePredicate = 2,
+    /// 宾语
+    CCStuffTypeObjective = 3,
+    /// 定语
+    CCStuffTypeAttributive = 4,
+    /// 状语
+    CCStuffTypeAdverbial = 5,
+    /// 补语
+    CCStuffTypeComplement = 6
+} CCStuffType;
 
-//------------------------------------------------------------------------------
-- (id)initWithRandom
-{
-    if ((self = [super init]))
-    {
-        CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
-        _uuidString = (NSString *)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, uuid));
-        CFRelease(uuid);
-    }
 
-    return self;
-}
-//------------------------------------------------------------------------------
-- (id)initWithString:(NSString *)uuid
+/** 原语语素。
+ * @author Jiangwei Xu
+ */
+@interface CCStuff : NSObject
 {
-    if (self = [super init])
-    {
-        _uuidString = uuid;
-    }
+@private
+    NSString *_value;
+}
 
-    return self;
-}
-//------------------------------------------------------------------------------
-- (void)dealloc
-{
-    if (nil != _uuidString)
-    {
-        _uuidString = nil;
-    }
-}
-//------------------------------------------------------------------------------
-- (NSString *)getAsString
-{
-    return _uuidString;
-}
+@property (nonatomic, assign) CCStuffType type;
+@property (nonatomic, assign) CCLiteralBase literalBase;
+
+/**
+ */
+- (id)initWithString:(NSString *)value;
+/**
+ */
+- (id)initWithInt:(int)value;
+/**
+ */
+- (id)initWithLong:(long)value;
+/**
+ */
+- (id)initWithBool:(BOOL)value;
+/**
+ */
+- (id)initWithData:(NSData *)data literal:(CCLiteralBase)literal;
+
+
+/** 仅用于子类覆盖 */
+- (void)willInitType;
+
+/**
+ */
+- (NSString *)getValueAsString;
+/**
+ */
+- (int)getValueAsInt;
+/**
+ */
+- (long)getValueAsLong;
+/**
+ */
+- (BOOL)getValueAsBoolean;
 
 @end

@@ -29,9 +29,11 @@
 
 #import <Foundation/Foundation.h>
 
-
 #pragma mark Servie Protocol
 
+/** 标准服务接口。
+ * @author Jiangwei Xu
+ */
 @protocol CCService <NSObject>
 
 /** 启动服务。 */
@@ -67,6 +69,14 @@
 
 // Talk Group
 
+@class CCPrimitive;
+@class CCSubjectStuff;
+@class CCPredicateStuff;
+@class CCObjectiveStuff;
+@class CCAttributiveStuff;
+@class CCAdverbialStuff;
+@class CCComplementStuff;
 @class CCTalkService;
+@class CCSpeaker;
 
 #endif // CellPrerequisites_h

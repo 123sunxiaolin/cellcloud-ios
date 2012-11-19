@@ -34,9 +34,14 @@
     NSString *_uuidString;
 }
 
+
 /** 生成随机 UUID 。
  */
 - (id)initWithRandom;
+
+/** 根据字符串生成。
+ */
+- (id)initWithString:(NSString *)uuid;
 
 /** 返回 UUID 字符串。
  */

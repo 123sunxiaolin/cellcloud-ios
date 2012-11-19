@@ -47,8 +47,6 @@ static CCLoggerManager *sharedInstance = nil;
 {
     if ((self = [super init]))
     {
-        _delegate = nil;
-        
         _dateFormatter = [[NSDateFormatter alloc] init];
         [_dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     }

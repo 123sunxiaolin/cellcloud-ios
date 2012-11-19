@@ -24,44 +24,16 @@
  ------------------------------------------------------------------------------
  */
 
-#import "CellNucleusTag.h"
+#import "CellPrerequisites.h"
 
-@implementation CCNucleusTag
+@interface CCPrimitiveSerializer : NSObject
 
-//------------------------------------------------------------------------------
-- (id)initWithRandom
-{
-    if ((self = [super init]))
-    {
-        CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
-        _uuidString = (NSString *)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, uuid));
-        CFRelease(uuid);
-    }
+/** 序列化。
+ */
++ (NSData *)serialize:(CCPrimitive *)primitive;
 
-    return self;
-}
-//------------------------------------------------------------------------------
-- (id)initWithString:(NSString *)uuid
-{
-    if (self = [super init])
-    {
-        _uuidString = uuid;
-    }
-
-    return self;
-}
-//------------------------------------------------------------------------------
-- (void)dealloc
-{
-    if (nil != _uuidString)
-    {
-        _uuidString = nil;
-    }
-}
-//------------------------------------------------------------------------------
-- (NSString *)getAsString
-{
-    return _uuidString;
-}
+/** 反序列化。
+ */
++ (CCPrimitive *)deserialize:(NSData *)dataStream;
 
 @end

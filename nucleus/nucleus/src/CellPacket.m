@@ -39,8 +39,6 @@
         _major = 0;
         _minor = 0;
         _sn = 1;
-        _body = nil;
-        _subsegments = nil;
     }
 
     return self;
@@ -51,8 +49,6 @@
     if ((self = [super init]))
     {
         memset(_tag, 0x0, sizeof(_tag));
-        _body = nil;
-        _subsegments = nil;
 
         memcpy(_tag, tag, PSL_TAG);
         _major = major;

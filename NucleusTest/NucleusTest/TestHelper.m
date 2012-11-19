@@ -1,5 +1,5 @@
 /*
- ------------------------------------------------------------------------------
+ -----------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
  Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
@@ -21,47 +21,38 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
- ------------------------------------------------------------------------------
+ -----------------------------------------------------------------------------
  */
 
-#import "CellNucleusTag.h"
+#import "TestHelper.h"
 
-@implementation CCNucleusTag
+@implementation TestHelper
 
 //------------------------------------------------------------------------------
-- (id)initWithRandom
+- (id)init
 {
     if ((self = [super init]))
     {
-        CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
-        _uuidString = (NSString *)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, uuid));
-        CFRelease(uuid);
+        self.primitives = [[NSMutableArray alloc] init];
+        self.counts = 0;
     }
-
+    
     return self;
 }
 //------------------------------------------------------------------------------
-- (id)initWithString:(NSString *)uuid
+- (void)fillPrimitive:(int)num
 {
-    if (self = [super init])
-    {
-        _uuidString = uuid;
-    }
+    [self.primitives removeAllObjects];
 
-    return self;
-}
-//------------------------------------------------------------------------------
-- (void)dealloc
-{
-    if (nil != _uuidString)
+    for (int i = 0; i < num; ++i)
     {
-        _uuidString = nil;
+        CCPrimitive *pri = [[CCPrimitive alloc] init];
+        [pri commit:[CCSubjectStuff stuffWithString:@"I'am a SubjectStuff"]];
+        [pri commit:[CCPredicateStuff stuffWithInt:1981]];
+        [pri commit:[CCObjectiveStuff stuffWithLong:198111242012l]];
+        [pri commit:[CCAttributiveStuff stuffWithBool:TRUE]];
+        [self.primitives addObject:pri];
     }
-}
-//------------------------------------------------------------------------------
-- (NSString *)getAsString
-{
-    return _uuidString;
 }
 
 @end

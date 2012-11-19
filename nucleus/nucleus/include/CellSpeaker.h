@@ -34,9 +34,15 @@
 @private
     NSString *_identifier;
     CCNonblockingConnector *_connector;
+
+    CCNucleusTag *_remoteTag;
+    
+    NSObject *_monitor;
 }
 
 @property (nonatomic, strong, readonly) NSString *identifier;
+@property (nonatomic, strong, readonly) CCNucleusTag *remoteTag;
+@property (nonatomic, assign) BOOL called;
 
 /** 初始化。 */
 - (id)initWithIdentifier:(NSString *)identifier;
@@ -47,7 +53,13 @@
 /** 中断与 Cellet 服务。 */
 - (void)hangup;
 
-/**  */
+/** 是否已经调用了 Cellet 。 */
 - (BOOL)isCalled;
+
+/** 向 Cellet 发送原语。 */
+- (void)speak:(CCPrimitive *)primitive;
+
+/** 心跳。 */
+- (void)heartbeat;
 
 @end

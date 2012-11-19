@@ -32,6 +32,10 @@
 #import "CellMessage.h"
 #import "CellLogger.h"
 #import "CellCryptology.h"
+#import "CellNucleusTag.h"
+#import "CellNucleus.h"
+#import "CellTalkService.h"
+#import "CellPrimitive.h"
 #include "CellTalkPacketDefinition.h"
 
 
@@ -39,11 +43,30 @@
 
 @interface CCSpeaker (Private)
 
-/// 
+/// 数据处理入口
 - (void)interpret:(CCSession *)session packet:(CCPacket *)packet;
 
 /// 请求进行密文校验
 - (void)requestCheck:(CCPacket *)packet session:(CCSession *)session;
+
+/// 处理进行完校验后操作
+- (void)processCheck:(CCPacket *)packet session:(CCSession *)session;
+
+/// 请求 Cellet
+- (void)requestCellet:(CCSession *)session;
+
+/// 处理请求返回
+- (void)processRequest:(CCPacket *)packet session:(CCSession *)session;
+
+/// 会话
+- (void)processDialogue:(CCPacket *)packet session:(CCSession *)session;
+
+///
+- (void)fireContacted;
+///
+- (void)fireQuitted;
+///
+- (void)fireFailed;
 
 @end
 
@@ -53,17 +76,32 @@
 @implementation CCSpeaker
 
 @synthesize identifier = _identifier;
+@synthesize remoteTag = _remoteTag;
 
+//------------------------------------------------------------------------------
+- (id)init
+{
+    if ((self = [super init]))
+    {
+        _monitor = [[NSObject alloc] init];
+    }
+    
+    return self;
+}
 //------------------------------------------------------------------------------
 - (id)initWithIdentifier:(NSString *)identifier
 {
     if ((self = [super init]))
     {
+        _monitor = [[NSObject alloc] init];
         _identifier = identifier;
-        _connector = nil;
     }
     
     return self;
+}
+//------------------------------------------------------------------------------
+- (void)dealloc
+{
 }
 
 #pragma mark Public Method
@@ -75,6 +113,8 @@
     {
         return FALSE;
     }
+    
+    self.called = FALSE;
 
     char head[4] = {0x20, 0x10, 0x11, 0x10};
     char tail[4] = {0x19, 0x78, 0x10, 0x04};
@@ -88,12 +128,37 @@
 //------------------------------------------------------------------------------
 - (void)hangup
 {
-    
+    // TODO
 }
 //------------------------------------------------------------------------------
 - (BOOL)isCalled
 {
-    return FALSE;
+    return self.called;
+}
+//------------------------------------------------------------------------------
+- (void)speak:(CCPrimitive *)primitive
+{
+    if (nil == _connector || ![_connector isConnected])
+    {
+        return;
+    }
+
+    @synchronized(_monitor) {
+        NSData *stream = [CCPrimitive write:primitive];
+        
+        // 封装数据包
+        char ptag[] = TPT_DIALOGUE;
+        CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:99 major:1 minor:0];
+        [packet appendSubsegment:stream];
+        [packet appendSubsegment:[[[CCNucleus sharedSingleton].tag getAsString] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        NSData *data = [CCPacket pack:packet];
+        if (nil != data)
+        {
+            CCMessage *message = [[CCMessage alloc] initWithData:data];
+            [[_connector getSession] write:message];
+        }
+    }
 }
 
 #pragma mark Private Method
@@ -104,9 +169,17 @@
     char tag[PSL_TAG + 1] = {0x0};
     [packet getTag:tag];
 
-    if (tag[2] == TPT_CHECK_B3 && tag[3] == TPT_CHECK_B4)
+    if (tag[2] == TPT_DIALOGUE_B3 && tag[3] == TPT_DIALOGUE_B4)
     {
-        NSLog(@"check is ok");
+        [self processDialogue:packet session:session];
+    }
+    else if (tag[2] == TPT_REQUEST_B3 && tag[3] == TPT_REQUEST_B4)
+    {
+        [self processRequest:packet session:session];
+    }
+    else if (tag[2] == TPT_CHECK_B3 && tag[3] == TPT_CHECK_B4)
+    {
+        [self processCheck:packet session:session];
     }
     else if (tag[2] == TPT_INTERROGATE_B3 && tag[3] == TPT_INTERROGATE_B4)
     {
@@ -129,6 +202,7 @@
     int plen = [[CCCryptology sharedSingleton] simpleDecrypt:plaintext
                     text:ciphertext length:ctData.length key:key];
 
+    // 回送数据进行服务器验证
     char tag[] = TPT_CHECK;
     CCPacket *response = [[CCPacket alloc] initWithTag:tag sn:1 major:1 minor:0];
     [response appendSubsegment:[NSData dataWithBytes:plaintext length:plen]];
@@ -138,6 +212,121 @@
     {
         CCMessage *message = [[CCMessage alloc] initWithData:data];
         [session write:message];
+    }
+}
+//------------------------------------------------------------------------------
+- (void)processCheck:(CCPacket *)packet session:(CCSession *)session
+{
+    // 包格式：成功码|内核标签
+    NSData *tagdata = [packet getSubsegment:1];
+    char tag[64] = {0x0};
+    [tagdata getBytes:tag];
+
+    // 设置对端标签
+    _remoteTag = [[CCNucleusTag alloc] initWithString:[[NSString alloc] initWithFormat:@"%s", tag]];
+
+    // 请求 Cellet
+    [self requestCellet:session];
+}
+//------------------------------------------------------------------------------
+- (void)requestCellet:(CCSession *)session
+{
+    // 包格式：Cellet标识串|标签
+    char ptag[] = TPT_REQUEST;
+    CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:2 major:1 minor:0];
+
+    [packet appendSubsegment:[self.identifier dataUsingEncoding:NSUTF8StringEncoding]];
+    [packet appendSubsegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
+
+    NSData *data = [CCPacket pack:packet];
+    if (nil != data)
+    {
+        CCMessage *message = [[CCMessage alloc] initWithData:data];
+        [session write:message];
+    }
+}
+//------------------------------------------------------------------------------
+- (void)processRequest:(CCPacket *)packet session:(CCSession *)session
+{
+    // 包格式：
+    // 成功格式：请求方标签|成功码|Cellet识别串|Cellet版本
+    // 失败格式：请求方标签|失败码
+
+    // 返回码
+    NSData *data = [packet getSubsegment:1];
+    char sc[4] = {0x0};
+    [data getBytes:sc];
+    
+    char success[] = CCTS_SUCCESS;
+    if (sc[0] == success[0] && sc[1] == success[1]
+        && sc[2] == success[2] && sc[3] == success[3])
+    {
+        [CCLogger d:@"Cellet %@ has called at %@:%d", _identifier,
+            [[session getAddress] getHost], [[session getAddress] getPort]];
+
+        // 变更状态
+        self.called = TRUE;
+
+        // 调用回调
+        [self fireContacted];
+    }
+    else
+    {
+        [self fireFailed];
+    }
+}
+//------------------------------------------------------------------------------
+- (void)processDialogue:(CCPacket *)packet session:(CCSession *)session
+{
+    // 包格式：原语序列
+    NSData *data = [packet getBody];
+    CCPrimitive *primitive = [CCPrimitive read:data];
+    if (nil != primitive)
+    {
+        // 设置对端标签
+        primitive.ownerTag = [_remoteTag getAsString];
+
+        if (nil != [CCTalkService sharedSingleton].listener)
+        {
+            [[CCTalkService sharedSingleton].listener dialogue:primitive.ownerTag primitive:primitive];
+        }
+    }
+}
+//------------------------------------------------------------------------------
+- (void)heartbeat
+{
+    // 心跳包（无包体）
+    char ptag[] = TPT_HEARTBEAT;
+    CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:99 major:1 minor:0];
+    NSData *data = [CCPacket pack:packet];
+    if (nil != data)
+    {
+        CCMessage *message = [[CCMessage alloc] initWithData:data];
+        [[_connector getSession] write:message];
+    }
+}
+//------------------------------------------------------------------------------
+- (void)fireContacted
+{
+    if (nil != [CCTalkService sharedSingleton].listener)
+    {
+        [[CCTalkService sharedSingleton].listener contacted:[_remoteTag getAsString]];
+    }
+}
+//------------------------------------------------------------------------------
+- (void)fireQuitted
+{
+    if (nil != [CCTalkService sharedSingleton].listener)
+    {
+        [[CCTalkService sharedSingleton].listener quitted:[_remoteTag getAsString]];
+    }
+}
+//------------------------------------------------------------------------------
+- (void)fireFailed
+{
+    if (nil != [CCTalkService sharedSingleton].listener)
+    {
+        [[CCTalkService sharedSingleton].listener failed:_identifier];
     }
 }
 
@@ -166,10 +355,6 @@
 //------------------------------------------------------------------------------
 - (void)messageReceived:(CCSession *)session message:(CCMessage *)message
 {
-//    NSString *str = [[NSString alloc] initWithData:message.data
-//                    encoding:NSUTF8StringEncoding];
-//    [CCLogger d:@"messageReceived - %p : %@", session, str];
-
     CCPacket *packet = [CCPacket unpack:message.data];
     if (nil != packet)
     {
@@ -182,9 +367,9 @@
 //    [CCLogger d:@"messageSent - %p", session];
 }
 //------------------------------------------------------------------------------
-- (void)errorOccurred:(int)errorCode session:(CCSession *)session
+- (void)errorOccurred:(CCMessageErrorCode)errorCode session:(CCSession *)session
 {
-    [CCLogger d:@"errorOccurred - %p", session];
+    [CCLogger d:@"errorOccurred - %d - %p", errorCode, session];
 }
 
 @end

@@ -25,11 +25,12 @@
  */
 
 #import "ViewController.h"
-#import "Cell.h"
 
 @interface ViewController (Private)
 
 - (void)configView;
+
+- (void)runTest;
 
 @end
 
@@ -38,9 +39,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
     
     [self configView];
+    
+    [self runTest];
 }
 
 - (void)viewDidUnload
@@ -68,13 +70,6 @@
     [self.mainTextView setText:text];
     
     [CCLoggerManager sharedSingleton].delegate = self;
-
-    // 连接 Cellet 服务
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-        , ^{
-            CCInetAddress *address = [[CCInetAddress alloc] initWithAddress:@"192.168.0.109" port:7000];
-            [[CCTalkService sharedSingleton] call:address identifier:@"Dummy"];
-        });
 }
 
 - (void)didReceiveMemoryWarning
@@ -97,6 +92,71 @@
 - (void)textViewDidChange:(UITextView *)textView
 {
     NSLog(@"textViewDidChange:");
+}
+
+#pragma Test method
+
+- (void)runTest
+{
+    _helper = [[TestHelper alloc] init];
+    [_helper fillPrimitive:1];
+
+    // 连接 Cellet 服务
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+        , ^{
+            // 设置监听器
+            [CCTalkService sharedSingleton].listener = self;
+
+            // 请求服务
+            CCInetAddress *address = [[CCInetAddress alloc] initWithAddress:@"192.168.0.104" port:7000];
+            [[CCTalkService sharedSingleton] call:address identifier:@"Dummy"];
+        });
+}
+
+#pragma Talk Listener
+
+- (void)dialogue:(NSString *)tag primitive:(CCPrimitive *)primitive
+{
+    [CCLogger d:@"dialogue : %@", tag];
+
+    CCPrimitive *current = [_helper.primitives objectAtIndex:_helper.counts];
+
+    _helper.counts += 1;
+    NSLog(@"*** Test counts : %d", _helper.counts);
+
+    char result1[8] = {0x0};
+    NSString *expected = [[current.subjects objectAtIndex:0] getValueAsString];
+    NSString *actual = [[primitive.subjects objectAtIndex:0] getValueAsString];
+    if ([expected isEqualToString:actual])
+        memcpy(result1, "true", 4);
+    else
+        memcpy(result1, "false", 5);
+    
+    NSLog(@"Result: %s", result1);
+}
+
+- (void)contacted:(NSString *)tag
+{
+    [CCLogger d:@"contacted : %@", tag];
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+        , ^{
+            for (CCPrimitive *pri in _helper.primitives)
+            {
+                [NSThread sleepForTimeInterval:0.1];
+                [[CCTalkService sharedSingleton] talk:@"Dummy" primitive:pri];
+            }
+        });
+}
+
+- (void)quitted:(NSString *)tag
+{
+    [CCLogger d:@"quitted : %@", tag];
+}
+
+- (void)failed:(NSString *)identifier
+{
+    [CCLogger d:@"failed : %@", identifier];
 }
 
 #pragma Log Delegate

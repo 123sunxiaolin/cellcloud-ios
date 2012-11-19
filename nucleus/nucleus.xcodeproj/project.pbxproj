@@ -20,12 +20,21 @@
 		4486E91116251714004C11C8 /* CellInetAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 4486E91016251714004C11C8 /* CellInetAddress.m */; };
 		4486E917162525E7004C11C8 /* CellMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4486E916162525E7004C11C8 /* CellMessage.m */; };
 		4498EAEB1621D91100AA47AF /* CellVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 4498EAEA1621D91100AA47AF /* CellVersion.m */; };
+		44B7ADD21654C72000E3B116 /* CellPrimitive.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B7ADD11654C72000E3B116 /* CellPrimitive.m */; };
+		44B7ADDA1654CAB200E3B116 /* CellStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B7ADD91654CAB200E3B116 /* CellStuff.m */; };
+		44B7ADE01654E95300E3B116 /* CellSubjectStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B7ADDF1654E95300E3B116 /* CellSubjectStuff.m */; };
 		44BEF6451647BE2100AFD75B /* CellCryptology.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BEF6441647BE2100AFD75B /* CellCryptology.m */; };
 		44CAE9C3162BAF0E0048E04B /* CellMessageConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CAE9C2162BAF0E0048E04B /* CellMessageConnector.m */; };
 		44CAE9C9162BE5180048E04B /* CellNonblockingConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CAE9C8162BE5180048E04B /* CellNonblockingConnector.m */; };
 		44CAE9CC162BFA860048E04B /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CAE9CB162BFA860048E04B /* GCDAsyncSocket.m */; };
 		44CAE9D6162C031C0048E04B /* CellLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CAE9D5162C031C0048E04B /* CellLogger.m */; };
 		44CE237D1638EF7E00DDE0F3 /* CellPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CE237C1638EF7E00DDE0F3 /* CellPacket.m */; };
+		44D9ADBB1657722100E22351 /* CellPrimitiveSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D9ADBA1657722100E22351 /* CellPrimitiveSerializer.m */; };
+		44EDB0301655E3AB0023B73B /* CellPredicateStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 44EDB02F1655E3AB0023B73B /* CellPredicateStuff.m */; };
+		44EDB0361655E7F60023B73B /* CellObjectiveStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 44EDB0351655E7F60023B73B /* CellObjectiveStuff.m */; };
+		44EDB03C1655E98E0023B73B /* CellAttributiveStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 44EDB03B1655E98D0023B73B /* CellAttributiveStuff.m */; };
+		44EDB0421655EC460023B73B /* CellAdverbialStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 44EDB0411655EC460023B73B /* CellAdverbialStuff.m */; };
+		44EDB0481655ED8F0023B73B /* CellComplementStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 44EDB0471655ED8E0023B73B /* CellComplementStuff.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -70,6 +79,13 @@
 		4486E916162525E7004C11C8 /* CellMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellMessage.m; path = src/CellMessage.m; sourceTree = "<group>"; };
 		4498EAE91621D90B00AA47AF /* CellVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellVersion.h; path = include/CellVersion.h; sourceTree = "<group>"; };
 		4498EAEA1621D91100AA47AF /* CellVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellVersion.m; path = src/CellVersion.m; sourceTree = "<group>"; };
+		44B7ADD01654C71800E3B116 /* CellPrimitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellPrimitive.h; path = include/CellPrimitive.h; sourceTree = "<group>"; };
+		44B7ADD11654C72000E3B116 /* CellPrimitive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellPrimitive.m; path = src/CellPrimitive.m; sourceTree = "<group>"; };
+		44B7ADD41654C8E500E3B116 /* CellLiteralBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellLiteralBase.h; path = include/CellLiteralBase.h; sourceTree = "<group>"; };
+		44B7ADD81654CAA800E3B116 /* CellStuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellStuff.h; path = include/CellStuff.h; sourceTree = "<group>"; };
+		44B7ADD91654CAB200E3B116 /* CellStuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellStuff.m; path = src/CellStuff.m; sourceTree = "<group>"; };
+		44B7ADDE1654E94900E3B116 /* CellSubjectStuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellSubjectStuff.h; path = include/CellSubjectStuff.h; sourceTree = "<group>"; };
+		44B7ADDF1654E95300E3B116 /* CellSubjectStuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellSubjectStuff.m; path = src/CellSubjectStuff.m; sourceTree = "<group>"; };
 		44BEF63E164791AF00AFD75B /* CellTalkPacketDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellTalkPacketDefinition.h; path = include/CellTalkPacketDefinition.h; sourceTree = "<group>"; };
 		44BEF6431647BE1A00AFD75B /* CellCryptology.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellCryptology.h; path = include/CellCryptology.h; sourceTree = "<group>"; };
 		44BEF6441647BE2100AFD75B /* CellCryptology.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellCryptology.m; path = src/CellCryptology.m; sourceTree = "<group>"; };
@@ -83,6 +99,18 @@
 		44CAE9D5162C031C0048E04B /* CellLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellLogger.m; path = src/CellLogger.m; sourceTree = "<group>"; };
 		44CE237B1638EF7600DDE0F3 /* CellPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellPacket.h; path = include/CellPacket.h; sourceTree = "<group>"; };
 		44CE237C1638EF7E00DDE0F3 /* CellPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellPacket.m; path = src/CellPacket.m; sourceTree = "<group>"; };
+		44D9ADB91657721800E22351 /* CellPrimitiveSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellPrimitiveSerializer.h; path = include/CellPrimitiveSerializer.h; sourceTree = "<group>"; };
+		44D9ADBA1657722100E22351 /* CellPrimitiveSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellPrimitiveSerializer.m; path = src/CellPrimitiveSerializer.m; sourceTree = "<group>"; };
+		44EDB02E1655E3A10023B73B /* CellPredicateStuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellPredicateStuff.h; path = include/CellPredicateStuff.h; sourceTree = "<group>"; };
+		44EDB02F1655E3AB0023B73B /* CellPredicateStuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellPredicateStuff.m; path = src/CellPredicateStuff.m; sourceTree = "<group>"; };
+		44EDB0341655E7EE0023B73B /* CellObjectiveStuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellObjectiveStuff.h; path = include/CellObjectiveStuff.h; sourceTree = "<group>"; };
+		44EDB0351655E7F60023B73B /* CellObjectiveStuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellObjectiveStuff.m; path = src/CellObjectiveStuff.m; sourceTree = "<group>"; };
+		44EDB03A1655E9860023B73B /* CellAttributiveStuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellAttributiveStuff.h; path = include/CellAttributiveStuff.h; sourceTree = "<group>"; };
+		44EDB03B1655E98D0023B73B /* CellAttributiveStuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellAttributiveStuff.m; path = src/CellAttributiveStuff.m; sourceTree = "<group>"; };
+		44EDB0401655EC3E0023B73B /* CellAdverbialStuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellAdverbialStuff.h; path = include/CellAdverbialStuff.h; sourceTree = "<group>"; };
+		44EDB0411655EC460023B73B /* CellAdverbialStuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellAdverbialStuff.m; path = src/CellAdverbialStuff.m; sourceTree = "<group>"; };
+		44EDB0461655ED850023B73B /* CellComplementStuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellComplementStuff.h; path = include/CellComplementStuff.h; sourceTree = "<group>"; };
+		44EDB0471655ED8E0023B73B /* CellComplementStuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellComplementStuff.m; path = src/CellComplementStuff.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +128,11 @@
 		444B2B79162E48C200C938AD /* Talk */ = {
 			isa = PBXGroup;
 			children = (
+				44B7ADD31654C88F00E3B116 /* Stuff */,
+				44B7ADD01654C71800E3B116 /* CellPrimitive.h */,
+				44B7ADD11654C72000E3B116 /* CellPrimitive.m */,
+				44D9ADB91657721800E22351 /* CellPrimitiveSerializer.h */,
+				44D9ADBA1657722100E22351 /* CellPrimitiveSerializer.m */,
 				444B2B84162E60EE00C938AD /* CellSpeaker.h */,
 				444B2B85162E60F400C938AD /* CellSpeaker.m */,
 				44BEF63E164791AF00AFD75B /* CellTalkPacketDefinition.h */,
@@ -217,6 +250,28 @@
 			name = Common;
 			sourceTree = "<group>";
 		};
+		44B7ADD31654C88F00E3B116 /* Stuff */ = {
+			isa = PBXGroup;
+			children = (
+				44EDB0401655EC3E0023B73B /* CellAdverbialStuff.h */,
+				44EDB0411655EC460023B73B /* CellAdverbialStuff.m */,
+				44EDB03A1655E9860023B73B /* CellAttributiveStuff.h */,
+				44EDB03B1655E98D0023B73B /* CellAttributiveStuff.m */,
+				44EDB0461655ED850023B73B /* CellComplementStuff.h */,
+				44EDB0471655ED8E0023B73B /* CellComplementStuff.m */,
+				44B7ADD41654C8E500E3B116 /* CellLiteralBase.h */,
+				44EDB0341655E7EE0023B73B /* CellObjectiveStuff.h */,
+				44EDB0351655E7F60023B73B /* CellObjectiveStuff.m */,
+				44EDB02E1655E3A10023B73B /* CellPredicateStuff.h */,
+				44EDB02F1655E3AB0023B73B /* CellPredicateStuff.m */,
+				44B7ADD81654CAA800E3B116 /* CellStuff.h */,
+				44B7ADD91654CAB200E3B116 /* CellStuff.m */,
+				44B7ADDE1654E94900E3B116 /* CellSubjectStuff.h */,
+				44B7ADDF1654E95300E3B116 /* CellSubjectStuff.m */,
+			);
+			name = Stuff;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -286,6 +341,15 @@
 				444B2B86162E60F400C938AD /* CellSpeaker.m in Sources */,
 				44CE237D1638EF7E00DDE0F3 /* CellPacket.m in Sources */,
 				44BEF6451647BE2100AFD75B /* CellCryptology.m in Sources */,
+				44B7ADD21654C72000E3B116 /* CellPrimitive.m in Sources */,
+				44B7ADDA1654CAB200E3B116 /* CellStuff.m in Sources */,
+				44B7ADE01654E95300E3B116 /* CellSubjectStuff.m in Sources */,
+				44EDB0301655E3AB0023B73B /* CellPredicateStuff.m in Sources */,
+				44EDB0361655E7F60023B73B /* CellObjectiveStuff.m in Sources */,
+				44EDB03C1655E98E0023B73B /* CellAttributiveStuff.m in Sources */,
+				44EDB0421655EC460023B73B /* CellAdverbialStuff.m in Sources */,
+				44EDB0481655ED8F0023B73B /* CellComplementStuff.m in Sources */,
+				44D9ADBB1657722100E22351 /* CellPrimitiveSerializer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

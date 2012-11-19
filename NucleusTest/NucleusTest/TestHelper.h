@@ -1,5 +1,5 @@
 /*
- ------------------------------------------------------------------------------
+ -----------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
  Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
@@ -21,47 +21,17 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
- ------------------------------------------------------------------------------
+ -----------------------------------------------------------------------------
  */
 
-#import "CellNucleusTag.h"
+#import <Foundation/Foundation.h>
+#import "Cell.h"
 
-@implementation CCNucleusTag
+@interface TestHelper : NSObject
 
-//------------------------------------------------------------------------------
-- (id)initWithRandom
-{
-    if ((self = [super init]))
-    {
-        CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
-        _uuidString = (NSString *)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, uuid));
-        CFRelease(uuid);
-    }
+@property (nonatomic, strong) NSMutableArray *primitives;
+@property (nonatomic, assign) int counts;
 
-    return self;
-}
-//------------------------------------------------------------------------------
-- (id)initWithString:(NSString *)uuid
-{
-    if (self = [super init])
-    {
-        _uuidString = uuid;
-    }
-
-    return self;
-}
-//------------------------------------------------------------------------------
-- (void)dealloc
-{
-    if (nil != _uuidString)
-    {
-        _uuidString = nil;
-    }
-}
-//------------------------------------------------------------------------------
-- (NSString *)getAsString
-{
-    return _uuidString;
-}
+- (void)fillPrimitive:(int)num;
 
 @end

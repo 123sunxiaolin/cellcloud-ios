@@ -26,8 +26,14 @@
 
 #import <UIKit/UIKit.h>
 #import <CellLoggerManager.h>
+#import "Cell.h"
+#import "TestHelper.h"
 
-@interface ViewController : UIViewController <UITextViewDelegate, CCLogDelegate>
+@interface ViewController : UIViewController <UITextViewDelegate, CCLogDelegate, CCTalkListener>
+{
+@private
+    TestHelper *_helper;
+}
 
 @property (strong, nonatomic) IBOutlet UITextView *mainTextView;
 

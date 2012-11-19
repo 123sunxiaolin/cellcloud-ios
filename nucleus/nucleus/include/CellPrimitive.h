@@ -24,44 +24,54 @@
  ------------------------------------------------------------------------------
  */
 
-#import "CellNucleusTag.h"
+#include "CellPrerequisites.h"
+#import "CellStuff.h"
 
-@implementation CCNucleusTag
+/** 原语。
+ *
+ * @author Jiangwei Xu
+ */
+@interface CCPrimitive : NSObject
+{
+@private
+    NSMutableArray *_subjectList;
+    NSMutableArray *_predicateList;
+    NSMutableArray *_objectiveList;
+    NSMutableArray *_attributiveList;
+    NSMutableArray *_adverbialList;
+    NSMutableArray *_complementList;
+}
 
-//------------------------------------------------------------------------------
-- (id)initWithRandom
-{
-    if ((self = [super init]))
-    {
-        CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
-        _uuidString = (NSString *)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, uuid));
-        CFRelease(uuid);
-    }
+@property (nonatomic, strong) NSString *ownerTag;
+@property (nonatomic, strong, readonly) NSMutableArray *subjects;
+@property (nonatomic, strong, readonly) NSMutableArray *predicates;
+@property (nonatomic, strong, readonly) NSMutableArray *objectives;
+@property (nonatomic, strong, readonly) NSMutableArray *attributives;
+@property (nonatomic, strong, readonly) NSMutableArray *adverbials;
+@property (nonatomic, strong, readonly) NSMutableArray *complements;
 
-    return self;
-}
-//------------------------------------------------------------------------------
-- (id)initWithString:(NSString *)uuid
-{
-    if (self = [super init])
-    {
-        _uuidString = uuid;
-    }
+/** 使用标签初始话。
+ */
+- (id)initWithTag:(NSString *)tag;
 
-    return self;
-}
-//------------------------------------------------------------------------------
-- (void)dealloc
-{
-    if (nil != _uuidString)
-    {
-        _uuidString = nil;
-    }
-}
-//------------------------------------------------------------------------------
-- (NSString *)getAsString
-{
-    return _uuidString;
-}
+/** 提交语素。
+ */
+- (void)commit:(CCStuff *)stuff;
+
+/** 清空所有语素。
+ */
+- (void)clearStuff;
+
+/** 复制语素。
+ */
+- (void)copyStuff:(CCPrimitive *)dest;
+
+/** 序列化原语。
+ */
++ (NSData *)write:(CCPrimitive *)primitive;
+
+/** 反序列化原语。
+ */
++ (CCPrimitive *)read:(NSData *)stream;
 
 @end

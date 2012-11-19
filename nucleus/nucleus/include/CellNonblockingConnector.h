@@ -29,7 +29,7 @@
 
 /** 非阻塞消息连接器。
  */
-@interface CCNonblockingConnector : CCMessageConnector
+@interface CCNonblockingConnector : CCMessageConnector <GCDAsyncSocketDelegate>
 {
 @private
     GCDAsyncSocket *_asyncSocket;

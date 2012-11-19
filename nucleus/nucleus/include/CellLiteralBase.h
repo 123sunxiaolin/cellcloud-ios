@@ -24,44 +24,23 @@
  ------------------------------------------------------------------------------
  */
 
-#import "CellNucleusTag.h"
+#ifndef CellLiteralBase_h
+#define CellLiteralBase_h
 
-@implementation CCNucleusTag
-
-//------------------------------------------------------------------------------
-- (id)initWithRandom
+typedef enum _CCLiteralBase
 {
-    if ((self = [super init]))
-    {
-        CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
-        _uuidString = (NSString *)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, uuid));
-        CFRelease(uuid);
-    }
+    /// 字符串类型。
+    CCLiteralBaseString = 1,
+    
+    /// 整数型。
+    CCLiteralBaseInt,
+    
+    /// 长整数型。
+    CCLiteralBaseLong,
+    
+    /// 布尔型。
+    CCLiteralBaseBool
+    
+} CCLiteralBase;
 
-    return self;
-}
-//------------------------------------------------------------------------------
-- (id)initWithString:(NSString *)uuid
-{
-    if (self = [super init])
-    {
-        _uuidString = uuid;
-    }
-
-    return self;
-}
-//------------------------------------------------------------------------------
-- (void)dealloc
-{
-    if (nil != _uuidString)
-    {
-        _uuidString = nil;
-    }
-}
-//------------------------------------------------------------------------------
-- (NSString *)getAsString
-{
-    return _uuidString;
-}
-
-@end
+#endif // CellLiteralBase_h

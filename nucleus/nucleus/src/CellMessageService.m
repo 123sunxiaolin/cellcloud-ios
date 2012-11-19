@@ -36,8 +36,6 @@
 {
     if ((self = [super init]))
     {
-        _delegate = nil;
-
         _headMark = NULL;
         _headLength = 0;
         _tailMark = NULL;
