@@ -53,5 +53,10 @@
 {
     return FALSE;
 }
+//------------------------------------------------------------------------------
+- (void)write:(CCMessage *)message
+{
+    [self write:[self getSession] message:message];
+}
 
 @end

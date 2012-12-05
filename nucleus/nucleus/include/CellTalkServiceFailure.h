@@ -1,5 +1,5 @@
 /*
- -----------------------------------------------------------------------------
+ ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
  Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
@@ -21,20 +21,38 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
- -----------------------------------------------------------------------------
+ ------------------------------------------------------------------------------
  */
 
-#import <UIKit/UIKit.h>
-#import <CellLoggerManager.h>
-#import "Cell.h"
+#include "CellPredicateStuff.h"
 
-@interface ViewController : UIViewController <UITextViewDelegate, CCLogDelegate, CCTalkListener>
+/** 会话故障码。
+ * @author Jiangwei Xu
+ */
+typedef enum _CCTalkFailureCode
+{
+    /// 未找到指定的 Cellet
+    CCTalkFailureNotFoundCellet = 100,
 
-@property (strong, nonatomic) IBOutlet UITextView *mainTextView;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiCall;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiHangUp;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiSuspend;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiResume;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiTalk;
+    /// Call 连接超时
+    CCTalkFailureCallTimeout = 201
+
+} CCTalkFailureCode;
+
+
+/** 会话服务故障描述。
+ * @author Jiangwei Xu
+ */
+@interface CCTalkServiceFailure : NSObject
+
+@property (nonatomic, assign) NSUInteger code;
+@property (nonatomic, strong) NSString *reason;
+@property (nonatomic, strong) NSString *description;
+@property (nonatomic, strong) NSString *sourceDescription;
+@property (nonatomic, strong) NSString *sourceCelletIdentifier;
+
+/** 
+ */
+- (id)initWithSource:(CCTalkFailureCode)code file:(const char*)file line:(int)line function:(const char*)function;
 
 @end

@@ -25,34 +25,38 @@
  */
 
 #include "CellPrerequisites.h"
-
-
-/// 状态码
-#define CCTS_SUCCESS {'0', '0', '0', '0'}
-#define CCTS_FAIL {'0', '0', '0', '1'}
-#define CCTS_FAIL_NOCELLET {'0', '0', '1', '0'}
-
+#include "CellTalkDefinition.h"
 
 /** 会话监听器。
  * @author Jiangwei Xu
  */
 @protocol CCTalkListener <NSObject>
 @optional
-/** 数据会话。
+/** 与内核进行会话。
  */
-- (void)dialogue:(NSString *)tag primitive:(CCPrimitive *)primitive;
+- (void)dialogue:(NSString *)identifier primitive:(CCPrimitive *)primitive;
 
-/** 与对端 Nucleus 建立连接。
+/** 与对端内核建立连接。
  */
-- (void)contacted:(NSString *)tag;
+- (void)contacted:(NSString *)identifier tag:(NSString *)tag;
 
-/** 与对端 Nucleus 断开连接。
+/** 与对端内核断开连接。
  */
-- (void)quitted:(NSString *)tag;
+- (void)quitted:(NSString *)identifier tag:(NSString *)tag;
+
+/** 当前访问会话被挂起。
+ */
+- (void)suspended:(NSString *)identifier tag:(NSString *)tag
+        timestamp:(NSTimeInterval)timestamp mode:(CCSuspendMode)mode;
+
+/** 恢复之前被挂起的会话原语。
+ */
+- (void)resumed:(NSString *)identifier tag:(NSString *)tag
+      timestamp:(NSTimeInterval)timestamp primitive:(CCPrimitive *)primitive;
 
 /** 发生错误。
  */
-- (void)failed:(NSString *)identifier;
+- (void)failed:(CCTalkServiceFailure *)failure;
 
 @end
 
@@ -61,18 +65,12 @@
  * @author Jiangwei Xu
  */
 @interface CCTalkService : NSObject <CCService>
-{
-@private
-    NSObject *_monitor;
-    NSMutableArray *_speakers;          /// Speaker 列表
-    NSMutableArray *_lostSpeakers;
-    NSUInteger _hbCounts;               /// Speaker 心跳计数
-    NSTimer *_daemonTimer;
-    NSTimeInterval _tickTime;
-}
 
 /// 会话监听器
 @property (nonatomic, strong) id<CCTalkListener> listener;
+
+/// 对话失败时，尝试重新建立会话的操作间隔
+@property (nonatomic, assign) NSTimeInterval retryInterval;
 
 /** 返回单例。
  */
@@ -84,13 +82,21 @@
 /** 停止守护任务。 */
 - (void)stopDaemon;
 
-/** 申请 Cellet 服务。
+/** 申请指定的 Cellet 服务。
  */
-- (BOOL)call:(CCInetAddress *)address identifier:(NSString *)identifier;
+- (BOOL)call:(NSString *)identifier hostAddress:(CCInetAddress *)address;
 
-/** 挂断 Cellet 服务。
+/** 挂断指定的 Cellet 服务。
  */
-- (void)hangup:(NSString *)identifier;
+- (void)hangUp:(NSString *)identifier;
+
+/** 挂起指定的 Cellet 服务。
+ */
+- (void)suspend:(NSString *)identifier duration:(NSTimeInterval)duration;
+
+/** 恢复指定的 Cellet 服务。
+ */
+- (void)resume:(NSString *)identifier startTime:(NSTimeInterval)startTime;
 
 /** 向 Cellet 发送原语。
  */

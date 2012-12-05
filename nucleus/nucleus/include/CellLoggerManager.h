@@ -56,13 +56,6 @@ typedef enum _CCLogLevel
 /** 日志管理器。
  */
 @interface CCLoggerManager : NSObject
-{
-@private
-
-    id<CCLogDelegate> _delegate;
-
-    NSDateFormatter *_dateFormatter;
-}
 
 @property (strong, nonatomic) id<CCLogDelegate> delegate;
 

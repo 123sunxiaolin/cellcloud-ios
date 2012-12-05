@@ -32,17 +32,9 @@
  * @author Jiangwei Xu
  */
 @interface CCPrimitive : NSObject
-{
-@private
-    NSMutableArray *_subjectList;
-    NSMutableArray *_predicateList;
-    NSMutableArray *_objectiveList;
-    NSMutableArray *_attributiveList;
-    NSMutableArray *_adverbialList;
-    NSMutableArray *_complementList;
-}
 
 @property (nonatomic, strong) NSString *ownerTag;
+@property (nonatomic, strong) NSString *celletIdentifier;
 @property (nonatomic, strong, readonly) NSMutableArray *subjects;
 @property (nonatomic, strong, readonly) NSMutableArray *predicates;
 @property (nonatomic, strong, readonly) NSMutableArray *objectives;

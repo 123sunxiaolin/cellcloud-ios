@@ -318,7 +318,7 @@
 + (NSData *)reviseValue:(NSData *)input
 {
     char *data = malloc(input.length);
-    [input getBytes:data];
+    [input getBytes:data length:input.length];
 
     char *dest = malloc(input.length + input.length);
     memset(dest, 0x0, input.length + input.length);

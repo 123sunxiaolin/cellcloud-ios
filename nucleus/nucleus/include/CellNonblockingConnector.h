@@ -30,14 +30,6 @@
 /** 非阻塞消息连接器。
  */
 @interface CCNonblockingConnector : CCMessageConnector <GCDAsyncSocketDelegate>
-{
-@private
-    GCDAsyncSocket *_asyncSocket;
-
-    CCSession *_session;
-
-    NSTimeInterval _timeout;
-}
 
 /** 使用数据掩码初始化。
  */

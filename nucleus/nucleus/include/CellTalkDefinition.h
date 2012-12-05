@@ -24,8 +24,10 @@
  ------------------------------------------------------------------------------
  */
 
-#ifndef CellTalkPacketDefinition_h
-#define CellTalkPacketDefinition_h
+#ifndef CellTalkDefinition_h
+#define CellTalkDefinition_h
+
+// TPT - Talk Packet Tag
 
 #define TPT_B1 'C'
 #define TPT_B2 'T'
@@ -55,6 +57,11 @@
 #define TPT_REQUEST_B4 'Q'
 #define TPT_REQUEST {TPT_B1, TPT_B2, TPT_REQUEST_B3, TPT_REQUEST_B4}
 
+// 协商服务能力
+#define TPT_CONSULT_B3 'C'
+#define TPT_CONSULT_B4 'O'
+#define TPT_CONSULT {TPT_B1, TPT_B2, TPT_CONSULT_B3, TPT_CONSULT_B4}
+
 // Cellet 对话
 #define TPT_DIALOGUE_B3 'D'
 #define TPT_DIALOGUE_B4 'L'
@@ -65,5 +72,34 @@
 #define TPT_HEARTBEAT_B4 'B'
 #define TPT_HEARTBEAT {TPT_B1, TPT_B2, TPT_HEARTBEAT_B3, TPT_HEARTBEAT_B4}
 
-#endif // CellTalkPacketDefinition_h
+// 挂起指定的 Cellet 服务
+#define TPT_SUSPEND_B3 'S'
+#define TPT_SUSPEND_B4 'U'
+#define TPT_SUSPEND {TPT_B1, TPT_B2, TPT_SUSPEND_B3, TPT_SUSPEND_B4}
+
+// 恢复指定的 Cellet 服务
+#define TPT_RESUME_B3 'R'
+#define TPT_RESUME_B4 'E'
+#define TPT_RESUME {TPT_B1, TPT_B2, TPT_RESUME_B3, TPT_RESUME_B4}
+
+
+/// 状态码
+#define CCTS_SUCCESS {'0', '0', '0', '0'}
+#define CCTS_FAILURE {'0', '0', '0', '1'}
+#define CCTS_FAILURE_NOCELLET {'0', '0', '1', '0'}
+
+
+/** 挂起状态模式。
+ */
+typedef enum _CCSuspendMode
+{
+    /** 主动挂起。 */
+    CCSuspendModeInitative = 10,
+
+    /** 被动挂起。 */
+    CCSuspendModePassive = 20
+
+} CCSuspendMode;
+
+#endif // CellTalkDefinition_h
 

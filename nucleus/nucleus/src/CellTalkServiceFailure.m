@@ -24,38 +24,48 @@
  ------------------------------------------------------------------------------
  */
 
-#import "CellUtil.h"
+#import "CellTalkServiceFailure.h"
 
-#include <sys/time.h>
+@interface CCTalkServiceFailure (Private)
 
-@implementation CCUtil
+- (void)construct:(CCTalkFailureCode)code file:(const char *)file line:(int)line function:(const char *)function;
+
+@end
+
+
+@implementation CCTalkServiceFailure
 
 //------------------------------------------------------------------------------
-+ (NSTimeInterval)currentTimeInterval
+- (id)initWithSource:(CCTalkFailureCode)code file:(const char *)file line:(int)line function:(const char *)function
 {
-    NSDate *date = [[NSDate alloc] init];
-    return [date timeIntervalSince1970];
+    if ((self = [super init]))
+    {
+        [self construct:code file:file line:line function:function];
+    }
+
+    return self;
 }
 //------------------------------------------------------------------------------
-+ (int64_t)currentTimeMillis
+- (void)construct:(CCTalkFailureCode)code file:(const char *)file line:(int)line function:(const char *)function
 {
-    struct timeval time;
-    gettimeofday(&time, NULL);
-    int64_t millis = (time.tv_sec * 1000) + (time.tv_usec / 1000);
-    return millis;
-}
-//------------------------------------------------------------------------------
-+ (long)randomLong
-{
-    return arc4random();
-}
-//------------------------------------------------------------------------------
-+ (NSTimeInterval)convertDataToTimeInterval:(NSData *)data
-{
-    NSString *szTimestamp = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    long long llTimestamp = [szTimestamp longLongValue];
-    NSTimeInterval timestamp = (NSTimeInterval)llTimestamp / 1000.0f;
-    return timestamp;
+    self.code = code;
+    self.reason = [NSString stringWithFormat:@"Error in %s function - %s on line %d", function, file, line];
+
+    switch (code)
+    {
+    case CCTalkFailureNotFoundCellet:
+        self.description = @"Server can not find specified cellet";
+        self.sourceDescription = @"";
+        break;
+    case CCTalkFailureCallTimeout:
+        self.description = @"Network connecting timeout";
+        self.sourceDescription = @"";
+        break;
+    default:
+        self.description = @"Unknown failure";
+        self.sourceDescription = @"";
+        break;
+    }
 }
 
 @end

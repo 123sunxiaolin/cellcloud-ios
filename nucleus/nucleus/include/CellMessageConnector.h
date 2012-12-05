@@ -45,4 +45,8 @@
 /** 是否已经连接。 */
 - (BOOL)isConnected;
 
+/** 写数据。
+ */
+- (void)write:(CCMessage *)message;
+
 @end

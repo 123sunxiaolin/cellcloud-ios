@@ -27,16 +27,16 @@
 #include "CellPrerequisites.h"
 
 /** 消息描述类。
+ * @author Jiangwei Xu
  */
 @interface CCMessage : NSObject
-{
-@private
-    NSData *_data;
-    NSInteger _length;
-}
 
 @property (nonatomic, strong, readonly) NSData* data;
 @property (nonatomic, assign, readonly) NSInteger length;
+
+/** 创建指定数据的消息。
+ */
++ (CCMessage *)messageWithData:(NSData *)data;
 
 /** 指定数据对象初始化。
  */

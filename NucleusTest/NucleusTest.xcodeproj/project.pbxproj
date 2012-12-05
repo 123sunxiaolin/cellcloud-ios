@@ -22,6 +22,7 @@
 		448404CF1615FFA700D94AB5 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 448404CD1615FFA700D94AB5 /* MainStoryboard.storyboard */; };
 		448404D21615FFA700D94AB5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 448404D11615FFA700D94AB5 /* ViewController.m */; };
 		44A8E73A1658D5A00045026C /* TestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 44A8E7391658D5A00045026C /* TestHelper.m */; };
+		44A98FED166C7F49009765A8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A98FEC166C7F49009765A8 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		448404D11615FFA700D94AB5 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		44A8E7381658D5A00045026C /* TestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestHelper.h; sourceTree = "<group>"; };
 		44A8E7391658D5A00045026C /* TestHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestHelper.m; sourceTree = "<group>"; };
+		44A98FEC166C7F49009765A8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,7 @@
 				447F321A161713040019234D /* libnucleus.a in Frameworks */,
 				445C1CC116369C0000183373 /* CFNetwork.framework in Frameworks */,
 				445C1CBE16369BF100183373 /* Security.framework in Frameworks */,
+				44A98FED166C7F49009765A8 /* QuartzCore.framework in Frameworks */,
 				448404B61615FFA700D94AB5 /* UIKit.framework in Frameworks */,
 				448404B81615FFA700D94AB5 /* Foundation.framework in Frameworks */,
 				448404BA1615FFA700D94AB5 /* CoreGraphics.framework in Frameworks */,
@@ -95,6 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				447F3219161713040019234D /* libnucleus.a */,
+				44A98FEC166C7F49009765A8 /* QuartzCore.framework */,
 				445C1CC016369C0000183373 /* CFNetwork.framework */,
 				448404B91615FFA700D94AB5 /* CoreGraphics.framework */,
 				448404B71615FFA700D94AB5 /* Foundation.framework */,

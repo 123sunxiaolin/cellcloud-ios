@@ -27,7 +27,7 @@
 #import "CellVersion.h"
 
 #define CC_MAJOR 0
-#define CC_MINOR 1
+#define CC_MINOR 2
 #define CC_REVISION 0
 #define CC_NAME @"Origin"
 

@@ -27,9 +27,21 @@
 #import "CellTalkService.h"
 #import "CellSpeaker.h"
 #import "CellPrimitive.h"
+#import "CellInetAddress.h"
+#import "CellLogger.h"
 
 // Private
-@interface CCTalkService (Private)
+@interface CCTalkService ()
+{
+@private
+    NSTimer *_daemonTimer;
+    NSTimeInterval _tickTime;
+    NSObject *_monitor;
+    
+    NSMutableArray *_speakers;          /// Speaker 列表
+    NSMutableArray *_lostSpeakers;
+    NSUInteger _hbCounts;               /// Speaker 心跳计数
+}
 
 // 守护定时器处理器。
 - (void)handleDaemonTimer:(NSTimer *) timer;
@@ -57,8 +69,10 @@ static CCTalkService *sharedInstance = nil;
     if ((self = [super init]))
     {
         _monitor = [[NSObject alloc] init];
-        _speakers = [[NSMutableArray alloc] init];
+        _speakers = [NSMutableArray array];
         _hbCounts = 0;
+        // 默认重试间隔：10 秒
+        self.retryInterval = 10;
     }
 
     return self;
@@ -95,7 +109,7 @@ static CCTalkService *sharedInstance = nil;
         _daemonTimer = nil;
     }
 
-    _daemonTimer = [NSTimer scheduledTimerWithTimeInterval:2
+    _daemonTimer = [NSTimer scheduledTimerWithTimeInterval:5
                                                     target:self
                                                     selector:@selector(handleDaemonTimer:)
                                                     userInfo:nil
@@ -117,9 +131,9 @@ static CCTalkService *sharedInstance = nil;
     _tickTime = date.timeIntervalSince1970;
 
     ++_hbCounts;
-    if (_hbCounts >= 10)
+    if (_hbCounts >= 12)
     {
-        // 20 秒一次心跳，计数器周期是 2 秒
+        // 60 秒一次心跳，计数器周期是 5 秒
         if (_speakers.count > 0)
         {
             for (CCSpeaker *spr in _speakers)
@@ -131,13 +145,38 @@ static CCTalkService *sharedInstance = nil;
         _hbCounts = 0;
     }
 
+    @synchronized (_monitor) {
+        // 检查丢失连接的 Speaker
+        if (nil != _lostSpeakers && [_lostSpeakers count] > 0)
+        {
+            NSMutableArray *discardedItems = [NSMutableArray array];
+
+            for (CCSpeaker *spr in _lostSpeakers)
+            {
+                if (_tickTime - spr.timestamp >= self.retryInterval)
+                {
+                    [CCLogger d:@"Retry call cellet %@ at %@:%d"
+                        , spr.identifier
+                        , spr.address.host
+                        , spr.address.port];
+
+                    [discardedItems addObject:spr];
+
+                    [spr call:spr.address];
+                }
+            }
+
+            [_lostSpeakers removeObjectsInArray:discardedItems];
+        }
+    }
+
     date = nil;
 }
 
 #pragma mark Client Interfaces
 
 //------------------------------------------------------------------------------
-- (BOOL)call:(CCInetAddress *)address identifier:(NSString *)identifier
+- (BOOL)call:(NSString *)identifier hostAddress:(CCInetAddress *)address
 {
     CCSpeaker *current = nil;
     for (CCSpeaker *speaker in _speakers)
@@ -154,12 +193,24 @@ static CCTalkService *sharedInstance = nil;
         current = [[CCSpeaker alloc] initWithIdentifier:identifier];
         [_speakers addObject:current];
     }
+    else
+    {
+        @synchronized (_monitor) {
+            if (nil != _lostSpeakers && [_lostSpeakers count] > 0)
+            {
+                if ([_lostSpeakers containsObject:current])
+                {
+                    [_lostSpeakers removeObject:current];
+                }
+            }
+        }
+    }
 
     BOOL ret = [current call:address];
     return ret;
 }
 //------------------------------------------------------------------------------
-- (void)hangup:(NSString *)identifier
+- (void)hangUp:(NSString *)identifier
 {
     CCSpeaker *current = nil;
     for (CCSpeaker *speaker in _speakers)
@@ -173,8 +224,50 @@ static CCTalkService *sharedInstance = nil;
 
     if (nil != current)
     {
-        [current hangup];
+        [current hangUp];
         [_speakers removeObject:current];
+    }
+
+    @synchronized(_monitor) {
+        if (nil != _lostSpeakers && [_lostSpeakers count] > 0)
+        {
+            for (CCSpeaker *speaker in _lostSpeakers)
+            {
+                if ([speaker.identifier isEqualToString:identifier])
+                {
+                    [_lostSpeakers removeObject:speaker];
+                    break;
+                }
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+- (void)suspend:(NSString *)identifier duration:(NSTimeInterval)duration
+{
+    @synchronized(_monitor) {
+        for (CCSpeaker *speaker in _speakers)
+        {
+            if ([speaker.identifier isEqualToString:identifier])
+            {
+                [speaker suspend:duration];
+                break;
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+- (void)resume:(NSString *)identifier startTime:(NSTimeInterval)startTime
+{
+    @synchronized(_monitor) {
+        for (CCSpeaker *speaker in _speakers)
+        {
+            if ([speaker.identifier isEqualToString:identifier])
+            {
+                [speaker resume:startTime];
+                break;
+            }
+        }
     }
 }
 //------------------------------------------------------------------------------
@@ -189,20 +282,20 @@ static CCTalkService *sharedInstance = nil;
             break;
         }
     }
-    
+
     if (nil == speaker)
     {
         return FALSE;
     }
-    
+
     // 发送原语
-    [speaker speak:primitive];
-    
-    return TRUE;
+    return [speaker speak:primitive];
 }
 //------------------------------------------------------------------------------
 - (void)markLostSpeaker:(CCSpeaker *)speaker
 {
+    speaker.timestamp = _tickTime;
+
     @synchronized(_monitor) {
         if (nil != _lostSpeakers)
         {
@@ -213,7 +306,7 @@ static CCTalkService *sharedInstance = nil;
         }
         else
         {
-            _lostSpeakers = [[NSMutableArray alloc] init];
+            _lostSpeakers = [NSMutableArray array];
             [_lostSpeakers addObject:speaker];
         }
     }

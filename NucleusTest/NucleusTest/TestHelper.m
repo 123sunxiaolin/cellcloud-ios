@@ -48,11 +48,32 @@
     {
         CCPrimitive *pri = [[CCPrimitive alloc] init];
         [pri commit:[CCSubjectStuff stuffWithString:@"I'am a SubjectStuff"]];
-        [pri commit:[CCPredicateStuff stuffWithInt:1981]];
-        [pri commit:[CCObjectiveStuff stuffWithLong:198111242012l]];
-        [pri commit:[CCAttributiveStuff stuffWithBool:TRUE]];
+        [pri commit:[CCPredicateStuff stuffWithInt:1981+i]];
+        [pri commit:[CCObjectiveStuff stuffWithLong:198111242012l - i]];
+        [pri commit:[CCAttributiveStuff stuffWithBool:(i % 2 == 0 ? TRUE : FALSE)]];
+        [pri commit:[CCComplementStuff stuffWithInt:i]];
         [self.primitives addObject:pri];
     }
+}
+//------------------------------------------------------------------------------
+- (BOOL)assertPrimitive:(CCPrimitive *)expected actual:(CCPrimitive *)actual
+{
+    NSString *expected1 = [[expected.subjects objectAtIndex:0] getValueAsString];
+    NSString *actual1 = [[actual.subjects objectAtIndex:0] getValueAsString];
+    int expected2 = [[expected.predicates objectAtIndex:0] getValueAsInt];
+    int actual2 = [[actual.predicates objectAtIndex:0] getValueAsInt];
+    long expected3 = [[expected.objectives objectAtIndex:0] getValueAsLong];
+    long actual3 = [[actual.objectives objectAtIndex:0] getValueAsLong];
+    BOOL expected4 = [[expected.attributives objectAtIndex:0] getValueAsBoolean];
+    BOOL actual4 = [[actual.attributives objectAtIndex:0] getValueAsBoolean];
+
+    if ([expected1 isEqualToString:actual1]
+        && expected2 == actual2
+        && expected3 == actual3
+        && expected4 == actual4)
+        return TRUE;
+    else
+        return FALSE;
 }
 
 @end

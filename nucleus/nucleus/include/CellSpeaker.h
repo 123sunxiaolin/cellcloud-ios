@@ -27,37 +27,58 @@
 #include "CellPrerequisites.h"
 #import "CellMessageService.h"
 
+/** 对话者状态。
+ */
+typedef enum _CCSpeakerState
+{
+    /// 无对话
+    CCSpeakerStateHangUp = 1,
+
+    /// 正在请求服务
+    CCSpeakerStateCalling,
+
+    /// 已经请求服务
+    CCSpeakerStateCalled,
+
+    /// 挂起状态
+    CCSpeakerStateSuspended
+
+} CCSpeakerState;
+
 /** 对话者描述类。
+ * @author Jiangwei Xu
  */
 @interface CCSpeaker : NSObject <CCMessageHandler>
-{
-@private
-    NSString *_identifier;
-    CCNonblockingConnector *_connector;
-
-    CCNucleusTag *_remoteTag;
-    
-    NSObject *_monitor;
-}
 
 @property (nonatomic, strong, readonly) NSString *identifier;
+@property (nonatomic, strong, readonly) CCInetAddress *address;
 @property (nonatomic, strong, readonly) CCNucleusTag *remoteTag;
-@property (nonatomic, assign) BOOL called;
+@property (nonatomic, strong) CCTalkCapacity *capacity;
+@property (nonatomic, assign) NSTimeInterval timestamp;
+@property (atomic, assign) CCSpeakerState state;
 
 /** 初始化。 */
 - (id)initWithIdentifier:(NSString *)identifier;
+/** 初始化。 */
+- (id)initWithCapacity:(NSString *)identifier capacity:(CCTalkCapacity*)capacity;
 
 /** 向指定地址请求 Cellet 服务。 */
 - (BOOL)call:(CCInetAddress *)address;
 
 /** 中断与 Cellet 服务。 */
-- (void)hangup;
+- (void)hangUp;
+
+/** 挂起与 Cellet 服务。 */
+- (void)suspend:(NSTimeInterval)duration;
+
+/** 恢复与 Cellet 服务。 */
+- (void)resume:(NSTimeInterval)startTime;
 
 /** 是否已经调用了 Cellet 。 */
 - (BOOL)isCalled;
 
 /** 向 Cellet 发送原语。 */
-- (void)speak:(CCPrimitive *)primitive;
+- (BOOL)speak:(CCPrimitive *)primitive;
 
 /** 心跳。 */
 - (void)heartbeat;

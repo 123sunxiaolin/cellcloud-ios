@@ -34,4 +34,6 @@
 
 - (void)fillPrimitive:(int)num;
 
+- (BOOL)assertPrimitive:(CCPrimitive *)expected actual:(CCPrimitive *)actual;
+
 @end

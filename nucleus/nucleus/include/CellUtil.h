@@ -30,12 +30,20 @@
  */
 @interface CCUtil : NSObject
 
-/** 返回当前系统绝对时间值。
+/** 返回当前系统绝对时间值。单位：秒。
  */
-+ (long)currentTimeMillis;
++ (NSTimeInterval)currentTimeInterval;
+
+/** 返回当前系统绝对时间值。单位：毫秒。
+ */
++ (int64_t)currentTimeMillis;
 
 /** 返回随机数。
  */
 + (long)randomLong;
+
+/** 转换 NSData 为 NSTimeInterval
+ */
++ (NSTimeInterval)convertDataToTimeInterval:(NSData *)data;
 
 @end

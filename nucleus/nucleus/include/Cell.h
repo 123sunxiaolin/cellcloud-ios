@@ -50,7 +50,9 @@
 #import "CellPrimitive.h"
 #import "CellSession.h"
 #import "CellSubjectStuff.h"
+#import "CellTalkCapacity.h"
 #import "CellTalkService.h"
+#import "CellTalkServiceFailure.h"
 #import "CellUtil.h"
 #import "CellVersion.h"
 

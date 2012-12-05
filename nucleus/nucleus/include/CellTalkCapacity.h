@@ -1,5 +1,5 @@
 /*
- -----------------------------------------------------------------------------
+ ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
  Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
@@ -21,20 +21,27 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
- -----------------------------------------------------------------------------
+ ------------------------------------------------------------------------------
  */
 
-#import <UIKit/UIKit.h>
-#import <CellLoggerManager.h>
-#import "Cell.h"
+#include "CellPrerequisites.h"
 
-@interface ViewController : UIViewController <UITextViewDelegate, CCLogDelegate, CCTalkListener>
+/** 会话能力描述。
+ * @author Jiangwei Xu
+ */
+@interface CCTalkCapacity : NSObject
 
-@property (strong, nonatomic) IBOutlet UITextView *mainTextView;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiCall;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiHangUp;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiSuspend;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiResume;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiTalk;
+/// 是否自动挂起。
+@property (nonatomic, assign) BOOL autoSuspend;
+/// 挂起有效时长。
+@property (nonatomic, assign) NSTimeInterval suspendDuration;
+
+/** 序列化。
+ */
++ (NSData *)serialize:(CCTalkCapacity *)capacity;
+
+/** 反序列化。
+ */
++ (CCTalkCapacity *)deserialize:(NSData *)data;
 
 @end

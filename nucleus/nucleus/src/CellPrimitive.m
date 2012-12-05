@@ -33,9 +33,22 @@
 #import "CellComplementStuff.h"
 #import "CellPrimitiveSerializer.h"
 
+@interface CCPrimitive ()
+{
+@private
+    NSMutableArray *_subjectList;
+    NSMutableArray *_predicateList;
+    NSMutableArray *_objectiveList;
+    NSMutableArray *_attributiveList;
+    NSMutableArray *_adverbialList;
+    NSMutableArray *_complementList;
+}
+@end
+
 @implementation CCPrimitive
 
 @synthesize ownerTag;
+@synthesize celletIdentifier;
 @synthesize subjects = _subjectList;
 @synthesize predicates = _predicateList;
 @synthesize objectives = _objectiveList;

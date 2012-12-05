@@ -24,61 +24,31 @@
  ------------------------------------------------------------------------------
  */
 
-#ifndef CellPrerequisites_h
-#define CellPrerequisites_h
+#import "CellTalkCapacity.h"
 
-#import <Foundation/Foundation.h>
+@implementation CCTalkCapacity
 
-#pragma mark Servie Protocol
+//------------------------------------------------------------------------------
++ (NSData *)serialize:(CCTalkCapacity *)capacity
+{
+    NSString *str = [[NSString alloc] initWithFormat:@"%@|%.0f"
+                     , capacity.autoSuspend ? @"Y" : @"N"
+                     , capacity.suspendDuration * 1000];
+    return [str dataUsingEncoding:NSUTF8StringEncoding];
+}
+//------------------------------------------------------------------------------
++ (CCTalkCapacity *)deserialize:(NSData *)data
+{
+    NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSRange range = [str rangeOfString:@"|"];
+    NSString *szAutoSuspend = [str substringWithRange:NSMakeRange(0, range.location)];
+    NSString *szDuration = [str substringFromIndex:(range.location + range.location)];
 
-/** 标准服务接口。
- * @author Jiangwei Xu
- */
-@protocol CCService <NSObject>
+    CCTalkCapacity *tc = [[CCTalkCapacity alloc] init];
+    tc.autoSuspend = [szAutoSuspend isEqualToString:@"Y"] ? TRUE : FALSE;
+    tc.suspendDuration = ((NSTimeInterval)[szDuration longLongValue]) / 1000.0f;
 
-/** 启动服务。 */
-- (BOOL)startup;
-
-/** 关闭服务。 */
-- (void)shutdown;
+    return tc;
+}
 
 @end
-
-
-
-// Common Group
-
-@class CCCryptology;
-@class CCInetAddress;
-@class CCMessage;
-@class CCMessageConnector;
-@class CCMessageService;
-@class CCNonblockingConnector;
-@class CCPacket;
-@class CCSession;
-
-
-// Core Group
-
-@class CCLogger;
-@class CCLoggerManager;
-@class CCNucleus;
-@class CCNucleusConfig;
-@class CCNucleusTag;
-@class CCVersion;
-
-// Talk Group
-
-@class CCPrimitive;
-@class CCSubjectStuff;
-@class CCPredicateStuff;
-@class CCObjectiveStuff;
-@class CCAttributiveStuff;
-@class CCAdverbialStuff;
-@class CCComplementStuff;
-@class CCTalkCapacity;
-@class CCTalkService;
-@class CCSpeaker;
-@class CCTalkServiceFailure;
-
-#endif // CellPrerequisites_h

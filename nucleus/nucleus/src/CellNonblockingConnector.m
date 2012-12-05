@@ -31,7 +31,15 @@
 #import "CellLogger.h"
 
 // 私有接口
-@interface CCNonblockingConnector (Private)
+@interface CCNonblockingConnector ()
+{
+@private
+    GCDAsyncSocket *_asyncSocket;
+    
+    CCSession *_session;
+    
+    NSTimeInterval _timeout;
+}
 
 /** 创建连接会话。 */
 - (void)fireSessionCreated;
@@ -157,6 +165,7 @@
     if ([self existDataMark])
     {
         char *buf = malloc(message.length + _headLength + _tailLength);
+        memset(buf, 0x0, message.length + _headLength + _tailLength);
         memcpy(buf, _headMark, _headLength);
         memcpy(buf + _headLength, message.data.bytes, message.length);
         memcpy(buf + _headLength + message.length, _tailMark, _tailLength);
@@ -168,6 +177,11 @@
     {
         [_asyncSocket writeData:message.data withTimeout:60 tag:0];
     }
+}
+//------------------------------------------------------------------------------
+- (void)write:(CCMessage *)message
+{
+    [self write:_session message:message];
 }
 
 
@@ -310,8 +324,8 @@
     switch (errCode)
     {
     case 3:
-        // Connecting timeout
-        [self fireErrorOccurred:CCMessageErrorConnectFailed];
+        // Attempt to connect to host timed out
+        [self fireErrorOccurred:CCMessageErrorConnectTimeout];
         [self fireSessionDestroyed];
         _session = nil;
         _asyncSocket = nil;
@@ -328,6 +342,22 @@
     case 60:
         // Operation timeout
         [self fireErrorOccurred:CCMessageErrorStateError];
+        [self fireSessionDestroyed];
+        _session = nil;
+        _asyncSocket = nil;
+        break;
+
+    case 61:
+        // Connection refused
+        [self fireErrorOccurred:CCMessageErrorConnectFailed];
+        [self fireSessionDestroyed];
+        _session = nil;
+        _asyncSocket = nil;
+        break;
+
+    case 64:
+        // Host is down
+        [self fireErrorOccurred:CCMessageErrorConnectFailed];
         [self fireSessionDestroyed];
         _session = nil;
         _asyncSocket = nil;

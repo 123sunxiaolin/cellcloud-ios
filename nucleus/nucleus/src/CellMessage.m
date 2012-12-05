@@ -26,11 +26,25 @@
 
 #import "CellMessage.h"
 
+@interface CCMessage ()
+{
+@private
+    NSData *_data;
+    NSInteger _length;
+}
+
+@end
+
 @implementation CCMessage
 
 @synthesize data = _data;
 @synthesize length = _length;
 
+//------------------------------------------------------------------------------
++ (CCMessage *)messageWithData:(NSData *)data
+{
+    return [[CCMessage alloc] initWithData:data];
+}
 //------------------------------------------------------------------------------
 - (id)initWithData:(NSData *)data
 {

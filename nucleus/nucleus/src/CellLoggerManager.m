@@ -26,9 +26,17 @@
 
 #import "CellLoggerManager.h"
 
+@interface CCLoggerManager ()
+{
+@private
+    NSDateFormatter *_dateFormatter;
+}
+
+@end
+
 @implementation CCLoggerManager
 
-@synthesize delegate = _delegate;
+@synthesize delegate;
 
 /// 实例
 static CCLoggerManager *sharedInstance = nil;
@@ -67,12 +75,12 @@ static CCLoggerManager *sharedInstance = nil;
     {
         NSLog(@"[DEBUG] %@", text);
 
-        if (nil != _delegate)
+        if (nil != self.delegate)
         {
             NSString *currentDateStr = [_dateFormatter stringFromDate:[NSDate date]];
             NSString *logstr = [[NSString alloc] initWithFormat:@"%@ [DEBUG] %@", currentDateStr, text];
 
-            [_delegate logDebug:logstr];
+            [self.delegate logDebug:logstr];
         }
 
         break;
@@ -81,12 +89,12 @@ static CCLoggerManager *sharedInstance = nil;
     {
         NSLog(@"[INFO] %@", text);
         
-        if (nil != _delegate)
+        if (nil != self.delegate)
         {
             NSString *currentDateStr = [_dateFormatter stringFromDate:[NSDate date]];
             NSString *logstr = [[NSString alloc] initWithFormat:@"%@ [INFO] %@", currentDateStr, text];
             
-            [_delegate logInfo:logstr];
+            [self.delegate logInfo:logstr];
         }
         
         break;
@@ -95,12 +103,12 @@ static CCLoggerManager *sharedInstance = nil;
     {
         NSLog(@"[WARN] %@", text);
         
-        if (nil != _delegate)
+        if (nil != self.delegate)
         {
             NSString *currentDateStr = [_dateFormatter stringFromDate:[NSDate date]];
             NSString *logstr = [[NSString alloc] initWithFormat:@"%@ [WARN] %@", currentDateStr, text];
             
-            [_delegate logWarn:logstr];
+            [self.delegate logWarn:logstr];
         }
 
         break;
@@ -109,12 +117,12 @@ static CCLoggerManager *sharedInstance = nil;
     {
         NSLog(@"[ERROR] %@", text);
         
-        if (nil != _delegate)
+        if (nil != self.delegate)
         {
             NSString *currentDateStr = [_dateFormatter stringFromDate:[NSDate date]];
             NSString *logstr = [[NSString alloc] initWithFormat:@"%@ [ERROR] %@", currentDateStr, text];
             
-            [_delegate logError:logstr];
+            [self.delegate logError:logstr];
         }
 
         break;
