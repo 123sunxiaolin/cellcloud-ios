@@ -13,6 +13,10 @@
 		445296181620347200C2750B /* CellLoggerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 445296171620347200C2750B /* CellLoggerManager.m */; };
 		4452961E16208CBD00C2750B /* CellUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4452961D16208CBD00C2750B /* CellUtil.m */; };
 		4471363D162408A20058667E /* CellMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4471363C162408A20058667E /* CellMessageService.m */; };
+		447741A0166EFD2E008D6CCE /* CellDialect.m in Sources */ = {isa = PBXBuildFile; fileRef = 4477419F166EFD2E008D6CCE /* CellDialect.m */; };
+		447741A6166F1EAA008D6CCE /* CellDialectMetaData.m in Sources */ = {isa = PBXBuildFile; fileRef = 447741A5166F1EAA008D6CCE /* CellDialectMetaData.m */; };
+		447741AC166F4342008D6CCE /* CellDialectEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 447741AB166F4342008D6CCE /* CellDialectEnumerator.m */; };
+		447741B2166F4C40008D6CCE /* CellDialectFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 447741B1166F4C40008D6CCE /* CellDialectFactory.m */; };
 		448404891615F9CB00D94AB5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448404881615F9CB00D94AB5 /* Foundation.framework */; };
 		448404A01615FAB700D94AB5 /* CellNucleus.m in Sources */ = {isa = PBXBuildFile; fileRef = 4484049D1615FAB700D94AB5 /* CellNucleus.m */; };
 		448404A11615FAB700D94AB5 /* CellNucleusConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 4484049E1615FAB700D94AB5 /* CellNucleusConfig.m */; };
@@ -64,6 +68,14 @@
 		4452961D16208CBD00C2750B /* CellUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellUtil.m; path = src/CellUtil.m; sourceTree = "<group>"; };
 		4471363B1624089A0058667E /* CellMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellMessageService.h; path = include/CellMessageService.h; sourceTree = "<group>"; };
 		4471363C162408A20058667E /* CellMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellMessageService.m; path = src/CellMessageService.m; sourceTree = "<group>"; };
+		4477419E166EFD26008D6CCE /* CellDialect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellDialect.h; path = include/CellDialect.h; sourceTree = "<group>"; };
+		4477419F166EFD2E008D6CCE /* CellDialect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellDialect.m; path = src/CellDialect.m; sourceTree = "<group>"; };
+		447741A4166F1E9C008D6CCE /* CellDialectMetaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellDialectMetaData.h; path = include/CellDialectMetaData.h; sourceTree = "<group>"; };
+		447741A5166F1EAA008D6CCE /* CellDialectMetaData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellDialectMetaData.m; path = src/CellDialectMetaData.m; sourceTree = "<group>"; };
+		447741AA166F433A008D6CCE /* CellDialectEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellDialectEnumerator.h; path = include/CellDialectEnumerator.h; sourceTree = "<group>"; };
+		447741AB166F4342008D6CCE /* CellDialectEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellDialectEnumerator.m; path = src/CellDialectEnumerator.m; sourceTree = "<group>"; };
+		447741B0166F4C3B008D6CCE /* CellDialectFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellDialectFactory.h; path = include/CellDialectFactory.h; sourceTree = "<group>"; };
+		447741B1166F4C40008D6CCE /* CellDialectFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellDialectFactory.m; path = src/CellDialectFactory.m; sourceTree = "<group>"; };
 		448404851615F9CB00D94AB5 /* libnucleus.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnucleus.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		448404881615F9CB00D94AB5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4484048C1615F9CB00D94AB5 /* nucleus-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "nucleus-Prefix.pch"; sourceTree = "<group>"; };
@@ -147,9 +159,25 @@
 				444B2B7F162E497F00C938AD /* CellTalkService.m */,
 				4412F679165B227800C0941B /* CellTalkServiceFailure.h */,
 				4412F67A165B228000C0941B /* CellTalkServiceFailure.m */,
+				4477419D166EFCD4008D6CCE /* Dialect */,
 				44B7ADD31654C88F00E3B116 /* Stuff */,
 			);
 			name = Talk;
+			sourceTree = "<group>";
+		};
+		4477419D166EFCD4008D6CCE /* Dialect */ = {
+			isa = PBXGroup;
+			children = (
+				4477419E166EFD26008D6CCE /* CellDialect.h */,
+				4477419F166EFD2E008D6CCE /* CellDialect.m */,
+				447741AA166F433A008D6CCE /* CellDialectEnumerator.h */,
+				447741AB166F4342008D6CCE /* CellDialectEnumerator.m */,
+				447741B0166F4C3B008D6CCE /* CellDialectFactory.h */,
+				447741B1166F4C40008D6CCE /* CellDialectFactory.m */,
+				447741A4166F1E9C008D6CCE /* CellDialectMetaData.h */,
+				447741A5166F1EAA008D6CCE /* CellDialectMetaData.m */,
+			);
+			name = Dialect;
 			sourceTree = "<group>";
 		};
 		4484047A1615F9CB00D94AB5 = {
@@ -203,10 +231,6 @@
 		448404961615FA4600D94AB5 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				44CAE9D4162C03140048E04B /* CellLogger.h */,
-				44CAE9D5162C031C0048E04B /* CellLogger.m */,
-				445296161620346A00C2750B /* CellLoggerManager.h */,
-				445296171620347200C2750B /* CellLoggerManager.m */,
 				4484049A1615FAA700D94AB5 /* CellNucleus.h */,
 				4484049D1615FAB700D94AB5 /* CellNucleus.m */,
 				4484049B1615FAA700D94AB5 /* CellNucleusConfig.h */,
@@ -244,6 +268,10 @@
 				44BEF6441647BE2100AFD75B /* CellCryptology.m */,
 				4486E90F1625170D004C11C8 /* CellInetAddress.h */,
 				4486E91016251714004C11C8 /* CellInetAddress.m */,
+				44CAE9D4162C03140048E04B /* CellLogger.h */,
+				44CAE9D5162C031C0048E04B /* CellLogger.m */,
+				445296161620346A00C2750B /* CellLoggerManager.h */,
+				445296171620347200C2750B /* CellLoggerManager.m */,
 				4486E915162525E0004C11C8 /* CellMessage.h */,
 				4486E916162525E7004C11C8 /* CellMessage.m */,
 				44CAE9C1162BAF080048E04B /* CellMessageConnector.h */,
@@ -362,6 +390,10 @@
 				44D9ADBB1657722100E22351 /* CellPrimitiveSerializer.m in Sources */,
 				4412F67B165B228000C0941B /* CellTalkServiceFailure.m in Sources */,
 				44DB3D501665AC00000E312D /* CellTalkCapacity.m in Sources */,
+				447741A0166EFD2E008D6CCE /* CellDialect.m in Sources */,
+				447741A6166F1EAA008D6CCE /* CellDialectMetaData.m in Sources */,
+				447741AC166F4342008D6CCE /* CellDialectEnumerator.m in Sources */,
+				447741B2166F4C40008D6CCE /* CellDialectFactory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

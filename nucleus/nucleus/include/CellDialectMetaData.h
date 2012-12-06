@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2013 Cell Cloud Team - cellcloudproject@gmail.com
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -24,64 +24,20 @@
  ------------------------------------------------------------------------------
  */
 
-#ifndef CellPrerequisites_h
-#define CellPrerequisites_h
+#include "CellPrerequisites.h"
 
-#import <Foundation/Foundation.h>
-
-#pragma mark Servie Protocol
-
-/** 标准服务接口。
+/** 方言元数据。
  * @author Jiangwei Xu
  */
-@protocol CCService <NSObject>
+@interface CCDialectMetaData : NSObject
 
-/** 启动服务。 */
-- (BOOL)startup;
+@property (nonatomic, strong, readonly) NSString *name;
+@property (nonatomic, strong, readonly) NSString *description;
 
-/** 关闭服务。 */
-- (void)shutdown;
+- (id)initWithDesc:(NSString *)name description:(NSString *)desc;
+
+/** 使用指定名称和描述构建 Meta Data
+ */
++ (CCDialectMetaData *)metaDataWithDesc:(NSString *)name description:(NSString *)desc;
 
 @end
-
-
-
-// Common Group
-
-@class CCCryptology;
-@class CCInetAddress;
-@class CCMessage;
-@class CCMessageConnector;
-@class CCMessageService;
-@class CCNonblockingConnector;
-@class CCPacket;
-@class CCSession;
-
-
-// Core Group
-
-@class CCLogger;
-@class CCLoggerManager;
-@class CCNucleus;
-@class CCNucleusConfig;
-@class CCNucleusTag;
-@class CCVersion;
-
-// Talk Group
-
-@class CCDialect;
-@class CCDialectFactory;
-@class CCDialectMetaData;
-@class CCPrimitive;
-@class CCSubjectStuff;
-@class CCPredicateStuff;
-@class CCObjectiveStuff;
-@class CCAttributiveStuff;
-@class CCAdverbialStuff;
-@class CCComplementStuff;
-@class CCTalkCapacity;
-@class CCTalkService;
-@class CCSpeaker;
-@class CCTalkServiceFailure;
-
-#endif // CellPrerequisites_h

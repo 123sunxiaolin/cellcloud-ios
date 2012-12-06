@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2013 Cell Cloud Team - cellcloudproject@gmail.com
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -24,64 +24,34 @@
  ------------------------------------------------------------------------------
  */
 
-#ifndef CellPrerequisites_h
-#define CellPrerequisites_h
+#import "CellDialect.h"
 
-#import <Foundation/Foundation.h>
+@implementation CCDialect
 
-#pragma mark Servie Protocol
+@synthesize name;
+@synthesize tracker;
+@synthesize ownerTag;
 
-/** 标准服务接口。
- * @author Jiangwei Xu
- */
-@protocol CCService <NSObject>
+//------------------------------------------------------------------------------
+- (id)initWithTracker:(NSString *)dialectName tracker:(NSString *)dialectTracker
+{
+    if ((self = [super init]))
+    {
+        self.name = dialectName;
+        self.tracker = dialectTracker;
+    }
 
-/** 启动服务。 */
-- (BOOL)startup;
-
-/** 关闭服务。 */
-- (void)shutdown;
+    return self;
+}
+//------------------------------------------------------------------------------
+- (CCPrimitive *)translate:(NSString *)tag
+{
+    return nil;
+}
+//------------------------------------------------------------------------------
+- (void)build:(CCPrimitive *)primitive
+{
+    // Nothing
+}
 
 @end
-
-
-
-// Common Group
-
-@class CCCryptology;
-@class CCInetAddress;
-@class CCMessage;
-@class CCMessageConnector;
-@class CCMessageService;
-@class CCNonblockingConnector;
-@class CCPacket;
-@class CCSession;
-
-
-// Core Group
-
-@class CCLogger;
-@class CCLoggerManager;
-@class CCNucleus;
-@class CCNucleusConfig;
-@class CCNucleusTag;
-@class CCVersion;
-
-// Talk Group
-
-@class CCDialect;
-@class CCDialectFactory;
-@class CCDialectMetaData;
-@class CCPrimitive;
-@class CCSubjectStuff;
-@class CCPredicateStuff;
-@class CCObjectiveStuff;
-@class CCAttributiveStuff;
-@class CCAdverbialStuff;
-@class CCComplementStuff;
-@class CCTalkCapacity;
-@class CCTalkService;
-@class CCSpeaker;
-@class CCTalkServiceFailure;
-
-#endif // CellPrerequisites_h

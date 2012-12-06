@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2013 Cell Cloud Team - cellcloudproject@gmail.com
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -24,64 +24,39 @@
  ------------------------------------------------------------------------------
  */
 
-#ifndef CellPrerequisites_h
-#define CellPrerequisites_h
+#import "CellDialectMetaData.h"
 
-#import <Foundation/Foundation.h>
-
-#pragma mark Servie Protocol
-
-/** 标准服务接口。
- * @author Jiangwei Xu
- */
-@protocol CCService <NSObject>
-
-/** 启动服务。 */
-- (BOOL)startup;
-
-/** 关闭服务。 */
-- (void)shutdown;
+@interface CCDialectMetaData ()
+{
+    NSString *_name;
+    NSString *_description;
+}
 
 @end
 
+@implementation CCDialectMetaData
 
+@synthesize name = _name;
+@synthesize description = _description;
 
-// Common Group
+//------------------------------------------------------------------------------
+- (id)initWithDesc:(NSString *)name description:(NSString *)desc
+{
+    if ((self = [super init]))
+    {
+        _name = name;
+        _description = desc;
+    }
 
-@class CCCryptology;
-@class CCInetAddress;
-@class CCMessage;
-@class CCMessageConnector;
-@class CCMessageService;
-@class CCNonblockingConnector;
-@class CCPacket;
-@class CCSession;
+    return self;
+}
 
+#pragma mark Class Methods
 
-// Core Group
+//------------------------------------------------------------------------------
++ (CCDialectMetaData *)metaDataWithDesc:(NSString *)name description:(NSString *)desc
+{
+    return [[CCDialectMetaData alloc] initWithDesc:name description:desc];
+}
 
-@class CCLogger;
-@class CCLoggerManager;
-@class CCNucleus;
-@class CCNucleusConfig;
-@class CCNucleusTag;
-@class CCVersion;
-
-// Talk Group
-
-@class CCDialect;
-@class CCDialectFactory;
-@class CCDialectMetaData;
-@class CCPrimitive;
-@class CCSubjectStuff;
-@class CCPredicateStuff;
-@class CCObjectiveStuff;
-@class CCAttributiveStuff;
-@class CCAdverbialStuff;
-@class CCComplementStuff;
-@class CCTalkCapacity;
-@class CCTalkService;
-@class CCSpeaker;
-@class CCTalkServiceFailure;
-
-#endif // CellPrerequisites_h
+@end

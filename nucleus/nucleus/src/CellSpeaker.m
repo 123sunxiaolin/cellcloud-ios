@@ -620,13 +620,18 @@
     {
         if (self.capacity.autoSuspend)
         {
+            // 更新状态
             _state = CCSpeakerStateSuspended;
             [self fireSuspended:[CCUtil currentTimeInterval] mode:CCSuspendModePassive];
+
+            // 自动重连
+            [[CCTalkService sharedSingleton] markLostSpeaker:self];
         }
     }
 
     _state = CCSpeakerStateHangUp;
 
+    // 通知退出
     [self fireQuitted];
 }
 //------------------------------------------------------------------------------

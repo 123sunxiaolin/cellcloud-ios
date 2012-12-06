@@ -173,6 +173,10 @@
 - (void)quitted:(NSString *)identifier tag:(NSString *)tag
 {
     [CCLogger d:@"quitted : identifier=%@ tag=%@", identifier, tag];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.bbiCall.enabled = YES;
+    });
 }
 
 - (void)suspended:(NSString *)identifier tag:(NSString *)tag
