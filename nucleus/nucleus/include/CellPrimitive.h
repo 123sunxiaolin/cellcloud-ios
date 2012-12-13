@@ -35,6 +35,7 @@
 
 @property (nonatomic, strong) NSString *ownerTag;
 @property (nonatomic, strong) NSString *celletIdentifier;
+@property (nonatomic, strong, readonly) CCDialect *dialect;
 @property (nonatomic, strong, readonly) NSMutableArray *subjects;
 @property (nonatomic, strong, readonly) NSMutableArray *predicates;
 @property (nonatomic, strong, readonly) NSMutableArray *objectives;
@@ -42,9 +43,13 @@
 @property (nonatomic, strong, readonly) NSMutableArray *adverbials;
 @property (nonatomic, strong, readonly) NSMutableArray *complements;
 
-/** 使用标签初始话。
+/** 使用标签初始化。
  */
 - (id)initWithTag:(NSString *)tag;
+
+/** 使用方言初始化。
+ */
+- (id)initWithDialect:(NSString *)tag dialect:(CCDialect *)dialect;
 
 /** 提交语素。
  */

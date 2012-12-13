@@ -24,36 +24,8 @@
  ------------------------------------------------------------------------------
  */
 
-#import "CellDialect.h"
-#import "CellPrimitive.h"
+#import "CellDialectFactory.h"
 
-@implementation CCDialect
-
-@synthesize name;
-@synthesize tracker;
-@synthesize ownerTag;
-
-//------------------------------------------------------------------------------
-- (id)initWithName:(NSString *)dialectName tracker:(NSString *)dialectTracker
-{
-    if ((self = [super init]))
-    {
-        self.name = dialectName;
-        self.tracker = dialectTracker;
-    }
-
-    return self;
-}
-//------------------------------------------------------------------------------
-- (CCPrimitive *)translate:(NSString *)tag
-{
-    self.ownerTag = tag;
-    return [[CCPrimitive alloc] initWithDialect:tag dialect:self];
-}
-//------------------------------------------------------------------------------
-- (void)build:(CCPrimitive *)primitive
-{
-    // Nothing
-}
+@interface CCActionDialectFactory : CCDialectFactory
 
 @end

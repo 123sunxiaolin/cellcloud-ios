@@ -40,7 +40,7 @@
 @synthesize description = _description;
 
 //------------------------------------------------------------------------------
-- (id)initWithDesc:(NSString *)name description:(NSString *)desc
+- (id)initWithName:(NSString *)name description:(NSString *)desc
 {
     if ((self = [super init]))
     {
@@ -54,9 +54,9 @@
 #pragma mark Class Methods
 
 //------------------------------------------------------------------------------
-+ (CCDialectMetaData *)metaDataWithDesc:(NSString *)name description:(NSString *)desc
++ (CCDialectMetaData *)metaDataWithName:(NSString *)name description:(NSString *)desc
 {
-    return [[CCDialectMetaData alloc] initWithDesc:name description:desc];
+    return [[CCDialectMetaData alloc] initWithName:name description:desc];
 }
 
 @end

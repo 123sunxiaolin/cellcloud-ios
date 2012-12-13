@@ -27,6 +27,8 @@
 #import "CellTalkService.h"
 #import "CellSpeaker.h"
 #import "CellPrimitive.h"
+#import "CellDialectEnumerator.h"
+#import "CellActionDialectFactory.h"
 #import "CellInetAddress.h"
 #import "CellLogger.h"
 
@@ -73,6 +75,9 @@ static CCTalkService *sharedInstance = nil;
         _hbCounts = 0;
         // 默认重试间隔：10 秒
         self.retryInterval = 10;
+
+        // 添加默认方言工厂
+        [[CCDialectEnumerator sharedSingleton] addFactory:[[CCActionDialectFactory alloc] init]];
     }
 
     return self;

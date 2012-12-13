@@ -32,10 +32,12 @@
 #import "CellAdverbialStuff.h"
 #import "CellComplementStuff.h"
 #import "CellPrimitiveSerializer.h"
+#import "CellDialect.h"
 
 @interface CCPrimitive ()
 {
 @private
+    CCDialect *_dialect;
     NSMutableArray *_subjectList;
     NSMutableArray *_predicateList;
     NSMutableArray *_objectiveList;
@@ -49,6 +51,7 @@
 
 @synthesize ownerTag;
 @synthesize celletIdentifier;
+@synthesize dialect = _dialect;
 @synthesize subjects = _subjectList;
 @synthesize predicates = _predicateList;
 @synthesize objectives = _objectiveList;
@@ -62,6 +65,17 @@
     if ((self = [super init]))
     {
         self.ownerTag = tag;
+    }
+    
+    return self;
+}
+//------------------------------------------------------------------------------
+- (id)initWithDialect:(NSString *)tag dialect:(CCDialect *)dialect
+{
+    if (self = [super init])
+    {
+        self.ownerTag = tag;
+        _dialect = dialect;
     }
     
     return self;

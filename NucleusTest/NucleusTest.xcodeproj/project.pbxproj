@@ -293,10 +293,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NucleusTest/NucleusTest-Prefix.pch";
 				INFOPLIST_FILE = "NucleusTest/NucleusTest-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../nucleus/build/Release-iphoneos\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/**";
 				WRAPPER_EXTENSION = app;
@@ -309,10 +306,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NucleusTest/NucleusTest-Prefix.pch";
 				INFOPLIST_FILE = "NucleusTest/NucleusTest-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../nucleus/build/Release-iphoneos\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/**";
 				WRAPPER_EXTENSION = app;

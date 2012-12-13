@@ -34,10 +34,10 @@
 @property (nonatomic, strong, readonly) NSString *name;
 @property (nonatomic, strong, readonly) NSString *description;
 
-- (id)initWithDesc:(NSString *)name description:(NSString *)desc;
+- (id)initWithName:(NSString *)name description:(NSString *)desc;
 
 /** 使用指定名称和描述构建 Meta Data
  */
-+ (CCDialectMetaData *)metaDataWithDesc:(NSString *)name description:(NSString *)desc;
++ (CCDialectMetaData *)metaDataWithName:(NSString *)name description:(NSString *)desc;
 
 @end

@@ -29,6 +29,8 @@
 
 #include "CellPrerequisites.h"
 
+#import "CellActionDialect.h"
+#import "CellActionDialectFactory.h"
 #import "CellAdverbialStuff.h"
 #import "CellAttributiveStuff.h"
 #import "CellComplementStuff.h"

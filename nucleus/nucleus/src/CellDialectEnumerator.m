@@ -26,6 +26,8 @@
 
 #import "CellDialectEnumerator.h"
 #import "CellDialect.h"
+#import "CellDialectMetaData.h"
+#import "CellDialectFactory.h"
 
 @interface CCDialectEnumerator ()
 {
@@ -60,17 +62,31 @@ static CCDialectEnumerator *sharedInstance = nil;
 //------------------------------------------------------------------------------
 - (CCDialect *)createDialect:(NSString *)name tracker:(NSString *)tracker
 {
+    CCDialectFactory* fact = [_factories objectForKey:name];
+    if (nil != fact)
+    {
+        return [fact create:tracker];
+    }
+
     return nil;
 }
 //------------------------------------------------------------------------------
 - (void)addFactory:(CCDialectFactory *)fact
 {
-    
+    if (nil == [_factories objectForKey:[fact getMetaData].name])
+    {
+        [_factories setObject:fact forKey:[fact getMetaData].name];
+    }
 }
 //------------------------------------------------------------------------------
 - (void)removeFactory:(CCDialectFactory *)fact
 {
-    
+    [_factories removeObjectForKey:[fact getMetaData].name];
+}
+//------------------------------------------------------------------------------
+- (CCDialectFactory *)getFactory:(NSString *)name
+{
+    return [_factories objectForKey:name];
 }
 
 @end

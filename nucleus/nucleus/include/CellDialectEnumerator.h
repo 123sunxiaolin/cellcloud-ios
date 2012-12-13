@@ -44,4 +44,8 @@
  */
 - (void)removeFactory:(CCDialectFactory *)fact;
 
+/** 返回指定名称的方言工厂。
+ */
+- (CCDialectFactory *)getFactory:(NSString *)name;
+
 @end

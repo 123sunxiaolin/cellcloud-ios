@@ -35,7 +35,7 @@
 @property (nonatomic, strong) NSString *tracker;
 @property (nonatomic, strong) NSString *ownerTag;
 
-- (id)initWithTracker:(NSString *)name tracker:(NSString *)tracker;
+- (id)initWithName:(NSString *)name tracker:(NSString *)tracker;
 
 /** 翻译原语为方言。
  */
