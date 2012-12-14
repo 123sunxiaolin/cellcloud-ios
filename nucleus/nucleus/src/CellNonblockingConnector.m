@@ -177,6 +177,9 @@
     {
         [_asyncSocket writeData:message.data withTimeout:60 tag:0];
     }
+
+    // 回调消息发送
+    [self fireMessageSent:message];
 }
 //------------------------------------------------------------------------------
 - (void)write:(CCMessage *)message
@@ -296,12 +299,12 @@
 //------------------------------------------------------------------------------
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag
 {
-    [CCLogger d:@"didWriteDataWithTag - tag:%ld", tag];
+//    [CCLogger d:@"didWriteDataWithTag - tag:%ld", tag];
 }
 //------------------------------------------------------------------------------
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
-    [CCLogger d:@"didReadData"];
+//    [CCLogger d:@"didReadData"];
 
     [self processReceived:data];
 

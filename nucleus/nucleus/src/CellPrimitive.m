@@ -49,8 +49,8 @@
 
 @implementation CCPrimitive
 
-@synthesize ownerTag;
-@synthesize celletIdentifier;
+@synthesize ownerTag = _ownerTag;
+@synthesize celletIdentifier = _celletIdentifier;
 @synthesize dialect = _dialect;
 @synthesize subjects = _subjectList;
 @synthesize predicates = _predicateList;
@@ -70,11 +70,10 @@
     return self;
 }
 //------------------------------------------------------------------------------
-- (id)initWithDialect:(NSString *)tag dialect:(CCDialect *)dialect
+- (id)initWithDialect:(CCDialect *)dialect
 {
     if (self = [super init])
     {
-        self.ownerTag = tag;
         _dialect = dialect;
     }
     
@@ -235,6 +234,42 @@
         }
     }
 }
+//------------------------------------------------------------------------------
+- (void)capture:(CCDialect *)dialect
+{
+    _dialect = dialect;
+    _dialect.ownerTag = self.ownerTag;
+    _dialect.celletIdentifier = self.celletIdentifier;
+}
+//------------------------------------------------------------------------------
+- (BOOL)isDialectal
+{
+    return (nil != _dialect);
+}
+
+#pragma mark Override Methods
+
+//------------------------------------------------------------------------------
+- (void)setOwnerTag:(NSString *)ownerTag
+{
+    _ownerTag = ownerTag;
+    if (nil != _dialect)
+    {
+        _dialect.ownerTag = ownerTag;
+    }
+}
+//------------------------------------------------------------------------------
+- (void)setCelletIdentifier:(NSString *)celletIdentifier
+{
+    _celletIdentifier = celletIdentifier;
+    if (nil != _dialect)
+    {
+        _dialect.celletIdentifier = celletIdentifier;
+    }
+}
+
+#pragma mark Class Methods
+
 //------------------------------------------------------------------------------
 + (NSData *)write:(CCPrimitive *)primitive
 {

@@ -50,14 +50,14 @@
     return self;
 }
 //------------------------------------------------------------------------------
-- (CCPrimitive *)translate:(NSString *)tag
+- (CCPrimitive *)translate
 {
     if (nil == self.action || self.action.length == 0)
     {
         return nil;
     }
 
-    CCPrimitive *primitive = [super translate:tag];
+    CCPrimitive *primitive = [super translate];
 
     for (NSString *key in _params)
     {
@@ -78,13 +78,13 @@
 - (void)build:(CCPrimitive *)primitive
 {
     self.action = [[primitive.predicates objectAtIndex:0] getValueAsString];
-    
+
     if (nil != primitive.subjects)
     {
         for (int i = 0, size = primitive.subjects.count; i < size; ++i)
         {
-            NSString *key = [primitive.subjects objectAtIndex:i];
-            NSString *value = [primitive.objectives objectAtIndex:i];
+            NSString *key = [[primitive.subjects objectAtIndex:i] getValueAsString];
+            NSString *value = [[primitive.objectives objectAtIndex:i] getValueAsString];
             [_params setObject:value forKey:key];
         }
     }
@@ -152,11 +152,18 @@
 //------------------------------------------------------------------------------
 - (void)act:(id<CCActionDelegate>)delegate
 {
-    id dialect = self;
-
-    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
         ^{
-            [delegate doAction:dialect];
+            [delegate doAction:self];
+        }
+    );
+}
+//------------------------------------------------------------------------------
+- (void)actWithBlock:(action_block_t)block
+{
+    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+        ^{
+            block(self);
         }
     );
 }

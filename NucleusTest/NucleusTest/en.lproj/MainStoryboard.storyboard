@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2844" systemVersion="11G63" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2844" systemVersion="12C60" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1930"/>
     </dependencies>
@@ -26,6 +26,7 @@
                                     <barButtonItem title="Call" id="Lkj-Xj-ZvD"/>
                                     <barButtonItem title="Hang Up" id="Cri-JG-Lci"/>
                                     <barButtonItem title="Talk" id="Ytf-Ai-wHA"/>
+                                    <barButtonItem title="Dialect" id="w0b-U5-NBp"/>
                                     <barButtonItem title="Suspend" id="W9J-iX-kTk"/>
                                     <barButtonItem title="Resume" id="tZd-Fg-0PN"/>
                                 </items>
@@ -35,6 +36,7 @@
                     </view>
                     <connections>
                         <outlet property="bbiCall" destination="Lkj-Xj-ZvD" id="fIz-oC-vPo"/>
+                        <outlet property="bbiDialect" destination="w0b-U5-NBp" id="3Jh-1c-m7N"/>
                         <outlet property="bbiHangUp" destination="Cri-JG-Lci" id="4Rw-MV-Rdn"/>
                         <outlet property="bbiResume" destination="tZd-Fg-0PN" id="JEU-Rc-JUT"/>
                         <outlet property="bbiSuspend" destination="W9J-iX-kTk" id="iZm-Az-Td1"/>
@@ -51,6 +53,7 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
             <relationships>
                 <relationship kind="outlet" name="bbiCall" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="bbiDialect" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="bbiHangUp" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="bbiResume" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="bbiSuspend" candidateClass="UIBarButtonItem"/>

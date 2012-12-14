@@ -271,7 +271,7 @@
         CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:99 major:1 minor:0];
         [packet appendSubsegment:stream];
         [packet appendSubsegment:[[[CCNucleus sharedSingleton].tag getAsString] dataUsingEncoding:NSUTF8StringEncoding]];
-        
+
         NSData *data = [CCPacket pack:packet];
         if (nil != data)
         {

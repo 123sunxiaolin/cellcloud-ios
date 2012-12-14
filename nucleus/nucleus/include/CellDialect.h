@@ -34,12 +34,13 @@
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *tracker;
 @property (nonatomic, strong) NSString *ownerTag;
+@property (nonatomic, strong) NSString *celletIdentifier;
 
 - (id)initWithName:(NSString *)name tracker:(NSString *)tracker;
 
 /** 翻译原语为方言。
  */
-- (CCPrimitive *)translate:(NSString *)tag;
+- (CCPrimitive *)translate;
 
 /** 从原语构建方言。
  */

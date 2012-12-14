@@ -28,7 +28,7 @@
 #import <CellLoggerManager.h>
 #import "Cell.h"
 
-@interface ViewController : UIViewController <UITextViewDelegate, CCLogDelegate, CCTalkListener>
+@interface ViewController : UIViewController <UITextViewDelegate, CCLogDelegate, CCTalkListener, CCActionDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextView *mainTextView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiCall;
@@ -36,5 +36,6 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiSuspend;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiResume;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiTalk;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiDialect;
 
 @end

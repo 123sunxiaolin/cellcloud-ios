@@ -102,6 +102,10 @@
  */
 - (BOOL)talk:(NSString *)identifier primitive:(CCPrimitive *)primitive;
 
+/** 向 Cellet 发送方言。
+ */
+- (BOOL)talk:(NSString *)identifier dialect:(CCDialect *)dialect;
+
 /** 标记指定 Speaker 为连接丢失。
  */
 - (void)markLostSpeaker:(CCSpeaker *)speaker;

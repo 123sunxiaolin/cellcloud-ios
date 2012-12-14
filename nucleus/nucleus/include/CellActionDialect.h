@@ -28,6 +28,8 @@
 
 #define ACTION_DIALECT_NAME @"ActionDialect"
 
+typedef void (^action_block_t)(CCActionDialect*);
+
 /** 动作执行委派。
  * @author Jiangwei Xu
  */
@@ -90,8 +92,12 @@
  */
 - (BOOL)existParam:(NSString *)name;
 
-/** 执行动作委派。
+/** 异步执行动作。
  */
 - (void)act:(id<CCActionDelegate>)delegate;
+
+/** 异步执行动作。
+ */
+- (void)actWithBlock:(action_block_t)block;
 
 @end

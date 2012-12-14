@@ -36,6 +36,7 @@
 #import "CellComplementStuff.h"
 #import "CellCryptology.h"
 #import "CellDialect.h"
+#import "CellDialectEnumerator.h"
 #import "CellDialectFactory.h"
 #import "CellDialectMetaData.h"
 #import "CellInetAddress.h"

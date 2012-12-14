@@ -27,6 +27,7 @@
 #import "CellTalkService.h"
 #import "CellSpeaker.h"
 #import "CellPrimitive.h"
+#import "CellDialect.h"
 #import "CellDialectEnumerator.h"
 #import "CellActionDialectFactory.h"
 #import "CellInetAddress.h"
@@ -295,6 +296,12 @@ static CCTalkService *sharedInstance = nil;
 
     // 发送原语
     return [speaker speak:primitive];
+}
+//------------------------------------------------------------------------------
+- (BOOL)talk:(NSString *)identifier dialect:(CCDialect *)dialect
+{
+    CCPrimitive *primitive = [dialect translate];
+    return [self talk:identifier primitive:primitive];
 }
 //------------------------------------------------------------------------------
 - (void)markLostSpeaker:(CCSpeaker *)speaker

@@ -49,7 +49,7 @@
 
 /** 使用方言初始化。
  */
-- (id)initWithDialect:(NSString *)tag dialect:(CCDialect *)dialect;
+- (id)initWithDialect:(CCDialect *)dialect;
 
 /** 提交语素。
  */
@@ -62,6 +62,14 @@
 /** 复制语素。
  */
 - (void)copyStuff:(CCPrimitive *)dest;
+
+/** 关联方言。
+ */
+- (void)capture:(CCDialect *)dialect;
+
+/** 是否具有方言特征。
+ */
+- (BOOL)isDialectal;
 
 /** 序列化原语。
  */

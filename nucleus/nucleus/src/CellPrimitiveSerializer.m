@@ -33,6 +33,9 @@
 #import "CellAttributiveStuff.h"
 #import "CellAdverbialStuff.h"
 #import "CellComplementStuff.h"
+#import "CellDialect.h"
+#import "CellDialectEnumerator.h"
+#import "CellDialectFactory.h"
 #import "CellLogger.h"
 
 #define PS_MAJOR 1
@@ -47,10 +50,15 @@
 #define TOKEN_OPERATE_DECLARE ':'
 #define TOKEN_AT '@'
 
+#define TOKEN_OPEN_BRACKET_STR "["
+#define TOKEN_CLOSE_BRACKET_STR "]"
 #define TOKEN_OPEN_BRACE_STR "{"
 #define TOKEN_CLOSE_BRACE_STR "}"
 #define TOKEN_OPERATE_ASSIGN_STR "="
 #define TOKEN_OPERATE_DECLARE_STR ":"
+#define TOKEN_AT_STR "@"
+
+#define TOKEN_AT_NSSTRING @"@"
 
 #define STUFFTYPE_SUBJECT "sub"
 #define STUFFTYPE_PREDICATE "pre"
@@ -84,7 +92,7 @@
 #define PARSE_PHASE_STUFF 5
 #define PARSE_PHASE_DIALECT 6
 
-@interface CCPrimitiveSerializer (Private)
+@interface CCPrimitiveSerializer ()
 
 /** 修正数据。 */
 + (NSData *)reviseValue:(NSData *)input;
@@ -97,6 +105,9 @@
 
 /** 将数据加入原语。 */
 + (void)injectStuff:(CCPrimitive *)primitive type:(NSData *)type value:(NSData *)value literal:(NSData *)literal;
+
+/** 反序列化方言。 */
++ (void)deserializeDialect:(CCPrimitive *)primitive dialectStr:(NSString *)dialectStr;
 
 @end
 
@@ -171,6 +182,17 @@
             [stream appendBytes:TOKEN_CLOSE_BRACE_STR length:1];
         }
     }
+    
+    // 序列化方言
+    CCDialect* dialect = primitive.dialect;
+    if (nil != dialect)
+    {
+        [stream appendBytes:TOKEN_OPEN_BRACKET_STR length:1];
+        [stream appendData:[dialect.name dataUsingEncoding:NSUTF8StringEncoding]];
+        [stream appendBytes:TOKEN_AT_STR length:1];
+        [stream appendData:[dialect.tracker dataUsingEncoding:NSUTF8StringEncoding]];
+        [stream appendBytes:TOKEN_CLOSE_BRACKET_STR length:1];
+    }
 
     return [NSData dataWithData:stream];
 }
@@ -183,7 +205,7 @@
     示例：
     [01.00]{sub=cloud:string}{pre=add:string}[FileReader@Lynx]
     */
-    
+
     CCPrimitive *primitive = [[CCPrimitive alloc] init];
 
     // FIXME 跳过版本
@@ -296,6 +318,24 @@
             {
                 // 进行语素类型解析
                 phase = PARSE_PHASE_TYPE;
+            }
+            else if (byte == TOKEN_OPEN_BRACKET)
+            {
+                // 开始解析方言
+                memset(buf, 0x0, bufSize);
+                bufCursor = 0;
+            }
+            else if (byte == TOKEN_CLOSE_BRACKET)
+            {
+                // 结束解析方言
+                NSString *dialectStr = [NSString stringWithCString:buf encoding:NSUTF8StringEncoding];
+                [CCPrimitiveSerializer deserializeDialect:primitive dialectStr:dialectStr];
+            }
+            else
+            {
+                // 记录数据
+                buf[bufCursor] = byte;
+                ++bufCursor;
             }
             break;
         default:
@@ -449,6 +489,32 @@
         CCComplementStuff *stuff = [[CCComplementStuff alloc] initWithData:value literal:literalBase];
         [primitive commit:stuff];
     }
+}
+//------------------------------------------------------------------------------
++ (void)deserializeDialect:(CCPrimitive *)primitive dialectStr:(NSString *)dialectStr
+{
+    NSArray *sections = [dialectStr componentsSeparatedByString:TOKEN_AT_NSSTRING];
+    if (sections.count != 2)
+    {
+        return;
+    }
+
+    NSString *dialectName = [sections objectAtIndex:0];
+    NSString *tracker = [sections objectAtIndex:1];
+
+    // 创建方言
+    CCDialect *dialect = [[CCDialectEnumerator sharedSingleton] createDialect:dialectName
+                                                                      tracker:tracker];
+    if (nil == dialect)
+    {
+        [CCLogger w:@"Can't create '%@' dialect.", dialectName];
+        return;
+    }
+
+    // 关联
+    [primitive capture:dialect];
+    // 分析数据
+    [dialect build:primitive];
 }
 
 

@@ -32,6 +32,7 @@
 @synthesize name;
 @synthesize tracker;
 @synthesize ownerTag;
+@synthesize celletIdentifier;
 
 //------------------------------------------------------------------------------
 - (id)initWithName:(NSString *)dialectName tracker:(NSString *)dialectTracker
@@ -45,10 +46,9 @@
     return self;
 }
 //------------------------------------------------------------------------------
-- (CCPrimitive *)translate:(NSString *)tag
+- (CCPrimitive *)translate
 {
-    self.ownerTag = tag;
-    return [[CCPrimitive alloc] initWithDialect:tag dialect:self];
+    return [[CCPrimitive alloc] initWithDialect:self];
 }
 //------------------------------------------------------------------------------
 - (void)build:(CCPrimitive *)primitive
