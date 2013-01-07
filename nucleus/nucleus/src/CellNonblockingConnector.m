@@ -105,6 +105,9 @@
         return nil;
     }
 
+    // 设置地址和端口
+    [super connect:address port:port];
+
     // 创建 Socket
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     _asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:queue];

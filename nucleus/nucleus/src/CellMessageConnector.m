@@ -26,11 +26,25 @@
 
 #import "CellMessageConnector.h"
 
+@interface CCMessageConnector ()
+{
+    NSString *_address;
+    UInt16 _port;
+}
+
+@end
+
 @implementation CCMessageConnector
+
+@synthesize address = _address;
+@synthesize port = _port;
 
 //------------------------------------------------------------------------------
 - (CCSession *)connect:(NSString *)address port:(UInt16)port
 {
+    _address = [NSString stringWithString:address];
+    _port = port;
+
     return nil;
 }
 //------------------------------------------------------------------------------

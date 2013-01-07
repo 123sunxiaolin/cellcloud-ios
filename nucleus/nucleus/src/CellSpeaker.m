@@ -151,29 +151,38 @@
 {
 }
 
-#pragma mark Public Method
+#pragma mark - Public Method
 
 //------------------------------------------------------------------------------
 - (BOOL)call:(CCInetAddress *)address
 {
-    if (nil != _connector && [_connector isConnected])
+    if (nil == _connector)
     {
-        return FALSE;
+        char head[4] = {0x20, 0x10, 0x11, 0x10};
+        char tail[4] = {0x19, 0x78, 0x10, 0x04};
+        _connector = [[CCNonblockingConnector alloc] initWithDataMark:self
+                                                             headMark:head
+                                                           headLength:4
+                                                             tailMark:tail
+                                                           tailLength:4];
     }
-
-    if (nil != _connector)
+    else
     {
-        _connector = nil;
+        NSString *addr = _connector.address;
+        UInt16 port = _connector.port;
+        if ([_connector isConnected]
+            && [[address getHost] isEqualToString:addr]
+            && [address getPort] == port)
+        {
+            return FALSE;
+        }
+
+        [_connector disconnect];
     }
 
     self.state = CCSpeakerStateHangUp;
 
     _address = address;
-
-    char head[4] = {0x20, 0x10, 0x11, 0x10};
-    char tail[4] = {0x19, 0x78, 0x10, 0x04};
-    _connector = [[CCNonblockingConnector alloc] initWithDataMark:self
-            headMark:head headLength:4 tailMark:tail tailLength:4];
 
     CCSession *session = [_connector connect:address.host port:address.port];
     if (nil != session)
@@ -205,7 +214,7 @@
     if (self.state == CCSpeakerStateCalled)
     {
         // 包格式：内核标签|有效时长
-        
+
         char tag[] = TPT_SUSPEND;
         CCPacket *packet = [[CCPacket alloc] initWithTag:tag sn:5 major:1 minor:0];
 
@@ -214,7 +223,7 @@
 
         NSString *szDuration = [NSString stringWithFormat:@"%.0f", duration * 1000];
         [packet appendSubsegment:[szDuration dataUsingEncoding:NSUTF8StringEncoding]];
-        
+
         NSData *data = [CCPacket pack:packet];
         if (nil != data)
         {
@@ -290,6 +299,11 @@
     return self.state == CCSpeakerStateCalled;
 }
 //------------------------------------------------------------------------------
+- (BOOL)isSuspended
+{
+    return self.state == CCSpeakerStateSuspended;
+}
+//------------------------------------------------------------------------------
 - (void)heartbeat
 {
     // 心跳包（无包体）
@@ -303,7 +317,7 @@
     }
 }
 
-#pragma mark Private Method
+#pragma mark - Private Method
 
 //------------------------------------------------------------------------------
 - (void)interpret:(CCSession *)session packet:(CCPacket *)packet
@@ -599,7 +613,7 @@
     }
 }
 
-#pragma mark Message Handle Delegate
+#pragma mark - Message Handle Delegate
 
 //------------------------------------------------------------------------------
 - (void)sessionCreated:(CCSession *)session

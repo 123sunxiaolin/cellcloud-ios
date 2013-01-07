@@ -29,11 +29,6 @@
 /** Cell Cloud 内核。
  */
 @interface CCNucleus : NSObject <CCService>
-{
-@private
-    CCNucleusTag *_tag;
-    CCNucleusConfig *_config;
-}
 
 @property (nonatomic, strong, readonly) CCNucleusTag *tag;
 

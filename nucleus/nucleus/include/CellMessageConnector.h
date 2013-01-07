@@ -30,6 +30,11 @@
  */
 @interface CCMessageConnector : CCMessageService
 
+/// 连接地址。
+@property (nonatomic, strong, readonly) NSString *address;
+/// 连接端口。
+@property (nonatomic, assign, readonly) UInt16 port;
+
 /** 连接对端消息接收器。 */
 - (CCSession *)connect:(NSString *)address port:(UInt16)port;
 

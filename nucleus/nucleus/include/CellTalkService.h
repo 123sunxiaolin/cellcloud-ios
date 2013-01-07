@@ -106,6 +106,14 @@
  */
 - (BOOL)talk:(NSString *)identifier dialect:(CCDialect *)dialect;
 
+/** 是否已经与 Cellet 建立服务。
+ */
+- (BOOL)isCalled:(NSString *)identifier;
+
+/** Cellet 服务是否已经被挂起。
+ */
+- (BOOL)isSuspended:(NSString *)identifier;
+
 /** 标记指定 Speaker 为连接丢失。
  */
 - (void)markLostSpeaker:(CCSpeaker *)speaker;

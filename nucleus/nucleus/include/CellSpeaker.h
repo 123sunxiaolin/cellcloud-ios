@@ -77,6 +77,9 @@ typedef enum _CCSpeakerState
 /** 是否已经调用了 Cellet 。 */
 - (BOOL)isCalled;
 
+/** 是否已挂起 Cellet 会话。 */
+- (BOOL)isSuspended;
+
 /** 向 Cellet 发送原语。 */
 - (BOOL)speak:(CCPrimitive *)primitive;
 

@@ -31,7 +31,12 @@
 #import "CellLogger.h"
 #import "CellVersion.h"
 
-@interface CCNucleus (Private)
+@interface CCNucleus ()
+{
+@private
+    CCNucleusTag *_tag;
+    CCNucleusConfig *_config;
+}
 
 /** 使用配置参数初始化 */
 - (id)initWithConfig:(CCNucleusConfig *)config;

@@ -89,7 +89,7 @@ static CCTalkService *sharedInstance = nil;
     [_speakers removeAllObjects];
 }
 
-#pragma mark Service Protocol
+#pragma mark - Service Protocol
 
 //------------------------------------------------------------------------------
 - (BOOL)startup
@@ -104,7 +104,7 @@ static CCTalkService *sharedInstance = nil;
     [self stopDaemon];
 }
 
-#pragma mark -
+#pragma mark - Common Methods
 
 //------------------------------------------------------------------------------
 - (void)startDaemon
@@ -179,7 +179,7 @@ static CCTalkService *sharedInstance = nil;
     date = nil;
 }
 
-#pragma mark Client Interfaces
+#pragma mark - Client Interfaces
 
 //------------------------------------------------------------------------------
 - (BOOL)call:(NSString *)identifier hostAddress:(CCInetAddress *)address
@@ -304,6 +304,50 @@ static CCTalkService *sharedInstance = nil;
     return [self talk:identifier primitive:primitive];
 }
 //------------------------------------------------------------------------------
+- (BOOL)isCalled:(NSString *)identifier
+{
+    CCSpeaker *speaker = nil;
+    @synchronized(_monitor) {
+        for (CCSpeaker *s in _speakers)
+        {
+            if ([s.identifier isEqualToString:identifier])
+            {
+                speaker = s;
+                break;
+            }
+        }
+    }
+
+    if (nil == speaker)
+    {
+        return FALSE;
+    }
+
+    return [speaker isCalled];
+}
+//------------------------------------------------------------------------------
+- (BOOL)isSuspended:(NSString *)identifier
+{
+    CCSpeaker *speaker = nil;
+    @synchronized(_monitor) {
+        for (CCSpeaker *s in _speakers)
+        {
+            if ([s.identifier isEqualToString:identifier])
+            {
+                speaker = s;
+                break;
+            }
+        }
+    }
+
+    if (nil == speaker)
+    {
+        return FALSE;
+    }
+
+    return [speaker isSuspended];
+}
+//------------------------------------------------------------------------------
 - (void)markLostSpeaker:(CCSpeaker *)speaker
 {
     speaker.timestamp = _tickTime;
@@ -324,6 +368,6 @@ static CCTalkService *sharedInstance = nil;
     }
 }
 
-#pragma mark Server Interfaces
+#pragma mark - Server Interfaces
 
 @end
