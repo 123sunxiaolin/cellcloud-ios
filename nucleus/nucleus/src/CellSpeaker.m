@@ -160,11 +160,11 @@
     {
         char head[4] = {0x20, 0x10, 0x11, 0x10};
         char tail[4] = {0x19, 0x78, 0x10, 0x04};
-        _connector = [[CCNonblockingConnector alloc] initWithDataMark:self
-                                                             headMark:head
-                                                           headLength:4
-                                                             tailMark:tail
-                                                           tailLength:4];
+        _connector = [[CCNonblockingConnector alloc] init:self
+                                                 headMark:head
+                                               headLength:4
+                                                 tailMark:tail
+                                               tailLength:4];
     }
     else
     {

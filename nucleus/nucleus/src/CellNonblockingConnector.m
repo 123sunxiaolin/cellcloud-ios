@@ -77,7 +77,7 @@
     return self;
 }
 //------------------------------------------------------------------------------
-- (id)initWithDataMark:(id<CCMessageHandler>)delegate
+- (id)init:(id<CCMessageHandler>)delegate
             headMark:(char *)headMark headLength:(size_t)headLength
             tailMark:(char *)tailMark tailLength:(size_t)tailLength
 {
