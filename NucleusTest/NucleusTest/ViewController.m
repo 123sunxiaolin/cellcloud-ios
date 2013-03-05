@@ -59,6 +59,7 @@
     [self setBbiResume:nil];
     [self setBbiTalk:nil];
     [self setBbiDialect:nil];
+    [self setBbiTalker:nil];
     [super viewDidUnload];
 }
 //------------------------------------------------------------------------------
@@ -71,6 +72,7 @@
     [self.bbiResume setAction:@selector(doResumeHandler:)];
     [self.bbiTalk setAction:@selector(doTalkHandler:)];
     [self.bbiDialect setAction:@selector(doDialectHandler:)];
+    [self.bbiTalker setAction:@selector(doTalkerHandler:)];
 
     self.bbiCall.enabled = TRUE;
     self.bbiHangUp.enabled = FALSE;
@@ -305,21 +307,21 @@
 //------------------------------------------------------------------------------
 - (void)doCallHandler:(id)sender
 {
-    [CCLogger i:@"Tap 'Call' ..."];
+    [CCLogger d:@"Tap 'Call' ..."];
 
     [self disableAllButtonItems];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
             , ^{
                 // 连接 Cellet 服务
-                CCInetAddress *address = [[CCInetAddress alloc] initWithAddress:@"192.168.0.104" port:7000];
+                CCInetAddress *address = [[CCInetAddress alloc] initWithAddress:@"192.168.0.110" port:7000];
                 [[CCTalkService sharedSingleton] call:@"Dummy" hostAddress:address];
             });
 }
 //------------------------------------------------------------------------------
 - (void)doHangUpHandler:(id)sender
 {
-    [CCLogger i:@"Tap 'Hang Up' ..."];
+    [CCLogger d:@"Tap 'Hang Up' ..."];
     
     [self disableAllButtonItems];
     self.bbiCall.enabled = YES;
@@ -332,7 +334,7 @@
 //------------------------------------------------------------------------------
 - (void)doTalkHandler:(id)sender
 {
-    [CCLogger i:@"Tap 'Talk' ..."];
+    [CCLogger d:@"Tap 'Talk' ..."];
 
     _helper.counts = 0;
 
@@ -348,7 +350,7 @@
 //------------------------------------------------------------------------------
 - (void)doDialectHandler:(id)sender
 {
-    [CCLogger i:@"Tap 'Dialect' ..."];
+    [CCLogger d:@"Tap 'Dialect' ..."];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
             , ^{
@@ -363,7 +365,7 @@
 //------------------------------------------------------------------------------
 - (void)doSuspendHandler:(id)sender
 {
-    [CCLogger i:@"Tap 'Suspend' ..."];
+    [CCLogger d:@"Tap 'Suspend' ..."];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
             , ^{
@@ -373,11 +375,25 @@
 //------------------------------------------------------------------------------
 - (void)doResumeHandler:(id)sender
 {
-    [CCLogger i:@"Tap 'Resume' ..."];
+    [CCLogger d:@"Tap 'Resume' ..."];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
             , ^{
                 [[CCTalkService sharedSingleton] resume:@"Dummy" startTime:0];
+            });
+}
+//------------------------------------------------------------------------------
+- (void)doTalkerHandler:(id)sender
+{
+    [CCLogger d:@"Tap 'Talker' ..."];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+            , ^{
+                CCInetAddress *address = [[CCInetAddress alloc] initWithAddress:@"192.168.0.110" port:7000];
+                CCTalker *talker = [[CCTalker alloc] initWithIdentifier:@"Dummy" address:address];
+                
+                CCPrimitive *pri = [_helper.primitives objectAtIndex:0];
+                [talker talkWithPrimitive:pri];
             });
 }
 

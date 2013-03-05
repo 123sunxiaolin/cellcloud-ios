@@ -85,5 +85,6 @@
 @class CCTalkService;
 @class CCSpeaker;
 @class CCTalkServiceFailure;
+@class CCTalker;
 
 #endif // CellPrerequisites_h

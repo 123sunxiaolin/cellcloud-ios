@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2013 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -24,43 +24,47 @@
  ------------------------------------------------------------------------------
  */
 
-#ifndef Cell_h
-#define Cell_h
-
 #include "CellPrerequisites.h"
 
-#import "CellActionDialect.h"
-#import "CellActionDialectFactory.h"
-#import "CellAdverbialStuff.h"
-#import "CellAttributiveStuff.h"
-#import "CellComplementStuff.h"
-#import "CellCryptology.h"
-#import "CellDialect.h"
-#import "CellDialectEnumerator.h"
-#import "CellDialectFactory.h"
-#import "CellDialectMetaData.h"
-#import "CellInetAddress.h"
-#import "CellLiteralBase.h"
-#import "CellLogger.h"
-#import "CellLoggerManager.h"
-#import "CellMessage.h"
-#import "CellMessageConnector.h"
-#import "CellMessageService.h"
-#import "CellNonblockingConnector.h"
-#import "CellNucleus.h"
-#import "CellNucleusConfig.h"
-#import "CellNucleusTag.h"
-#import "CellObjectiveStuff.h"
-#import "CellPacket.h"
-#import "CellPredicateStuff.h"
-#import "CellPrimitive.h"
-#import "CellSession.h"
-#import "CellSubjectStuff.h"
-#import "CellTalkCapacity.h"
-#import "CellTalker.h"
-#import "CellTalkService.h"
-#import "CellTalkServiceFailure.h"
-#import "CellUtil.h"
-#import "CellVersion.h"
+typedef enum _CCTalkerResult
+{
+    // 正确处理完成请求
+    OK,
 
-#endif // Cell_h
+    // 连接失败
+    CONNECT_FAILED,
+
+    // 连接超时
+    CONNECT_TIMEOUT,
+    
+    // 没有正确设置标示
+    NO_IDENTIFIER,
+    
+    // 没有正确设置服务器地址
+    NO_ADDRESS,
+    
+    // 未知错误
+    UNKNOWN
+
+} CCTalkerResult;
+
+@interface CCTalker : NSObject
+
+@property (nonatomic, strong) NSString *identifier;
+@property (nonatomic, strong) CCInetAddress* address;
+@property (nonatomic, assign) NSTimeInterval timeout;
+
+/** 使用 Cellet Identifer 初始化。
+ */
+- (id)initWithIdentifier:(NSString *)identifier address:(CCInetAddress *)address;
+
+/** 发送原语数据。
+ */
+- (CCTalkerResult)talkWithPrimitive:(CCPrimitive *)primitive;
+//- (BOOL)talkWithPrimitive:(CCPrimitive *)primitive completed:(void(^)(CCTalker *))completed;
+
+/** 发送方言数据。
+ */
+- (CCTalkerResult)talkWithDialect:(CCDialect *)dialect;
+
+@end
