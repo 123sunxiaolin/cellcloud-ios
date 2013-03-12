@@ -427,7 +427,7 @@
         self.state = CCSpeakerStateHangUp;
 
         CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc]
-                                         initWithSource:CCTalkFailureNotFoundCellet
+                                         initWithSource:CCTalkStatusNotFoundCellet
                                          file:__FILE__
                                          line:__LINE__
                                          function:__FUNCTION__];
@@ -670,7 +670,7 @@
         || errorCode == CCMessageErrorConnectFailed)
     {
         CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc]
-                                         initWithSource:CCTalkFailureCallTimeout
+                                         initWithSource:CCTalkStatusConnectTimeout
                                          file:__FILE__
                                          line:__LINE__
                                          function:__FUNCTION__];

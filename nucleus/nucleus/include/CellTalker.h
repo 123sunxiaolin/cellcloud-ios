@@ -25,28 +25,7 @@
  */
 
 #include "CellPrerequisites.h"
-
-typedef enum _CCTalkerResult
-{
-    // 正确处理完成请求
-    OK,
-
-    // 连接失败
-    CONNECT_FAILED,
-
-    // 连接超时
-    CONNECT_TIMEOUT,
-    
-    // 没有正确设置标示
-    NO_IDENTIFIER,
-    
-    // 没有正确设置服务器地址
-    NO_ADDRESS,
-    
-    // 未知错误
-    UNKNOWN
-
-} CCTalkerResult;
+#include "CellTalkDefinition.h"
 
 @interface CCTalker : NSObject
 
@@ -60,11 +39,11 @@ typedef enum _CCTalkerResult
 
 /** 发送原语数据。
  */
-- (CCTalkerResult)talkWithPrimitive:(CCPrimitive *)primitive;
+- (CCTalkStatusCode)talkWithPrimitive:(CCPrimitive *)primitive;
 //- (BOOL)talkWithPrimitive:(CCPrimitive *)primitive completed:(void(^)(CCTalker *))completed;
 
 /** 发送方言数据。
  */
-- (CCTalkerResult)talkWithDialect:(CCDialect *)dialect;
+- (CCTalkStatusCode)talkWithDialect:(CCDialect *)dialect;
 
 @end

@@ -101,5 +101,33 @@ typedef enum _CCSuspendMode
 
 } CCSuspendMode;
 
+
+/** 会话状态码。
+ */
+typedef enum _CCTalkStatusCode
+{
+    // 正确处理完成请求
+    CCTalkStatusOk = 100,
+
+    // 连接失败
+    CCTalkStatusConnectFailed = 201,
+
+    // 连接超时
+    CCTalkStatusConnectTimeout = 202,
+    
+    /// 未找到指定的 Cellet
+    CCTalkStatusNotFoundCellet = 300,
+    
+    // 没有正确设置标示
+    CCTalkStatusNoIdentifier = 701,
+    
+    // 没有正确设置服务器地址
+    CCTalkStatusNoAddress = 702,
+    
+    // 未知状态
+    CCTalkStatusUnknown = 900,
+    
+} CCTalkStatusCode;
+
 #endif // CellTalkDefinition_h
 

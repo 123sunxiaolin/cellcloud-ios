@@ -28,7 +28,7 @@
 
 @interface CCTalkServiceFailure (Private)
 
-- (void)construct:(CCTalkFailureCode)code file:(const char *)file line:(int)line function:(const char *)function;
+- (void)construct:(CCTalkStatusCode)code file:(const char *)file line:(int)line function:(const char *)function;
 
 @end
 
@@ -36,7 +36,7 @@
 @implementation CCTalkServiceFailure
 
 //------------------------------------------------------------------------------
-- (id)initWithSource:(CCTalkFailureCode)code file:(const char *)file line:(int)line function:(const char *)function
+- (id)initWithSource:(CCTalkStatusCode)code file:(const char *)file line:(int)line function:(const char *)function
 {
     if ((self = [super init]))
     {
@@ -46,18 +46,18 @@
     return self;
 }
 //------------------------------------------------------------------------------
-- (void)construct:(CCTalkFailureCode)code file:(const char *)file line:(int)line function:(const char *)function
+- (void)construct:(CCTalkStatusCode)code file:(const char *)file line:(int)line function:(const char *)function
 {
     self.code = code;
     self.reason = [NSString stringWithFormat:@"Error in %s function - %s on line %d", function, file, line];
 
     switch (code)
     {
-    case CCTalkFailureNotFoundCellet:
+    case CCTalkStatusNotFoundCellet:
         self.description = @"Server can not find specified cellet";
         self.sourceDescription = @"";
         break;
-    case CCTalkFailureCallTimeout:
+    case CCTalkStatusConnectTimeout:
         self.description = @"Network connecting timeout";
         self.sourceDescription = @"";
         break;

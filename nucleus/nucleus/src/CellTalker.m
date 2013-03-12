@@ -26,6 +26,7 @@
 
 #import "CellTalker.h"
 #import "CellTalkService.h"
+#import "CellDialect.h"
 
 @interface CCTalker ()
 {
@@ -50,21 +51,21 @@
     return self;
 }
 //------------------------------------------------------------------------------
-- (CCTalkerResult)talkWithPrimitive:(CCPrimitive *)primitive
+- (CCTalkStatusCode)talkWithPrimitive:(CCPrimitive *)primitive
 {
-    CCTalkerResult result = UNKNOWN;
+    CCTalkStatusCode result = CCTalkStatusUnknown;
 
     if ([[CCTalkService sharedSingleton] isCalled:self.identifier])
     {
         [[CCTalkService sharedSingleton] talk:self.identifier primitive:primitive];
-        result = OK;
+        result = CCTalkStatusOk;
     }
     else
     {
         dispatch_queue_t talkingQueue = dispatch_queue_create("CCTalkingQueue", NULL);
         dispatch_group_t group = dispatch_group_create();
 
-        __block CCTalkerResult ret = UNKNOWN;
+        __block CCTalkStatusCode ret = CCTalkStatusUnknown;
         dispatch_group_async(group, talkingQueue, ^{
             [[CCTalkService sharedSingleton] call:self.identifier hostAddress:self.address];
 
@@ -72,18 +73,18 @@
             while (FALSE == [[CCTalkService sharedSingleton] isCalled:self.identifier])
             {
                 [NSThread sleepForTimeInterval:0.2];
-                
+
                 NSDate *current = [NSDate date];
                 if (current.timeIntervalSince1970 - start.timeIntervalSince1970 >= self.timeout)
                 {
                     // 超时
-                    ret = CONNECT_TIMEOUT;
+                    ret = CCTalkStatusConnectTimeout;
                     break;
                 }
             }
             start = nil;
         });
-        
+
         // 阻塞等待
 //        dispatch_time_t timeout = self.timeout * 1000000000l;
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
@@ -91,17 +92,17 @@
         if ([[CCTalkService sharedSingleton] isCalled:self.identifier])
         {
             [[CCTalkService sharedSingleton] talk:self.identifier primitive:primitive];
-            result = OK;
+            result = CCTalkStatusOk;
         }
         else
         {
-            if (CONNECT_TIMEOUT == ret)
+            if (CCTalkStatusConnectTimeout == ret)
             {
-                result = CONNECT_TIMEOUT;
+                result = CCTalkStatusConnectTimeout;
             }
             else
             {
-                result = CONNECT_FAILED;
+                result = CCTalkStatusConnectFailed;
             }
         }
         
@@ -112,9 +113,10 @@
     return result;
 }
 //------------------------------------------------------------------------------
-- (CCTalkerResult)talkWithDialect:(CCDialect *)dialect
+- (CCTalkStatusCode)talkWithDialect:(CCDialect *)dialect
 {
-    return UNKNOWN;
+    CCPrimitive *primitive = [dialect translate];
+    return [self talkWithPrimitive:primitive];
 }
 //------------------------------------------------------------------------------
 

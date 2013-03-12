@@ -244,7 +244,7 @@
 {
     [CCLogger d:@"failed - Code:%d - Reason:%@ - Desc:%@", failure.code, failure.reason, failure.description];
 
-    if (CCTalkFailureCallTimeout == failure.code)
+    if (CCTalkStatusConnectTimeout == failure.code)
     {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.bbiHangUp.enabled = YES;

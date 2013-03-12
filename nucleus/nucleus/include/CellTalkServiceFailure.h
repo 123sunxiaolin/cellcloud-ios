@@ -25,20 +25,7 @@
  */
 
 #include "CellPredicateStuff.h"
-
-/** 会话故障码。
- * @author Jiangwei Xu
- */
-typedef enum _CCTalkFailureCode
-{
-    /// 未找到指定的 Cellet
-    CCTalkFailureNotFoundCellet = 100,
-
-    /// Call 连接超时
-    CCTalkFailureCallTimeout = 201
-
-} CCTalkFailureCode;
-
+#include "CellTalkDefinition.h"
 
 /** 会话服务故障描述。
  * @author Jiangwei Xu
@@ -53,6 +40,6 @@ typedef enum _CCTalkFailureCode
 
 /** 
  */
-- (id)initWithSource:(CCTalkFailureCode)code file:(const char*)file line:(int)line function:(const char*)function;
+- (id)initWithSource:(CCTalkStatusCode)code file:(const char*)file line:(int)line function:(const char*)function;
 
 @end
