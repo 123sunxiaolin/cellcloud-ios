@@ -26,7 +26,7 @@
 
 #import "CellPacket.h"
 
-#define PACK_BUF_SIZE 8192
+#define PACK_BUF_SIZE 131072
 
 @implementation CCPacket
 

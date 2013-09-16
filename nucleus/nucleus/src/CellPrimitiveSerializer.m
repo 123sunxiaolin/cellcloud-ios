@@ -92,6 +92,8 @@
 #define PARSE_PHASE_STUFF 5
 #define PARSE_PHASE_DIALECT 6
 
+#define BLOCK 65536
+
 @interface CCPrimitiveSerializer ()
 
 /** 修正数据。 */
@@ -216,7 +218,7 @@
     [pridata getBytes:src length:srcSize];
     int srcCursor = 0;
 
-    const int bufSize = 2048;
+    const int bufSize = BLOCK;
     char *buf = malloc(bufSize);
     int bufCursor = 0;
 
