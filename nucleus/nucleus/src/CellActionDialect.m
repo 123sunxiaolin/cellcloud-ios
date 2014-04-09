@@ -81,7 +81,7 @@
 
     if (nil != primitive.subjects)
     {
-        for (int i = 0, size = primitive.subjects.count; i < size; ++i)
+        for (NSUInteger i = 0, size = primitive.subjects.count; i < size; ++i)
         {
             NSString *key = [[primitive.subjects objectAtIndex:i] getValueAsString];
             NSString *value = [[primitive.objectives objectAtIndex:i] getValueAsString];

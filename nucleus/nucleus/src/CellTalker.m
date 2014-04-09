@@ -105,9 +105,11 @@
                 result = CCTalkStatusConnectFailed;
             }
         }
-        
-        dispatch_release(talkingQueue);
-        dispatch_release(group);
+
+        #if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
+            dispatch_release(talkingQueue);
+            dispatch_release(group);
+        #endif
     }
 
     return result;

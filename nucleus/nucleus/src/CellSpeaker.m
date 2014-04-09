@@ -368,7 +368,7 @@
     // 解密
     char plaintext[32] = {0x0};
     int plen = [[CCCryptology sharedSingleton] simpleDecrypt:plaintext
-                    text:ciphertext length:ctData.length key:key];
+                    text:ciphertext length:(int)ctData.length key:key];
 
     // 回送数据进行服务器验证
     char tag[] = TPT_CHECK;

@@ -324,8 +324,8 @@
 //------------------------------------------------------------------------------
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
-    int errCode = [err code];
-    [CCLogger d:@"socketDidDisconnect - %d : %@", errCode, err];
+    long errCode = [err code];
+    [CCLogger d:@"socketDidDisconnect - %ld : %@", errCode, err];
 
     switch (errCode)
     {

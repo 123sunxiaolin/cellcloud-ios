@@ -147,7 +147,7 @@
     memcpy(buf + cursor, sn, PSL_SN);
     cursor += PSL_SN;
 
-    uint32_t bodyLength = 0;
+    NSUInteger bodyLength = 0;
     
     // 计算 Body 段长度
     if (nil != packet->_subsegments)
@@ -168,7 +168,7 @@
 
     // Body length
     char szLen[PSL_BODY_LENGTH + 1] = {0x0};
-    sprintf(szLen, "%08d", bodyLength);
+    sprintf(szLen, "%08lu", (unsigned long)bodyLength);
     memcpy(buf + cursor, szLen, PSL_BODY_LENGTH);
     cursor += PSL_BODY_LENGTH;
 
@@ -178,7 +178,7 @@
         {
             // 子段数量
             char szBuf[PSL_SUBSEGMENT_LENGTH + 1] = {0x0};
-            sprintf(szBuf, "%04d", packet->_subsegments.count);
+            sprintf(szBuf, "%04lu", (unsigned long)packet->_subsegments.count);
             memcpy(buf + cursor, szBuf, PSL_SUBSEGMENT_NUM);
             cursor += PSL_SUBSEGMENT_NUM;
 
@@ -186,7 +186,7 @@
             for (NSData *sub in packet->_subsegments)
             {
                 memset(szBuf, 0x0, sizeof(szBuf));
-                sprintf(szBuf, "%08d", sub.length);
+                sprintf(szBuf, "%08lu", (unsigned long)sub.length);
                 memcpy(buf + cursor, szBuf, PSL_SUBSEGMENT_LENGTH);
                 cursor += PSL_SUBSEGMENT_LENGTH;
             }

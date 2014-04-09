@@ -213,7 +213,7 @@
     // FIXME 跳过版本
     NSData *pridata = [dataStream subdataWithRange:NSMakeRange(7, dataStream.length - 7)];
 
-    const int srcSize = pridata.length;
+    const NSUInteger srcSize = pridata.length;
     char *src = malloc(srcSize);
     [pridata getBytes:src length:srcSize];
     int srcCursor = 0;
@@ -366,7 +366,7 @@
     memset(dest, 0x0, input.length + input.length);
     int destCoursor = 0;
 
-    for (int i = 0, size = input.length; i < size; ++i)
+    for (NSUInteger i = 0, size = input.length; i < size; ++i)
     {
         char c = data[i];
 
