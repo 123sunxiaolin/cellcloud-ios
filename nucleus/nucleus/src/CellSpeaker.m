@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -48,7 +48,6 @@
 {
 @private
     NSString *_identifier;
-    CCTalkCapacity *_capacity;
     
     CCInetAddress *_address;
     CCNonblockingConnector *_connector;
@@ -122,7 +121,7 @@
     return self;
 }
 //------------------------------------------------------------------------------
-- (id)initWithIdentifier:(NSString *)identifier
+- (id)initWith:(NSString *)identifier
 {
     if ((self = [super init]))
     {
@@ -140,7 +139,7 @@
     {
         _monitor = [[NSObject alloc] init];
         _identifier = identifier;
-        _capacity = capacity;
+        self.capacity = capacity;
         self.state = CCSpeakerStateHangUp;
     }
 
@@ -427,7 +426,7 @@
         self.state = CCSpeakerStateHangUp;
 
         CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc]
-                                         initWithSource:CCTalkStatusNotFoundCellet
+                                         initWithSource:CCFailureNotFoundCellet
                                          file:__FILE__
                                          line:__LINE__
                                          function:__FUNCTION__];
@@ -439,9 +438,9 @@
     }
 
     // 如果调用成功，则进行能力协商
-    if (_state == CCSpeakerStateCalled && nil != _capacity)
+    if (_state == CCSpeakerStateCalled && nil != self.capacity)
     {
-        [self consult:_capacity];
+        [self consult:self.capacity];
     }
 }
 //------------------------------------------------------------------------------
@@ -474,10 +473,10 @@
     }
 
     // 进行对比
-    if (nil != _capacity)
+    if (nil != self.capacity)
     {
-        if (newCapacity.autoSuspend != _capacity.autoSuspend
-            || newCapacity.suspendDuration != _capacity.suspendDuration)
+        if (newCapacity.autoSuspend != self.capacity.autoSuspend
+            || newCapacity.suspendDuration != self.capacity.suspendDuration)
         {
             [CCLogger w:@"Talk capacity has changed from '%@' : AutoSuspend=%d SuspendDuration=%f"
                 , _identifier
@@ -487,8 +486,8 @@
     }
 
     // 更新
-    _capacity.autoSuspend = newCapacity.autoSuspend;
-    _capacity.suspendDuration = newCapacity.suspendDuration;
+    self.capacity.autoSuspend = newCapacity.autoSuspend;
+    self.capacity.suspendDuration = newCapacity.suspendDuration;
 }
 //------------------------------------------------------------------------------
 - (void)processSuspend:(CCPacket *)packet session:(CCSession *)session
@@ -607,6 +606,11 @@
 //------------------------------------------------------------------------------
 - (void)fireFailed:(CCTalkServiceFailure *)failure
 {
+    if (failure.code == CCFailureCallFailed)
+    {
+        self.state = CCSpeakerStateHangUp;
+    }
+
     if (nil != [CCTalkService sharedSingleton].listener)
     {
         [[CCTalkService sharedSingleton].listener failed:failure];
@@ -643,6 +647,32 @@
         }
     }
 
+    // 判断是否为异常网络中断
+    if (CCSpeakerStateCalling == _state)
+    {
+        CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc] initWithSource:CCFailureCallFailed
+                                                                                file:__FILE__
+                                                                                line:__LINE__
+                                                                            function:__FUNCTION__];
+        failure.sourceDescription = @"No network device";
+        [self fireFailed:failure];
+
+        // 标记为丢失
+        [[CCTalkService sharedSingleton] markLostSpeaker:self];
+    }
+    else if (CCSpeakerStateCalled == _state)
+    {
+        CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc] initWithSource:CCFailureTalkLost
+                                                                                file:__FILE__
+                                                                                line:__LINE__
+                                                                            function:__FUNCTION__];
+        failure.sourceDescription = @"Network fault, connection closed";
+        [self fireFailed:failure];
+
+        // 标记为丢失
+        [[CCTalkService sharedSingleton] markLostSpeaker:self];
+    }
+
     _state = CCSpeakerStateHangUp;
 
     // 通知退出
@@ -670,13 +700,14 @@
         || errorCode == CCMessageErrorConnectFailed)
     {
         CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc]
-                                         initWithSource:CCTalkStatusConnectTimeout
+                                         initWithSource:CCFailureCallFailed
                                          file:__FILE__
                                          line:__LINE__
                                          function:__FUNCTION__];
         failure.sourceDescription = @"Attempt to connect to host timed out";
         [self fireFailed:failure];
 
+        // 标记为丢失
         [[CCTalkService sharedSingleton] markLostSpeaker:self];
     }
 }

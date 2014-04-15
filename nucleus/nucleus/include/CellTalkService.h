@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,9 @@
 #include "CellPrerequisites.h"
 #include "CellTalkDefinition.h"
 
-/** 会话监听器。
+/**
+ * 会话监听器。
+ *
  * @author Jiangwei Xu
  */
 @protocol CCTalkListener <NSObject>
@@ -61,16 +63,15 @@
 @end
 
 
-/** 会话服务。
+/**
+ * 会话服务。
+ *
  * @author Jiangwei Xu
  */
 @interface CCTalkService : NSObject <CCService>
 
 /// 会话监听器
 @property (nonatomic, strong) id<CCTalkListener> listener;
-
-/// 对话失败时，尝试重新建立会话的操作间隔
-@property (nonatomic, assign) NSTimeInterval retryInterval;
 
 /** 返回单例。
  */
@@ -82,35 +83,48 @@
 /** 停止守护任务。 */
 - (void)stopDaemon;
 
-/** 申请指定的 Cellet 服务。
+/**
+ * 申请指定的 Cellet 服务。
  */
 - (BOOL)call:(NSString *)identifier hostAddress:(CCInetAddress *)address;
 
-/** 挂断指定的 Cellet 服务。
+/**
+ * 申请指定的 Cellet 服务。
+ */
+- (BOOL)call:(NSString *)identifier hostAddress:(CCInetAddress *)address capacity:(CCTalkCapacity *)capacity;
+
+/**
+ * 挂断指定的 Cellet 服务。
  */
 - (void)hangUp:(NSString *)identifier;
 
-/** 挂起指定的 Cellet 服务。
+/**
+ * 挂起指定的 Cellet 服务。
  */
 - (void)suspend:(NSString *)identifier duration:(NSTimeInterval)duration;
 
-/** 恢复指定的 Cellet 服务。
+/**
+ * 恢复指定的 Cellet 服务。
  */
 - (void)resume:(NSString *)identifier startTime:(NSTimeInterval)startTime;
 
-/** 向 Cellet 发送原语。
+/**
+ * 向 Cellet 发送原语。
  */
 - (BOOL)talk:(NSString *)identifier primitive:(CCPrimitive *)primitive;
 
-/** 向 Cellet 发送方言。
+/**
+ * 向 Cellet 发送方言。
  */
 - (BOOL)talk:(NSString *)identifier dialect:(CCDialect *)dialect;
 
-/** 是否已经与 Cellet 建立服务。
+/**
+ * 是否已经与 Cellet 建立服务。
  */
 - (BOOL)isCalled:(NSString *)identifier;
 
-/** Cellet 服务是否已经被挂起。
+/**
+ * Cellet 服务是否已经被挂起。
  */
 - (BOOL)isSuspended:(NSString *)identifier;
 

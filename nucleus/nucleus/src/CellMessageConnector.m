@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
 @interface CCMessageConnector ()
 {
     NSString *_address;
-    UInt16 _port;
+    NSUInteger _port;
 }
 
 @end
@@ -40,7 +40,7 @@
 @synthesize port = _port;
 
 //------------------------------------------------------------------------------
-- (CCSession *)connect:(NSString *)address port:(UInt16)port
+- (CCSession *)connect:(NSString *)address port:(NSUInteger)port
 {
     _address = [NSString stringWithString:address];
     _port = port;

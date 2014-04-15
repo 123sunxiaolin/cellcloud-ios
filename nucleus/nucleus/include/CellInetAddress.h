@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,28 +26,27 @@
 
 #include "CellPrerequisites.h"
 
-/** 网络地址描述类。
+/**
+ * 网络地址描述类。
  */
 @interface CCInetAddress : NSObject
-{
-@private
-    NSString *_host;
-    UInt16 _port;
-}
 
 @property (nonatomic, strong, readonly) NSString *host;
-@property (nonatomic, assign, readonly) UInt16 port;
+@property (nonatomic, assign, readonly) NSUInteger port;
 
-/** 按地址初始化。
+/**
+ * 按地址初始化。
  */
-- (id)initWithAddress:(NSString *)host port:(UInt16)port;
+- (id)initWithAddress:(NSString *)host port:(NSUInteger)port;
 
-/** 返回主机地址字符串。
+/**
+ * 返回主机地址字符串。
  */
 - (NSString *)getHost;
 
-/** 返回通信服务端口。
+/**
+ * 返回通信服务端口。
  */
-- (UInt16)getPort;
+- (NSUInteger)getPort;
 
 @end

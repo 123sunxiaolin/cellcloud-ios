@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		18F589E316E43D7E0061861A /* CellTalker.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F589E216E43D7E0061861A /* CellTalker.m */; };
 		18F96ED816797AA700FCCF59 /* CellActionDialect.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F96ED716797AA700FCCF59 /* CellActionDialect.m */; };
 		18F96F251679C28C00FCCF59 /* CellActionDialectFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F96F241679C28C00FCCF59 /* CellActionDialectFactory.m */; };
 		4412F67B165B228000C0941B /* CellTalkServiceFailure.m in Sources */ = {isa = PBXBuildFile; fileRef = 4412F67A165B228000C0941B /* CellTalkServiceFailure.m */; };
@@ -59,8 +58,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		18F589E016E43D750061861A /* CellTalker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellTalker.h; path = include/CellTalker.h; sourceTree = "<group>"; };
-		18F589E216E43D7E0061861A /* CellTalker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellTalker.m; path = src/CellTalker.m; sourceTree = "<group>"; };
 		18F96ED616797AA000FCCF59 /* CellActionDialect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellActionDialect.h; path = include/CellActionDialect.h; sourceTree = "<group>"; };
 		18F96ED716797AA700FCCF59 /* CellActionDialect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellActionDialect.m; path = src/CellActionDialect.m; sourceTree = "<group>"; };
 		18F96EDC1679C27200FCCF59 /* CellActionDialectFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellActionDialectFactory.h; path = include/CellActionDialectFactory.h; sourceTree = "<group>"; };
@@ -164,8 +161,6 @@
 				44DB3D4E1665ABF7000E312D /* CellTalkCapacity.h */,
 				44DB3D4F1665AC00000E312D /* CellTalkCapacity.m */,
 				44BEF63E164791AF00AFD75B /* CellTalkDefinition.h */,
-				18F589E016E43D750061861A /* CellTalker.h */,
-				18F589E216E43D7E0061861A /* CellTalker.m */,
 				444B2B7E162E497700C938AD /* CellTalkService.h */,
 				444B2B7F162E497F00C938AD /* CellTalkService.m */,
 				4412F679165B227800C0941B /* CellTalkServiceFailure.h */,
@@ -411,7 +406,6 @@
 				447741B2166F4C40008D6CCE /* CellDialectFactory.m in Sources */,
 				18F96ED816797AA700FCCF59 /* CellActionDialect.m in Sources */,
 				18F96F251679C28C00FCCF59 /* CellActionDialectFactory.m in Sources */,
-				18F589E316E43D7E0061861A /* CellTalker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,7 +434,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				"HEADER_SEARCH_PATHS[arch=*]" = ./nucleus/include;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -462,7 +456,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				"HEADER_SEARCH_PATHS[arch=*]" = ./nucleus/include;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

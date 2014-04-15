@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2013 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -30,19 +30,24 @@
 
 typedef void (^action_block_t)(CCActionDialect*);
 
-/** 动作执行委派。
+/**
+ * 动作执行委派。
+ *
  * @author Jiangwei Xu
  */
 @protocol CCActionDelegate <NSObject>
 
-/** 执行动作时被线程回调的执行方法。
+/**
+ * 执行动作时被线程回调的执行方法。
  */
 - (void)doAction:(CCActionDialect *)dialect;
 
 @end
 
 
-/** 动作方言。
+/**
+ * 动作方言。
+ *
  * @author Jiangwei Xu
  */
 @interface CCActionDialect : CCDialect
@@ -52,51 +57,68 @@ typedef void (^action_block_t)(CCActionDialect*);
 /// 自定义上下文
 @property (nonatomic, strong) id<NSObject> customContext;
 
-/** 指定动作跟踪器。
+/**
+ * 指定动作的跟踪器。
  */
 - (id)initWithTracker:(NSString *)tracker;
 
-/** 添加动作键值对。
+/**
+ * 指定动作名称。
+ */
+- (id)initWithAction:(NSString *)action;
+
+/**
+ * 添加动作键值对。
  */
 - (void)appendParam:(NSString *)name stringValue:(NSString *)value;
 
-/** 添加动作键值对。
+/**
+ * 添加动作键值对。
  */
 - (void)appendParam:(NSString *)name intValue:(int)value;
 
-/** 添加动作键值对。
+/**
+ * 添加动作键值对。
  */
 - (void)appendParam:(NSString *)name longValue:(long)value;
 
-/** 添加动作键值对。
+/**
+ * 添加动作键值对。
  */
 - (void)appendParam:(NSString *)name boolValue:(BOOL)value;
 
-/** 返回指定名称的参数值。
+/**
+ * 返回指定名称的参数值。
  */
 - (NSString *)getParamAsString:(NSString *)name;
 
-/** 返回指定名称的参数值。
+/**
+ * 返回指定名称的参数值。
  */
 - (int)getParamAsInt:(NSString *)name;
 
-/** 返回指定名称的参数值。
+/**
+ * 返回指定名称的参数值。
  */
 - (long)getParamAsLong:(NSString *)name;
 
-/** 返回指定名称的参数值。
+/**
+ * 返回指定名称的参数值。
  */
 - (BOOL)getParamAsBool:(NSString *)name;
 
-/** 判断指定名称的参数是否存在。
+/**
+ * 判断指定名称的参数是否存在。
  */
 - (BOOL)existParam:(NSString *)name;
 
-/** 异步执行动作。
+/**
+ * 异步执行动作。
  */
 - (void)act:(id<CCActionDelegate>)delegate;
 
-/** 异步执行动作。
+/**
+ * 异步执行动作。
  */
 - (void)actWithBlock:(action_block_t)block;
 

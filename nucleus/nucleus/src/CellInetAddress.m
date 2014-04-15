@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,13 +26,21 @@
 
 #import "CellInetAddress.h"
 
+@interface CCInetAddress()
+{
+@private
+    NSString *_host;
+    NSUInteger _port;
+}
+@end
+
 @implementation CCInetAddress
 
 @synthesize host = _host;
 @synthesize port = _port;
 
 //------------------------------------------------------------------------------
-- (id)initWithAddress:(NSString *)host port:(UInt16)port
+- (id)initWithAddress:(NSString *)host port:(NSUInteger)port
 {
     if ((self = [super init]))
     {
@@ -51,7 +59,7 @@
     return _host;
 }
 //------------------------------------------------------------------------------
-- (UInt16)getPort
+- (NSUInteger)getPort
 {
     return _port;
 }

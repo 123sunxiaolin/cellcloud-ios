@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -54,14 +54,10 @@ static CCNucleus *sharedInstance = nil;
 //------------------------------------------------------------------------------
 + (CCNucleus *)sharedSingleton
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[CCNucleus alloc] init];
-    });
     return sharedInstance;
 }
 //------------------------------------------------------------------------------
- + (CCNucleus *)sharedSingletonWithConfig:(CCNucleusConfig *)config
+ + (CCNucleus *)createSingletonWith:(CCNucleusConfig *)config
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -123,11 +119,11 @@ static CCNucleus *sharedInstance = nil;
         // 启动 Talk Service
         if ([talkService startup])
         {
-            // TODO
+            [CCLogger i:@"Starting talk service success."];
         }
         else
         {
-            // TODO
+            [CCLogger i:@"Starting talk service failure."];
         }
     }
 
@@ -143,7 +139,8 @@ static CCNucleus *sharedInstance = nil;
 - (void)shutdown
 {
     [CCLogger i:@"*-*-* Cell Finalizing *-*-*"];
-    // TODO
+
+    [[CCTalkService sharedSingleton] shutdown];
 }
 
 @end

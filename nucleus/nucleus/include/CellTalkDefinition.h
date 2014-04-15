@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -89,7 +89,8 @@
 #define CCTS_FAILURE_NOCELLET {'0', '0', '1', '0'}
 
 
-/** 挂起状态模式。
+/**
+ * 挂起状态模式。
  */
 typedef enum _CCSuspendMode
 {
@@ -102,9 +103,29 @@ typedef enum _CCSuspendMode
 } CCSuspendMode;
 
 
+/**
+ * 会话故障码。
+ */
+typedef enum _CCTalkFailureCode
+{
+    /// 未找到指定的 Cellet，不触发自动重连
+    CCFailureNotFoundCellet = 1000,
+
+    /// Call 失败
+    CCFailureCallFailed = 2000,
+
+    /// 会话连接意外断开
+    CCFailureTalkLost = 3000,
+
+    /// 重试次数达到上限，不触发自动重连
+    CCFailureRetryEnd = 4000
+
+} CCTalkFailureCode;
+
+
 /** 会话状态码。
  */
-typedef enum _CCTalkStatusCode
+/*typedef enum _CCTalkStatusCode
 {
     // 正确处理完成请求
     CCTalkStatusOk = 100,
@@ -127,7 +148,7 @@ typedef enum _CCTalkStatusCode
     // 未知状态
     CCTalkStatusUnknown = 900,
     
-} CCTalkStatusCode;
+} CCTalkStatusCode;*/
 
 #endif // CellTalkDefinition_h
 

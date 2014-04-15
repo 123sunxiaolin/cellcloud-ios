@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -28,11 +28,13 @@
 
 @interface CCPrimitiveSerializer : NSObject
 
-/** 序列化。
+/**
+ * 序列化。
  */
 + (NSData *)serialize:(CCPrimitive *)primitive;
 
-/** 反序列化。
+/**
+ * 反序列化。
  */
 + (CCPrimitive *)deserialize:(NSData *)dataStream;
 

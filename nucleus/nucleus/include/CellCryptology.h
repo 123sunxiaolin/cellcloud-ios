@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,19 +26,23 @@
 
 #include "CellPrerequisites.h"
 
-/** 加解密工具。
+/**
+ * 加解密工具。
  */
 @interface CCCryptology : NSObject
 
-/** 返回单例。
+/**
+ * 返回单例。
  */
 + (CCCryptology *)sharedSingleton;
 
-/** 简单数据异或加密。密钥长度必须为 8 位。
+/**
+ * 简单数据异或加密。密钥长度必须为 8 位。
  */
 - (int)simpleEncrypt:(char *)out text:(const char *)text length:(int)length key:(const char *)key;
 
-/** 简单数据异或解密。密钥长度必须为 8 位。
+/**
+ * 简单数据异或解密。密钥长度必须为 8 位。
  */
 - (int)simpleDecrypt:(char *)out text:(const char *)text length:(int)length key:(const char *)key;
 

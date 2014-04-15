@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@
 
 /** 返回单例。
  */
-+ (CCNucleus *)sharedSingletonWithConfig:(CCNucleusConfig *)config;
++ (CCNucleus *)createSingletonWith:(CCNucleusConfig *)config;
 
 /** 返回内核标签。
  */

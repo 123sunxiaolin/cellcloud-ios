@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2013 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,17 @@
 {
     if (self = [super initWithName:ACTION_DIALECT_NAME tracker:tracker])
     {
-        _params = [NSMutableDictionary dictionary];
+        _params = [[NSMutableDictionary alloc] initWithCapacity:2];
+    }
+
+    return self;
+}
+//------------------------------------------------------------------------------
+- (id)initWithAction:(NSString *)action
+{
+    if (self = [super initWithName:ACTION_DIALECT_NAME tracker:@"none"])
+    {
+        _action = action;
     }
 
     return self;
@@ -68,7 +78,7 @@
         [primitive commit:keyStuff];
         [primitive commit:valueStuff];
     }
-    
+
     CCPredicateStuff *actionStuff = [CCPredicateStuff stuffWithString:self.action];
     [primitive commit:actionStuff];
 

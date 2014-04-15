@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -33,10 +33,10 @@
 /// 连接地址。
 @property (nonatomic, strong, readonly) NSString *address;
 /// 连接端口。
-@property (nonatomic, assign, readonly) UInt16 port;
+@property (nonatomic, assign, readonly) NSUInteger port;
 
 /** 连接对端消息接收器。 */
-- (CCSession *)connect:(NSString *)address port:(UInt16)port;
+- (CCSession *)connect:(NSString *)address port:(NSUInteger)port;
 
 /** 关闭已建立的连接。 */
 - (void)disconnect;

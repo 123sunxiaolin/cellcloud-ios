@@ -37,6 +37,5 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiResume;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiTalk;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiDialect;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiTalker;
 
 @end

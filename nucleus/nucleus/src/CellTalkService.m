@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@
 #import "CellDialect.h"
 #import "CellDialectEnumerator.h"
 #import "CellActionDialectFactory.h"
+#import "CellTalkCapacity.h"
 #import "CellInetAddress.h"
 #import "CellLogger.h"
 
@@ -74,8 +75,6 @@ static CCTalkService *sharedInstance = nil;
         _monitor = [[NSObject alloc] init];
         _speakers = [NSMutableArray array];
         _hbCounts = 0;
-        // 默认重试间隔：10 秒
-        self.retryInterval = 10;
 
         // 添加默认方言工厂
         [[CCDialectEnumerator sharedSingleton] addFactory:[[CCActionDialectFactory alloc] init]];
@@ -155,11 +154,11 @@ static CCTalkService *sharedInstance = nil;
         // 检查丢失连接的 Speaker
         if (nil != _lostSpeakers && [_lostSpeakers count] > 0)
         {
-            NSMutableArray *discardedItems = [NSMutableArray array];
+            NSMutableArray *discardedItems = [[NSMutableArray alloc] initWithCapacity:1];
 
             for (CCSpeaker *spr in _lostSpeakers)
             {
-                if (_tickTime - spr.timestamp >= self.retryInterval)
+                if (nil != spr.capacity && _tickTime - spr.timestamp >= spr.capacity.retryInterval)
                 {
                     [CCLogger d:@"Retry call cellet %@ at %@:%d"
                         , spr.identifier
@@ -184,6 +183,11 @@ static CCTalkService *sharedInstance = nil;
 //------------------------------------------------------------------------------
 - (BOOL)call:(NSString *)identifier hostAddress:(CCInetAddress *)address
 {
+    return [self call:identifier hostAddress:address capacity:nil];
+}
+//------------------------------------------------------------------------------
+- (BOOL)call:(NSString *)identifier hostAddress:(CCInetAddress *)address capacity:(CCTalkCapacity *)capacity
+{
     CCSpeaker *current = nil;
     for (CCSpeaker *speaker in _speakers)
     {
@@ -196,7 +200,7 @@ static CCTalkService *sharedInstance = nil;
 
     if (nil == current)
     {
-        current = [[CCSpeaker alloc] initWithIdentifier:identifier];
+        current = [[CCSpeaker alloc] initWithCapacity:identifier capacity:capacity];
         [_speakers addObject:current];
     }
     else
@@ -211,7 +215,7 @@ static CCTalkService *sharedInstance = nil;
             }
         }
     }
-
+    
     BOOL ret = [current call:address];
     return ret;
 }

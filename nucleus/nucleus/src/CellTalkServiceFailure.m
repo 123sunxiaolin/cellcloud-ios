@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@
 
 @interface CCTalkServiceFailure (Private)
 
-- (void)construct:(CCTalkStatusCode)code file:(const char *)file line:(int)line function:(const char *)function;
+- (void)construct:(CCTalkFailureCode)code file:(const char *)file line:(int)line function:(const char *)function;
 
 @end
 
@@ -36,7 +36,7 @@
 @implementation CCTalkServiceFailure
 
 //------------------------------------------------------------------------------
-- (id)initWithSource:(CCTalkStatusCode)code file:(const char *)file line:(int)line function:(const char *)function
+- (id)initWithSource:(CCTalkFailureCode)code file:(const char *)file line:(int)line function:(const char *)function
 {
     if ((self = [super init]))
     {
@@ -46,19 +46,27 @@
     return self;
 }
 //------------------------------------------------------------------------------
-- (void)construct:(CCTalkStatusCode)code file:(const char *)file line:(int)line function:(const char *)function
+- (void)construct:(CCTalkFailureCode)code file:(const char *)file line:(int)line function:(const char *)function
 {
     self.code = code;
     self.reason = [NSString stringWithFormat:@"Error in %s function - %s on line %d", function, file, line];
 
     switch (code)
     {
-    case CCTalkStatusNotFoundCellet:
+    case CCFailureNotFoundCellet:
         self.description = @"Server can not find specified cellet";
         self.sourceDescription = @"";
         break;
-    case CCTalkStatusConnectTimeout:
+    case CCFailureCallFailed:
         self.description = @"Network connecting timeout";
+        self.sourceDescription = @"";
+        break;
+    case CCFailureTalkLost:
+        self.description = @"Lost talk connection";
+        self.sourceDescription = @"";
+        break;
+    case CCFailureRetryEnd:
+        self.description = @"Auto retry end";
         self.sourceDescription = @"";
         break;
     default:

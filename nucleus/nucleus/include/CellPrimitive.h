@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,8 @@
 #include "CellPrerequisites.h"
 #import "CellStuff.h"
 
-/** 原语。
+/**
+ * 原语。
  *
  * @author Jiangwei Xu
  */
@@ -43,39 +44,48 @@
 @property (nonatomic, strong, readonly) NSMutableArray *adverbials;
 @property (nonatomic, strong, readonly) NSMutableArray *complements;
 
-/** 使用标签初始化。
+/**
+ * 使用标签初始化。
  */
 - (id)initWithTag:(NSString *)tag;
 
-/** 使用方言初始化。
+/**
+ * 使用方言初始化。
  */
 - (id)initWithDialect:(CCDialect *)dialect;
 
-/** 提交语素。
+/**
+ * 提交语素。
  */
 - (void)commit:(CCStuff *)stuff;
 
-/** 清空所有语素。
+/**
+ * 清空所有语素。
  */
 - (void)clearStuff;
 
-/** 复制语素。
+/**
+ * 复制语素。
  */
 - (void)copyStuff:(CCPrimitive *)dest;
 
-/** 关联方言。
+/**
+ * 关联方言。
  */
 - (void)capture:(CCDialect *)dialect;
 
-/** 是否具有方言特征。
+/**
+ * 是否具有方言特征。
  */
 - (BOOL)isDialectal;
 
-/** 序列化原语。
+/**
+ * 序列化原语。
  */
 + (NSData *)write:(CCPrimitive *)primitive;
 
-/** 反序列化原语。
+/**
+ * 反序列化原语。
  */
 + (CCPrimitive *)read:(NSData *)stream;
 

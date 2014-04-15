@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,8 @@
 #include "CellPrerequisites.h"
 #import "CellMessageService.h"
 
-/** 对话者状态。
+/**
+ * 对话者状态。
  */
 typedef enum _CCSpeakerState
 {
@@ -45,7 +46,9 @@ typedef enum _CCSpeakerState
 
 } CCSpeakerState;
 
-/** 对话者描述类。
+/**
+ * 对话者描述类。
+ *
  * @author Jiangwei Xu
  */
 @interface CCSpeaker : NSObject <CCMessageHandler>
@@ -58,7 +61,7 @@ typedef enum _CCSpeakerState
 @property (atomic, assign) CCSpeakerState state;
 
 /** 初始化。 */
-- (id)initWithIdentifier:(NSString *)identifier;
+- (id)initWith:(NSString *)identifier;
 /** 初始化。 */
 - (id)initWithCapacity:(NSString *)identifier capacity:(CCTalkCapacity*)capacity;
 

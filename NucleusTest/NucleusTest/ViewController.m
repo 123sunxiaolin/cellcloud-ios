@@ -59,7 +59,6 @@
     [self setBbiResume:nil];
     [self setBbiTalk:nil];
     [self setBbiDialect:nil];
-    [self setBbiTalker:nil];
     [super viewDidUnload];
 }
 //------------------------------------------------------------------------------
@@ -72,7 +71,6 @@
     [self.bbiResume setAction:@selector(doResumeHandler:)];
     [self.bbiTalk setAction:@selector(doTalkHandler:)];
     [self.bbiDialect setAction:@selector(doDialectHandler:)];
-    [self.bbiTalker setAction:@selector(doTalkerHandler:)];
 
     self.bbiCall.enabled = TRUE;
     self.bbiHangUp.enabled = FALSE;
@@ -87,7 +85,7 @@
                       "| __| __| | | |    | __| | |   | | | _ \\\n"\
                       "| |_| _|| |_| |_   | |_| |_| | | | | | |\n"\
                       "|___|___|___|___|  |___|___|___|___|___/\n\n"\
-                      "Copyright (c) 2009,2012 Cell Cloud Team, www.cellcloud.net\n"\
+                      "Copyright (c) 2009,2014 Cell Cloud Team, www.cellcloud.net\n"\
                       "-----------------------------------------------------------------------\n"
                       , [CCVersion major]
                       , [CCVersion minor]
@@ -244,7 +242,8 @@
 {
     [CCLogger d:@"failed - Code:%d - Reason:%@ - Desc:%@", failure.code, failure.reason, failure.description];
 
-    if (CCTalkStatusConnectTimeout == failure.code)
+    if (CCFailureCallFailed == failure.code
+        || CCFailureTalkLost == failure.code)
     {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.bbiHangUp.enabled = YES;
@@ -389,11 +388,11 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
             , ^{
-                CCInetAddress *address = [[CCInetAddress alloc] initWithAddress:@"192.168.0.110" port:7000];
+                /*CCInetAddress *address = [[CCInetAddress alloc] initWithAddress:@"192.168.0.110" port:7000];
                 CCTalker *talker = [[CCTalker alloc] initWithIdentifier:@"Dummy" address:address];
                 
                 CCPrimitive *pri = [_helper.primitives objectAtIndex:0];
-                [talker talkWithPrimitive:pri];
+                [talker talkWithPrimitive:pri];*/
             });
 }
 

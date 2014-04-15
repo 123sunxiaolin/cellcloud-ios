@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,18 @@
 #import "CellTalkCapacity.h"
 
 @implementation CCTalkCapacity
+
+
+//------------------------------------------------------------------------------
+- (id)init
+{
+    if (self = [super init])
+    {
+        // 默认重试间隔：10 秒
+        self.retryInterval = 10;
+    }
+    return self;
+}
 
 //------------------------------------------------------------------------------
 + (NSData *)serialize:(CCTalkCapacity *)capacity
