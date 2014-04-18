@@ -655,6 +655,7 @@
                                                                                 line:__LINE__
                                                                             function:__FUNCTION__];
         failure.sourceDescription = @"No network device";
+        failure.sourceCelletIdentifier = _identifier;
         [self fireFailed:failure];
 
         // 标记为丢失
@@ -667,6 +668,7 @@
                                                                                 line:__LINE__
                                                                             function:__FUNCTION__];
         failure.sourceDescription = @"Network fault, connection closed";
+        failure.sourceCelletIdentifier = _identifier;
         [self fireFailed:failure];
 
         // 标记为丢失
@@ -705,6 +707,7 @@
                                          line:__LINE__
                                          function:__FUNCTION__];
         failure.sourceDescription = @"Attempt to connect to host timed out";
+        failure.sourceCelletIdentifier = _identifier;
         [self fireFailed:failure];
 
         // 标记为丢失
