@@ -55,6 +55,7 @@
     if (self = [super initWithName:ACTION_DIALECT_NAME tracker:@"none"])
     {
         _action = action;
+        _params = [[NSMutableDictionary alloc] initWithCapacity:2];
     }
 
     return self;
