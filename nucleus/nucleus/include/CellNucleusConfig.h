@@ -31,16 +31,16 @@
 typedef enum _CCNucleusRole
 {
     /// 计算节点
-    NODE = 0x01,
-    
+    CCRoleNode = 0x01,
+
     /// 存储
-    STORAGE = 0x02,
-    
+    CCRoleStorage = 0x02,
+
     /// 网关
-    GATE = 0X04,
-    
+    CCRoleGate = 0x04,
+
     /// 消费
-    CONSUMER = 0x08
+    CCRoleConsumer = 0x08
 } CCNucleusRole;
 
 
@@ -49,16 +49,16 @@ typedef enum _CCNucleusRole
 typedef enum _CCNucleusDevice
 {
     /// 手机
-    PHONE = 1,
+    CCDevicePhone = 1,
     
     /// 平板
-    TABLET = 3,
+    CCDeviceTablet = 3,
 
     /// 台式机
-    DESKTOP = 5,
+    CCDeviceDesktop = 5,
 
     /// 服务器
-    SERVER = 7
+    CCDeviceServer = 7
 } CCNucleusDevice;
 
 @interface CCNucleusConfig : NSObject

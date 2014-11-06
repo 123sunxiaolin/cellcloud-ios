@@ -43,11 +43,10 @@
 {
     if ((self = [super init]))
     {
-        _value = value;
+        _value = [NSString stringWithString:value];
         self.literalBase = CCLiteralBaseString;
         [self willInitType];
     }
-
     return self;
 }
 //------------------------------------------------------------------------------
@@ -59,7 +58,17 @@
         self.literalBase = CCLiteralBaseInt;
         [self willInitType];
     }
-
+    return self;
+}
+//------------------------------------------------------------------------------
+- (id)initWithUInt:(unsigned int)value
+{
+    if ((self = [super init]))
+    {
+        _value = [[NSString alloc] initWithFormat:@"%u", value];
+        self.literalBase = CCLiteralBaseUInt;
+        [self willInitType];
+    }
     return self;
 }
 //------------------------------------------------------------------------------
@@ -71,7 +80,17 @@
         self.literalBase = CCLiteralBaseLong;
         [self willInitType];
     }
-    
+    return self;
+}
+//------------------------------------------------------------------------------
+- (id)initWithULong:(unsigned long)value
+{
+    if ((self = [super init]))
+    {
+        _value = [[NSString alloc] initWithFormat:@"%lu", value];
+        self.literalBase = CCLiteralBaseULong;
+        [self willInitType];
+    }
     return self;
 }
 //------------------------------------------------------------------------------
@@ -83,7 +102,60 @@
         self.literalBase = CCLiteralBaseBool;
         [self willInitType];
     }
-
+    return self;
+}
+//------------------------------------------------------------------------------
+- (id)initWithDictionary:(NSDictionary *)value
+{
+    if ((self = [super init]))
+    {
+        __autoreleasing NSError *error = nil;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value
+                                                           options:NSJSONWritingPrettyPrinted
+                                                             error:&error];
+        _value = [[NSString alloc] initWithData:jsonData
+                                       encoding:NSUTF8StringEncoding];
+        self.literalBase = CCLiteralBaseJSON;
+        [self willInitType];
+    }
+    return self;
+}
+//------------------------------------------------------------------------------
+- (id)initWithArray:(NSArray *)value
+{
+    if ((self = [super init]))
+    {
+        __autoreleasing NSError *error = nil;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value
+                                                           options:NSJSONWritingPrettyPrinted
+                                                             error:&error];
+        _value = [[NSString alloc] initWithData:jsonData
+                                       encoding:NSUTF8StringEncoding];
+        self.literalBase = CCLiteralBaseJSON;
+        [self willInitType];
+    }
+    return self;
+}
+//------------------------------------------------------------------------------
+- (id)initWithFloat:(float)value
+{
+    if ((self = [super init]))
+    {
+        _value = [NSString stringWithFormat:@"%.2f", value];
+        self.literalBase = CCLiteralBaseFloat;
+        [self willInitType];
+    }
+    return self;
+}
+//------------------------------------------------------------------------------
+- (id)initWithDouble:(double)value
+{
+    if ((self = [super init]))
+    {
+        _value = [NSString stringWithFormat:@"%.2f", value];
+        self.literalBase = CCLiteralBaseDouble;
+        [self willInitType];
+    }
     return self;
 }
 //------------------------------------------------------------------------------
@@ -95,8 +167,12 @@
         self.literalBase = literal;
         [self willInitType];
     }
-    
     return self;
+}
+//------------------------------------------------------------------------------
+- (void)dealloc
+{
+    _value = nil;
 }
 //------------------------------------------------------------------------------
 - (void)willInitType
@@ -114,7 +190,17 @@
     return [_value intValue];
 }
 //------------------------------------------------------------------------------
+- (unsigned int)getValueAsUInt
+{
+    return [_value intValue];
+}
+//------------------------------------------------------------------------------
 - (long)getValueAsLong
+{
+    return [_value longLongValue];
+}
+//------------------------------------------------------------------------------
+- (unsigned long)getValueAsULong
 {
     return [_value longLongValue];
 }
@@ -122,6 +208,36 @@
 - (BOOL)getValueAsBoolean
 {
     return [_value isEqualToString:@"true"] ? TRUE : FALSE;
+}
+//------------------------------------------------------------------------------
+- (NSDictionary *)getValueAsDictionary
+{
+    __autoreleasing NSError *error = nil;
+    NSData *jsonData = [_value dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *ret = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                        options:NSJSONReadingAllowFragments
+                                                          error:&error];
+    return ret;
+}
+//------------------------------------------------------------------------------
+- (NSArray *)getValueAsArray
+{
+    __autoreleasing NSError *error = nil;
+    NSData *jsonData = [_value dataUsingEncoding:NSUTF8StringEncoding];
+    NSArray *ret = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                   options:NSJSONReadingAllowFragments
+                                                     error:&error];
+    return ret;
+}
+//------------------------------------------------------------------------------
+- (float)getValueAsFloat
+{
+    return [_value floatValue];
+}
+//------------------------------------------------------------------------------
+- (double)getValueAsDouble
+{
+    return [_value doubleValue];
 }
 
 @end

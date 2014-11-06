@@ -36,9 +36,27 @@
 + (CCPredicateStuff *)stuffWithInt:(int)value;
 /**
  */
++ (CCPredicateStuff *)stuffWithUInt:(unsigned int)value;
+/**
+ */
 + (CCPredicateStuff *)stuffWithLong:(long)value;
 /**
  */
++ (CCPredicateStuff *)stuffWithULong:(unsigned long)value;
+/**
+ */
 + (CCPredicateStuff *)stuffWithBool:(BOOL)value;
+/**
+ */
++ (CCPredicateStuff *)stuffWithDictionary:(NSDictionary *)value;
+/**
+ */
++ (CCPredicateStuff *)stuffWithArray:(NSArray *)value;
+/**
+ */
++ (CCPredicateStuff *)stuffWithFloat:(float)value;
+/**
+ */
++ (CCPredicateStuff *)stuffWithDouble:(double)value;
 
 @end

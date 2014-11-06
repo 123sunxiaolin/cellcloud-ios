@@ -33,8 +33,8 @@
 {
     if ((self = [super init]))
     {
-        self.role = CONSUMER;
-        self.device = PHONE;
+        self.role = CCRoleConsumer;
+        self.device = CCDevicePhone;
     }
     
     return self;

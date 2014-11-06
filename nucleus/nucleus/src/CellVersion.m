@@ -26,10 +26,10 @@
 
 #import "CellVersion.h"
 
-#define CC_MAJOR 0
-#define CC_MINOR 5
+#define CC_MAJOR 1
+#define CC_MINOR 0
 #define CC_REVISION 0
-#define CC_NAME @"Origin"
+#define CC_NAME @"Journey"
 
 @implementation CCVersion
 

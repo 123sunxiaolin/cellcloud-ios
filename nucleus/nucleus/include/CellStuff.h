@@ -57,7 +57,7 @@ typedef enum _CCStuffType
 @property (nonatomic, assign) CCStuffType type;
 @property (nonatomic, assign) CCLiteralBase literalBase;
 
-/**
+/** 构造为数据字面义为字符串类型。
  */
 - (id)initWithString:(NSString *)value;
 /**
@@ -65,10 +65,28 @@ typedef enum _CCStuffType
 - (id)initWithInt:(int)value;
 /**
  */
+- (id)initWithUInt:(unsigned int)value;
+/**
+ */
 - (id)initWithLong:(long)value;
 /**
  */
+- (id)initWithULong:(unsigned long)value;
+/**
+ */
 - (id)initWithBool:(BOOL)value;
+/**
+ */
+- (id)initWithDictionary:(NSDictionary *)value;
+/**
+ */
+- (id)initWithArray:(NSArray *)value;
+/**
+ */
+- (id)initWithFloat:(float)value;
+/**
+ */
+- (id)initWithDouble:(double)value;
 /**
  */
 - (id)initWithData:(NSData *)data literal:(CCLiteralBase)literal;
@@ -85,9 +103,27 @@ typedef enum _CCStuffType
 - (int)getValueAsInt;
 /**
  */
+- (unsigned int)getValueAsUInt;
+/**
+ */
 - (long)getValueAsLong;
 /**
  */
+- (unsigned long)getValueAsULong;
+/**
+ */
 - (BOOL)getValueAsBoolean;
+/**
+ */
+- (NSDictionary *)getValueAsDictionary;
+/**
+ */
+- (NSArray *)getValueAsArray;
+/**
+ */
+- (float)getValueAsFloat;
+/**
+ */
+- (double)getValueAsDouble;
 
 @end

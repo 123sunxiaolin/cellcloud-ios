@@ -36,9 +36,27 @@
 + (CCAdverbialStuff *)stuffWithInt:(int)value;
 /**
  */
++ (CCAdverbialStuff *)stuffWithUInt:(unsigned int)value;
+/**
+ */
 + (CCAdverbialStuff *)stuffWithLong:(long)value;
 /**
  */
++ (CCAdverbialStuff *)stuffWithULong:(unsigned long)value;
+/**
+ */
 + (CCAdverbialStuff *)stuffWithBool:(BOOL)value;
+/**
+ */
++ (CCAdverbialStuff *)stuffWithDictionary:(NSDictionary *)value;
+/**
+ */
++ (CCAdverbialStuff *)stuffWithArray:(NSArray *)value;
+/**
+ */
++ (CCAdverbialStuff *)stuffWithFloat:(float)value;
+/**
+ */
++ (CCAdverbialStuff *)stuffWithDouble:(double)value;
 
 @end

@@ -39,8 +39,6 @@
 
 @implementation CCSession
 
-@synthesize id = _id;
-
 //------------------------------------------------------------------------------
 - (id)initWithService:(CCMessageService *)service address:(CCInetAddress *)address
 {

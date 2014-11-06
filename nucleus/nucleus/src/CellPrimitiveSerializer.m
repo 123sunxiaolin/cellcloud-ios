@@ -76,13 +76,25 @@
 
 #define LITERALBASE_STRING "string"
 #define LITERALBASE_INT "int"
+#define LITERALBASE_UINT "uint"
 #define LITERALBASE_LONG "long"
+#define LITERALBASE_ULONG "ulong"
+#define LITERALBASE_FLOAT "float"
+#define LITERALBASE_DOUBLE "double"
 #define LITERALBASE_BOOL "bool"
+#define LITERALBASE_JSON "json"
+#define LITERALBASE_XML "xml"
 
 #define LITERALBASE_STRING_NSSTRING @"string"
 #define LITERALBASE_INT_NSSTRING @"int"
+#define LITERALBASE_UINT_NSSTRING @"uint"
 #define LITERALBASE_LONG_NSSTRING @"long"
+#define LITERALBASE_ULONG_NSSTRING @"ulong"
+#define LITERALBASE_FLOAT_NSSTRING @"float"
+#define LITERALBASE_DOUBLE_NSSTRING @"double"
 #define LITERALBASE_BOOL_NSSTRING @"bool"
+#define LITERALBASE_JSON_NSSTRING @"json"
+#define LITERALBASE_XML_NSSTRING @"xml"
 
 #define PARSE_PHASE_UNKNOWN 0
 #define PARSE_PHASE_VERSION 1
@@ -122,7 +134,7 @@
     原语序列化格式：
     [version]{sutff}...{stuff}[dialect@tracker]
     示例：
-    [01.00]{sub=cloud:string}{pre=add:string}[FileReader@Lynx]
+    [01.00]{sub=cloud:string}{pre=add:string}[FileReader@Ambrose]
     */
     
     NSMutableData *stream = [[NSMutableData alloc] init];
@@ -205,7 +217,7 @@
     原语序列化格式：
     [version]{sutff}...{stuff}[dialect@tracker]
     示例：
-    [01.00]{sub=cloud:string}{pre=add:string}[FileReader@Lynx]
+    [01.00]{sub=cloud:string}{pre=add:string}[FileReader@Ambrose]
     */
 
     CCPrimitive *primitive = [[CCPrimitive alloc] init];
@@ -430,14 +442,29 @@
     case CCLiteralBaseString:
         ret = [NSData dataWithBytes:LITERALBASE_STRING length:strlen(LITERALBASE_STRING)];
         break;
+    case CCLiteralBaseJSON:
+        ret = [NSData dataWithBytes:LITERALBASE_JSON length:strlen(LITERALBASE_JSON)];
+        break;
     case CCLiteralBaseInt:
         ret = [NSData dataWithBytes:LITERALBASE_INT length:strlen(LITERALBASE_INT)];
+        break;
+    case CCLiteralBaseUInt:
+        ret = [NSData dataWithBytes:LITERALBASE_UINT length:strlen(LITERALBASE_UINT)];
         break;
     case CCLiteralBaseLong:
         ret = [NSData dataWithBytes:LITERALBASE_LONG length:strlen(LITERALBASE_LONG)];
         break;
+    case CCLiteralBaseULong:
+        ret = [NSData dataWithBytes:LITERALBASE_ULONG length:strlen(LITERALBASE_ULONG)];
+        break;
     case CCLiteralBaseBool:
         ret = [NSData dataWithBytes:LITERALBASE_BOOL length:strlen(LITERALBASE_BOOL)];
+        break;
+    case CCLiteralBaseFloat:
+        ret = [NSData dataWithBytes:LITERALBASE_FLOAT length:strlen(LITERALBASE_FLOAT)];
+        break;
+    case CCLiteralBaseDouble:
+        ret = [NSData dataWithBytes:LITERALBASE_DOUBLE length:strlen(LITERALBASE_DOUBLE)];
         break;
     default:
         break;
@@ -451,12 +478,22 @@
     NSString *szLiteral = [[NSString alloc] initWithData:literal encoding:NSUTF8StringEncoding];
     if ([szLiteral isEqualToString:LITERALBASE_STRING_NSSTRING])
         literalBase = CCLiteralBaseString;
+    else if ([szLiteral isEqualToString:LITERALBASE_JSON_NSSTRING])
+        literalBase = CCLiteralBaseJSON;
     else if ([szLiteral isEqualToString:LITERALBASE_INT_NSSTRING])
         literalBase = CCLiteralBaseInt;
     else if ([szLiteral isEqualToString:LITERALBASE_LONG_NSSTRING])
         literalBase = CCLiteralBaseLong;
     else if ([szLiteral isEqualToString:LITERALBASE_BOOL_NSSTRING])
         literalBase = CCLiteralBaseBool;
+    else if ([szLiteral isEqualToString:LITERALBASE_FLOAT_NSSTRING])
+        literalBase = CCLiteralBaseFloat;
+    else if ([szLiteral isEqualToString:LITERALBASE_DOUBLE_NSSTRING])
+        literalBase = CCLiteralBaseDouble;
+    else if ([szLiteral isEqualToString:LITERALBASE_UINT_NSSTRING])
+        literalBase = CCLiteralBaseUInt;
+    else if ([szLiteral isEqualToString:LITERALBASE_ULONG_NSSTRING])
+        literalBase = CCLiteralBaseULong;
     else
         [CCLogger e:@"Error primitive stuff literal base"];
 

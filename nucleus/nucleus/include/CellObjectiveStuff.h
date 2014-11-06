@@ -36,9 +36,27 @@
 + (CCObjectiveStuff *)stuffWithInt:(int)value;
 /**
  */
++ (CCObjectiveStuff *)stuffWithUInt:(unsigned int)value;
+/**
+ */
 + (CCObjectiveStuff *)stuffWithLong:(long)value;
 /**
  */
++ (CCObjectiveStuff *)stuffWithULong:(unsigned long)value;
+/**
+ */
 + (CCObjectiveStuff *)stuffWithBool:(BOOL)value;
+/**
+ */
++ (CCObjectiveStuff *)stuffWithDictionary:(NSDictionary *)value;
+/**
+ */
++ (CCObjectiveStuff *)stuffWithArray:(NSArray *)value;
+/**
+ */
++ (CCObjectiveStuff *)stuffWithFloat:(float)value;
+/**
+ */
++ (CCObjectiveStuff *)stuffWithDouble:(double)value;
 
 @end

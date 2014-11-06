@@ -31,15 +31,33 @@ typedef enum _CCLiteralBase
 {
     /// 字符串类型。
     CCLiteralBaseString = 1,
-    
+
     /// 整数型。
     CCLiteralBaseInt,
-    
-    /// 长整数型。
+
+    /// 无符号整数型。
+    CCLiteralBaseUInt,
+
+    /// 长整型。
     CCLiteralBaseLong,
-    
+
+    /// 无符号长整型。
+    CCLiteralBaseULong,
+
     /// 布尔型。
-    CCLiteralBaseBool
+    CCLiteralBaseBool,
+
+    /// 浮点型。
+    CCLiteralBaseFloat,
+
+    /// 双精浮点型。
+    CCLiteralBaseDouble,
+
+    /// JSON 类型。
+    CCLiteralBaseJSON,
+
+    /// XML 类型。
+    CCLiteralBaseXML
     
 } CCLiteralBase;
 

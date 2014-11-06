@@ -83,7 +83,7 @@
 
 - (void)startupCell
 {
-    CCNucleusConfig *config = [[CCNucleusConfig alloc] init:CONSUMER device:PHONE];
+    CCNucleusConfig *config = [[CCNucleusConfig alloc] init:CCRoleConsumer device:CCDevicePhone];
     CCNucleus *nucleus = [CCNucleus createSingletonWith:config];
     [nucleus startup];
 }

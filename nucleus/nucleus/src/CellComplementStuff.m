@@ -45,14 +45,44 @@
     return [[CCComplementStuff alloc] initWithInt:value];
 }
 //------------------------------------------------------------------------------
++ (CCComplementStuff *)stuffWithUInt:(unsigned int)value
+{
+    return [[CCComplementStuff alloc] initWithUInt:value];
+}
+//------------------------------------------------------------------------------
 + (CCComplementStuff *)stuffWithLong:(long)value
 {
     return [[CCComplementStuff alloc] initWithLong:value];
 }
 //------------------------------------------------------------------------------
++ (CCComplementStuff *)stuffWithULong:(unsigned long)value
+{
+    return [[CCComplementStuff alloc] initWithULong:value];
+}
+//------------------------------------------------------------------------------
 + (CCComplementStuff *)stuffWithBool:(BOOL)value
 {
     return [[CCComplementStuff alloc] initWithBool:value];
+}
+//------------------------------------------------------------------------------
++ (CCComplementStuff *)stuffWithDictionary:(NSDictionary *)value
+{
+    return [[CCComplementStuff alloc] initWithDictionary:value];
+}
+//------------------------------------------------------------------------------
++ (CCComplementStuff *)stuffWithArray:(NSArray *)value
+{
+    return [[CCComplementStuff alloc] initWithArray:value];
+}
+//------------------------------------------------------------------------------
++ (CCComplementStuff *)stuffWithFloat:(float)value
+{
+    return [[CCComplementStuff alloc] initWithFloat:value];
+}
+//------------------------------------------------------------------------------
++ (CCComplementStuff *)stuffWithDouble:(double)value
+{
+    return [[CCComplementStuff alloc] initWithDouble:value];
 }
 
 @end

@@ -45,14 +45,44 @@
     return [[CCAdverbialStuff alloc] initWithInt:value];
 }
 //------------------------------------------------------------------------------
++ (CCAdverbialStuff *)stuffWithUInt:(unsigned int)value
+{
+    return [[CCAdverbialStuff alloc] initWithUInt:value];
+}
+//------------------------------------------------------------------------------
 + (CCAdverbialStuff *)stuffWithLong:(long)value
 {
     return [[CCAdverbialStuff alloc] initWithLong:value];
 }
 //------------------------------------------------------------------------------
++ (CCAdverbialStuff *)stuffWithULong:(unsigned long)value
+{
+    return [[CCAdverbialStuff alloc] initWithULong:value];
+}
+//------------------------------------------------------------------------------
 + (CCAdverbialStuff *)stuffWithBool:(BOOL)value
 {
     return [[CCAdverbialStuff alloc] initWithBool:value];
+}
+//------------------------------------------------------------------------------
++ (CCAdverbialStuff *)stuffWithDictionary:(NSDictionary *)value
+{
+    return [[CCAdverbialStuff alloc] initWithDictionary:value];
+}
+//------------------------------------------------------------------------------
++ (CCAdverbialStuff *)stuffWithArray:(NSArray *)value
+{
+    return [[CCAdverbialStuff alloc] initWithArray:value];
+}
+//------------------------------------------------------------------------------
++ (CCAdverbialStuff *)stuffWithFloat:(float)value
+{
+    return [[CCAdverbialStuff alloc] initWithFloat:value];
+}
+//------------------------------------------------------------------------------
++ (CCAdverbialStuff *)stuffWithDouble:(double)value
+{
+    return [[CCAdverbialStuff alloc] initWithDouble:value];
 }
 
 @end

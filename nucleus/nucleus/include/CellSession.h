@@ -30,8 +30,6 @@
  */
 @interface CCSession : NSObject
 
-@property (nonatomic, assign, readonly) long id;
-
 /** 标准初始化。
  */
 - (id)initWithService:(CCMessageService *)service address:(CCInetAddress *)address;

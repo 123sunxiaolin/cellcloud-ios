@@ -35,6 +35,8 @@
 
 @implementation CCTalkServiceFailure
 
+@synthesize description;
+
 //------------------------------------------------------------------------------
 - (id)initWithSource:(CCTalkFailureCode)code file:(const char *)file line:(int)line function:(const char *)function
 {

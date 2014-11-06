@@ -114,7 +114,7 @@ static CCNucleus *sharedInstance = nil;
     CCTalkService *talkService = [CCTalkService sharedSingleton];
 
     // 节点角色
-    if ((_config.role & NODE) != 0)
+    if ((_config.role & CCRoleNode) != 0)
     {
         // 启动 Talk Service
         if ([talkService startup])
@@ -128,7 +128,7 @@ static CCNucleus *sharedInstance = nil;
     }
 
     // 消费角色
-    if ((_config.role & CONSUMER) != 0)
+    if ((_config.role & CCRoleConsumer) != 0)
     {
         [talkService startDaemon];
     }
