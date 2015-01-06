@@ -53,7 +53,7 @@ typedef enum _CCSpeakerState
  */
 @interface CCSpeaker : NSObject <CCMessageHandler>
 
-@property (nonatomic, strong, readonly) NSString *identifier;
+@property (nonatomic, strong, readonly) NSArray *identifiers;
 @property (nonatomic, strong, readonly) CCInetAddress *address;
 @property (nonatomic, strong, readonly) CCNucleusTag *remoteTag;
 @property (nonatomic, strong) CCTalkCapacity *capacity;
@@ -61,12 +61,14 @@ typedef enum _CCSpeakerState
 @property (atomic, assign) CCSpeakerState state;
 
 /** 初始化。 */
-- (id)initWith:(NSString *)identifier;
+- (id)initWith:(CCInetAddress *)address;
 /** 初始化。 */
-- (id)initWithCapacity:(NSString *)identifier capacity:(CCTalkCapacity*)capacity;
+- (id)initWithCapacity:(CCInetAddress *)address capacity:(CCTalkCapacity*)capacity;
 
 /** 向指定地址请求 Cellet 服务。 */
-- (BOOL)call:(CCInetAddress *)address;
+- (BOOL)call:(NSArray *)identifiers;
+
+- (BOOL)recall;
 
 /** 中断与 Cellet 服务。 */
 - (void)hangUp;
@@ -84,7 +86,7 @@ typedef enum _CCSpeakerState
 - (BOOL)isSuspended;
 
 /** 向 Cellet 发送原语。 */
-- (BOOL)speak:(CCPrimitive *)primitive;
+- (BOOL)speak:(NSString *)identifier primitive:(CCPrimitive *)primitive;
 
 /** 心跳。 */
 - (void)heartbeat;

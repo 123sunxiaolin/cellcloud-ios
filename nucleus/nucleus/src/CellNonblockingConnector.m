@@ -111,6 +111,9 @@
     // 创建 Socket
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     _asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:queue];
+    
+    // 注册为 VoIP Socket
+    [_asyncSocket enableBackgroundingOnSocket];
 
     [CCLogger d:@"Connecting to %@:%hu", address, port];
 
@@ -138,7 +141,6 @@
     if (nil != _asyncSocket)
     {
         [_asyncSocket disconnect];
-        [_asyncSocket setDelegate:nil delegateQueue:NULL];
         _asyncSocket = nil;
     }
 

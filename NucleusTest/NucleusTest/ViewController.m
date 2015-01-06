@@ -313,8 +313,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
             , ^{
                 // 连接 Cellet 服务
-                CCInetAddress *address = [[CCInetAddress alloc] initWithAddress:@"192.168.0.110" port:7000];
-                [[CCTalkService sharedSingleton] call:@"Dummy" hostAddress:address];
+                CCInetAddress *address = [[CCInetAddress alloc] initWithAddress:@"127.0.0.1" port:7000];
+                [[CCTalkService sharedSingleton] call:[NSArray arrayWithObjects:@"Dummy", nil] hostAddress:address];
             });
 }
 //------------------------------------------------------------------------------

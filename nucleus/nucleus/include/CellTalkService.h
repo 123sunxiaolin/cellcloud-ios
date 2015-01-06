@@ -86,12 +86,12 @@
 /**
  * 申请指定的 Cellet 服务。
  */
-- (BOOL)call:(NSString *)identifier hostAddress:(CCInetAddress *)address;
+- (BOOL)call:(NSArray *)identifiers hostAddress:(CCInetAddress *)address;
 
 /**
  * 申请指定的 Cellet 服务。
  */
-- (BOOL)call:(NSString *)identifier hostAddress:(CCInetAddress *)address capacity:(CCTalkCapacity *)capacity;
+- (BOOL)call:(NSArray *)identifiers hostAddress:(CCInetAddress *)address capacity:(CCTalkCapacity *)capacity;
 
 /**
  * 挂断指定的 Cellet 服务。

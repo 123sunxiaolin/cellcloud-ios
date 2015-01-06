@@ -47,13 +47,13 @@
 @interface CCSpeaker ()
 {
 @private
-    NSString *_identifier;
-    
+    NSMutableArray *_identifierList;
+
     CCInetAddress *_address;
     CCNonblockingConnector *_connector;
-    
+
     CCNucleusTag *_remoteTag;
-    
+
     NSObject *_monitor;
 }
 
@@ -82,15 +82,15 @@
 - (void)processDialogue:(CCPacket *)packet session:(CCSession *)session;
 
 /// 请求 Cellet
-- (void)requestCellet:(CCSession *)session;
+- (void)requestCellets:(CCSession *)session;
 
 /// 协商能力
 - (void)consult:(CCTalkCapacity *)capacity;
 
 ///
-- (void)fireContacted;
+- (void)fireContacted:(NSString *)celletIdentifier;
 ///
-- (void)fireQuitted;
+- (void)fireQuitted:(NSString *)celletIdentifier;
 ///
 - (void)fireSuspended:(NSTimeInterval)timestamp mode:(CCSuspendMode)mode;
 ///
@@ -105,7 +105,7 @@
 
 @implementation CCSpeaker
 
-@synthesize identifier = _identifier;
+@synthesize identifiers = _identifierList;
 @synthesize address = _address;
 @synthesize remoteTag = _remoteTag;
 
@@ -115,30 +115,33 @@
     if ((self = [super init]))
     {
         _monitor = [[NSObject alloc] init];
+        _identifierList = [[NSMutableArray alloc] initWithCapacity:2];
         self.state = CCSpeakerStateHangUp;
     }
 
     return self;
 }
 //------------------------------------------------------------------------------
-- (id)initWith:(NSString *)identifier
+- (id)initWith:(CCInetAddress *)address
 {
     if ((self = [super init]))
     {
         _monitor = [[NSObject alloc] init];
-        _identifier = identifier;
+        _identifierList = [[NSMutableArray alloc] initWithCapacity:2];
+        _address = address;
         self.state = CCSpeakerStateHangUp;
     }
 
     return self;
 }
 //------------------------------------------------------------------------------
-- (id)initWithCapacity:(NSString *)identifier capacity:(CCTalkCapacity *)capacity
+- (id)initWithCapacity:(CCInetAddress *)address capacity:(CCTalkCapacity *)capacity
 {
     if ((self = [super init]))
     {
         _monitor = [[NSObject alloc] init];
-        _identifier = identifier;
+        _identifierList = [[NSMutableArray alloc] initWithCapacity:2];
+        _address = address;
         self.capacity = capacity;
         self.state = CCSpeakerStateHangUp;
     }
@@ -148,13 +151,40 @@
 //------------------------------------------------------------------------------
 - (void)dealloc
 {
+    _address = nil;
+    _monitor = nil;
 }
 
 #pragma mark - Public Method
 
 //------------------------------------------------------------------------------
-- (BOOL)call:(CCInetAddress *)address
+- (BOOL)call:(NSArray *)identifiers
 {
+    if (CCSpeakerStateCalling == self.state)
+    {
+        // 正在 Call 返回 false
+        return FALSE;
+    }
+
+    if (nil != identifiers)
+    {
+        for (NSString *identifier in identifiers)
+        {
+            if ([_identifierList containsObject:identifier])
+            {
+                continue;
+            }
+
+            [_identifierList addObject:identifier];
+        }
+    }
+
+    if (_identifierList.count == 0)
+    {
+        [CCLogger e:@"Can not find any cellets to call in param 'identifiers'."];
+        return FALSE;
+    }
+
     if (nil == _connector)
     {
         char head[4] = {0x20, 0x10, 0x11, 0x10};
@@ -167,23 +197,15 @@
     }
     else
     {
-        NSString *addr = _connector.address;
-        UInt16 port = _connector.port;
-        if ([_connector isConnected]
-            && [[address getHost] isEqualToString:addr]
-            && [address getPort] == port)
+        if ([_connector isConnected])
         {
-            return FALSE;
+            [_connector disconnect];
         }
-
-        [_connector disconnect];
     }
 
     self.state = CCSpeakerStateHangUp;
 
-    _address = address;
-
-    CCSession *session = [_connector connect:address.host port:address.port];
+    CCSession *session = [_connector connect:_address.host port:_address.port];
     if (nil != session)
     {
         // 变更状态
@@ -191,6 +213,12 @@
     }
 
     return (nil != session);
+}
+//------------------------------------------------------------------------------
+- (BOOL)recall
+{
+    // TODO
+    return FALSE;
 }
 //------------------------------------------------------------------------------
 - (void)hangUp
@@ -203,6 +231,8 @@
         }
 
         _connector = nil;
+
+        [_identifierList removeAllObjects];
 
         self.state = CCSpeakerStateHangUp;
     }
@@ -262,7 +292,7 @@
     }
 }
 //------------------------------------------------------------------------------
-- (BOOL)speak:(CCPrimitive *)primitive
+- (BOOL)speak:(NSString *)identifier primitive:(CCPrimitive *)primitive
 {
     if (nil == _connector
         || ![_connector isConnected]
@@ -273,12 +303,13 @@
 
     @synchronized(_monitor) {
         NSData *stream = [CCPrimitive write:primitive];
-        
+
         // 封装数据包
         char ptag[] = TPT_DIALOGUE;
         CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:99 major:1 minor:0];
         [packet appendSubsegment:stream];
         [packet appendSubsegment:[[[CCNucleus sharedSingleton].tag getAsString] dataUsingEncoding:NSUTF8StringEncoding]];
+        [packet appendSubsegment:[identifier dataUsingEncoding:NSUTF8StringEncoding]];
 
         NSData *data = [CCPacket pack:packet];
         if (nil != data)
@@ -373,7 +404,8 @@
     char tag[] = TPT_CHECK;
     CCPacket *response = [[CCPacket alloc] initWithTag:tag sn:2 major:1 minor:0];
     [response appendSubsegment:[NSData dataWithBytes:plaintext length:plen]];
-    
+    [response appendSubsegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
+
     NSData *data = [CCPacket pack:response];
     if (nil != data)
     {
@@ -393,7 +425,7 @@
     _remoteTag = [[CCNucleusTag alloc] initWithString:[[NSString alloc] initWithFormat:@"%s", tag]];
 
     // 请求 Cellet
-    [self requestCellet:session];
+    [self requestCellets:session];
 }
 //------------------------------------------------------------------------------
 - (void)processRequest:(CCPacket *)packet session:(CCSession *)session
@@ -411,14 +443,15 @@
     if (sc[0] == success[0] && sc[1] == success[1]
         && sc[2] == success[2] && sc[3] == success[3])
     {
-        [CCLogger d:@"Cellet %@ has called at %@:%d", _identifier,
+        NSString *identifier = [[NSString alloc] initWithData:[packet getSubsegment:2] encoding:NSUTF8StringEncoding];
+        [CCLogger d:@"Cellet %@ has called at %@:%d", identifier,
             [[session getAddress] getHost], [[session getAddress] getPort]];
 
         // 变更状态
         self.state = CCSpeakerStateCalled;
 
         // 调用回调
-        [self fireContacted];
+        [self fireContacted:identifier];
     }
     else
     {
@@ -430,7 +463,7 @@
                                          file:__FILE__
                                          line:__LINE__
                                          function:__FUNCTION__];
-        failure.sourceCelletIdentifier = _identifier;
+        failure.sourceCelletIdentifiers = _identifierList;
         [self fireFailed:failure];
 
         // 关闭连接
@@ -446,14 +479,16 @@
 //------------------------------------------------------------------------------
 - (void)processDialogue:(CCPacket *)packet session:(CCSession *)session
 {
-    // 包格式：原语序列
-    NSData *data = [packet getBody];
+    // 包格式：原语序列|Cellet
+    NSData *data = [packet getSubsegment:0];
+    NSString *celletIdentifier = [[NSString alloc] initWithData:[packet getSubsegment:1] encoding:NSUTF8StringEncoding];
+
     CCPrimitive *primitive = [CCPrimitive read:data];
     if (nil != primitive)
     {
         // 设置对端标签
         primitive.ownerTag = [_remoteTag getAsString];
-        primitive.celletIdentifier = [NSString stringWithString:_identifier];
+        primitive.celletIdentifier = celletIdentifier;
 
         if (nil != [CCTalkService sharedSingleton].listener)
         {
@@ -479,7 +514,7 @@
             || newCapacity.suspendDuration != self.capacity.suspendDuration)
         {
             [CCLogger w:@"Talk capacity has changed from '%@' : AutoSuspend=%d SuspendDuration=%f"
-                , _identifier
+                , self.remoteTag
                 , newCapacity.autoSuspend
                 , newCapacity.suspendDuration];
         }
@@ -518,36 +553,43 @@
 //------------------------------------------------------------------------------
 - (void)processResume:(CCPacket *)packet session:(CCSession *)session
 {
-    // 包格式：目标标签|时间戳|原语序列
+    // 包格式：目标标签|时间戳|原语序列|Cellet
     NSTimeInterval timestamp = [CCUtil convertDataToTimeInterval:[packet getSubsegment:1]];
 
     NSData *data = [packet getSubsegment:2];
     CCPrimitive *primitive = [CCPrimitive read:data];
     if (nil != primitive)
     {
+        NSString *identifier = [[NSString alloc] initWithData:[packet getSubsegment:3] encoding:NSUTF8StringEncoding];
         // 设置对端标签
         primitive.ownerTag = [_remoteTag getAsString];
-        primitive.celletIdentifier = [NSString stringWithString:_identifier];
-        
+        primitive.celletIdentifier = [NSString stringWithString:identifier];
+
         [self fireResumed:timestamp primitive:primitive];
     }
 }
 //------------------------------------------------------------------------------
-- (void)requestCellet:(CCSession *)session
+- (void)requestCellets:(CCSession *)session
 {
     // 包格式：Cellet标识串|标签
-    char ptag[] = TPT_REQUEST;
-    CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:3 major:1 minor:0];
-    
-    [packet appendSubsegment:[self.identifier dataUsingEncoding:NSUTF8StringEncoding]];
-    [packet appendSubsegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    NSData *data = [CCPacket pack:packet];
-    if (nil != data)
-    {
-        CCMessage *message = [CCMessage messageWithData:data];
-        [session write:message];
-    }
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        for (NSString *identifier in _identifierList)
+        {
+            char ptag[] = TPT_REQUEST;
+            CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:3 major:1 minor:0];
+
+            [packet appendSubsegment:[identifier dataUsingEncoding:NSUTF8StringEncoding]];
+            [packet appendSubsegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
+
+            NSData *data = [CCPacket pack:packet];
+            if (nil != data)
+            {
+                CCMessage *message = [CCMessage messageWithData:data];
+                [session write:message];
+            }
+        }
+    });
 }
 //------------------------------------------------------------------------------
 - (void)consult:(CCTalkCapacity *)capacity
@@ -566,19 +608,19 @@
     }
 }
 //------------------------------------------------------------------------------
-- (void)fireContacted
+- (void)fireContacted:(NSString *)celletIdentifier
 {
     if (nil != [CCTalkService sharedSingleton].listener)
     {
-        [[CCTalkService sharedSingleton].listener contacted:_identifier tag:[_remoteTag getAsString]];
+        [[CCTalkService sharedSingleton].listener contacted:celletIdentifier tag:[_remoteTag getAsString]];
     }
 }
 //------------------------------------------------------------------------------
-- (void)fireQuitted
+- (void)fireQuitted:(NSString *)celletIdentifier
 {
     if (nil != [CCTalkService sharedSingleton].listener)
     {
-        [[CCTalkService sharedSingleton].listener quitted:_identifier tag:[_remoteTag getAsString]];
+        [[CCTalkService sharedSingleton].listener quitted:celletIdentifier tag:[_remoteTag getAsString]];
     }
 }
 //------------------------------------------------------------------------------
@@ -586,10 +628,11 @@
 {
     if (nil != [CCTalkService sharedSingleton].listener)
     {
+        /* TODO
         [[CCTalkService sharedSingleton].listener suspended:_identifier
                                                         tag:[_remoteTag getAsString]
                                                   timestamp:timestamp
-                                                       mode:mode];
+                                                       mode:mode];*/
     }
 }
 //------------------------------------------------------------------------------
@@ -597,10 +640,11 @@
 {
     if (nil != [CCTalkService sharedSingleton].listener)
     {
+        /* TODO
         [[CCTalkService sharedSingleton].listener resumed:_identifier
                                                       tag:[_remoteTag getAsString]
                                                 timestamp:timestamp
-                                                primitive:primitive];
+                                                primitive:primitive];*/
     }
 }
 //------------------------------------------------------------------------------
@@ -655,7 +699,7 @@
                                                                                 line:__LINE__
                                                                             function:__FUNCTION__];
         failure.sourceDescription = @"No network device";
-        failure.sourceCelletIdentifier = _identifier;
+        failure.sourceCelletIdentifiers = _identifierList;
         [self fireFailed:failure];
 
         // 标记为丢失
@@ -668,7 +712,7 @@
                                                                                 line:__LINE__
                                                                             function:__FUNCTION__];
         failure.sourceDescription = @"Network fault, connection closed";
-        failure.sourceCelletIdentifier = _identifier;
+        failure.sourceCelletIdentifiers = _identifierList;
         [self fireFailed:failure];
 
         // 标记为丢失
@@ -678,7 +722,10 @@
     _state = CCSpeakerStateHangUp;
 
     // 通知退出
-    [self fireQuitted];
+    for (NSString *identifier in _identifierList)
+    {
+        [self fireQuitted:identifier];
+    }
 }
 //------------------------------------------------------------------------------
 - (void)messageReceived:(CCSession *)session message:(CCMessage *)message
@@ -707,7 +754,7 @@
                                          line:__LINE__
                                          function:__FUNCTION__];
         failure.sourceDescription = @"Attempt to connect to host timed out";
-        failure.sourceCelletIdentifier = _identifier;
+        failure.sourceCelletIdentifiers = _identifierList;
         [self fireFailed:failure];
 
         // 标记为丢失

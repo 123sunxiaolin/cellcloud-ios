@@ -38,7 +38,7 @@
 @property (nonatomic, strong) NSString *reason;
 @property (nonatomic, strong) NSString *description;
 @property (nonatomic, strong) NSString *sourceDescription;
-@property (nonatomic, strong) NSString *sourceCelletIdentifier;
+@property (nonatomic, strong) NSArray *sourceCelletIdentifiers;
 
 /** 
  */

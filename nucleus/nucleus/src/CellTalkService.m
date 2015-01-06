@@ -41,8 +41,9 @@
     NSTimer *_daemonTimer;
     NSTimeInterval _tickTime;
     NSObject *_monitor;
-    
+
     NSMutableArray *_speakers;          /// Speaker 列表
+//    NSMutableDictionary *_speakerMap;   /// Speaker 映射关系
     NSMutableArray *_lostSpeakers;
     NSUInteger _hbCounts;               /// Speaker 心跳计数
 }
@@ -74,6 +75,7 @@ static CCTalkService *sharedInstance = nil;
     {
         _monitor = [[NSObject alloc] init];
         _speakers = [NSMutableArray array];
+//        _speakerMap = [NSMutableDictionary dictionary];
         _hbCounts = 0;
 
         // 添加默认方言工厂
@@ -86,6 +88,7 @@ static CCTalkService *sharedInstance = nil;
 - (void)dealloc
 {
     [_speakers removeAllObjects];
+//    [_speakerMap removeAllObjects];
 }
 
 #pragma mark - Service Protocol
@@ -160,14 +163,13 @@ static CCTalkService *sharedInstance = nil;
             {
                 if (nil != spr.capacity && _tickTime - spr.timestamp >= spr.capacity.retryInterval)
                 {
-                    [CCLogger d:@"Retry call cellet %@ at %@:%d"
-                        , spr.identifier
+                    [CCLogger d:@"Retry call cellet at %@:%d"
                         , spr.address.host
                         , spr.address.port];
 
                     [discardedItems addObject:spr];
 
-                    [spr call:spr.address];
+                    [spr recall];
                 }
             }
 
@@ -181,42 +183,46 @@ static CCTalkService *sharedInstance = nil;
 #pragma mark - Client Interfaces
 
 //------------------------------------------------------------------------------
-- (BOOL)call:(NSString *)identifier hostAddress:(CCInetAddress *)address
+- (BOOL)call:(NSArray *)identifiers hostAddress:(CCInetAddress *)address
 {
-    return [self call:identifier hostAddress:address capacity:nil];
+    return [self call:identifiers hostAddress:address capacity:nil];
 }
 //------------------------------------------------------------------------------
-- (BOOL)call:(NSString *)identifier hostAddress:(CCInetAddress *)address capacity:(CCTalkCapacity *)capacity
+- (BOOL)call:(NSArray *)identifiers hostAddress:(CCInetAddress *)address capacity:(CCTalkCapacity *)capacity
 {
-    CCSpeaker *current = nil;
     for (CCSpeaker *speaker in _speakers)
     {
-        if ([speaker.identifier isEqualToString:identifier])
+        for (NSString *identifier in identifiers)
         {
-            current = speaker;
-            break;
-        }
-    }
-
-    if (nil == current)
-    {
-        current = [[CCSpeaker alloc] initWithCapacity:identifier capacity:capacity];
-        [_speakers addObject:current];
-    }
-    else
-    {
-        @synchronized (_monitor) {
-            if (nil != _lostSpeakers && [_lostSpeakers count] > 0)
+            if ([speaker.identifiers containsObject:identifier])
             {
-                if ([_lostSpeakers containsObject:current])
-                {
-                    [_lostSpeakers removeObject:current];
-                }
+                // 列表里已经有对应的 Cellet，不允许再次 Call
+                return FALSE;
             }
         }
     }
-    
-    BOOL ret = [current call:address];
+
+    CCSpeaker *speaker = [[CCSpeaker alloc] initWithCapacity:address capacity:capacity];
+    [_speakers addObject:speaker];
+
+//    for (NSString *identifier in identifiers)
+//    {
+//        [_speakerMap setValue:speaker forKey:identifier];
+//    }
+
+    /* FIXME 1/6/15 Ambrose
+    @synchronized (_monitor) {
+        if (nil != _lostSpeakers && [_lostSpeakers count] > 0)
+        {
+            if ([_lostSpeakers containsObject:current])
+            {
+                [_lostSpeakers removeObject:current];
+            }
+        }
+    }
+    */
+
+    BOOL ret = [speaker call:identifiers];
     return ret;
 }
 //------------------------------------------------------------------------------
@@ -225,17 +231,11 @@ static CCTalkService *sharedInstance = nil;
     CCSpeaker *current = nil;
     for (CCSpeaker *speaker in _speakers)
     {
-        if ([speaker.identifier isEqualToString:identifier])
+        if ([speaker.identifiers containsObject:identifier])
         {
             current = speaker;
             break;
         }
-    }
-
-    if (nil != current)
-    {
-        [current hangUp];
-        [_speakers removeObject:current];
     }
 
     @synchronized(_monitor) {
@@ -243,13 +243,20 @@ static CCTalkService *sharedInstance = nil;
         {
             for (CCSpeaker *speaker in _lostSpeakers)
             {
-                if ([speaker.identifier isEqualToString:identifier])
+                if ([speaker.identifiers containsObject:identifier])
                 {
                     [_lostSpeakers removeObject:speaker];
                     break;
                 }
             }
         }
+    }
+
+    if (nil != current)
+    {
+        [current hangUp];
+        [_speakers removeObject:current];
+//        [_speakerMap removeObjectForKey:identifier];
     }
 }
 //------------------------------------------------------------------------------
@@ -258,7 +265,7 @@ static CCTalkService *sharedInstance = nil;
     @synchronized(_monitor) {
         for (CCSpeaker *speaker in _speakers)
         {
-            if ([speaker.identifier isEqualToString:identifier])
+            if ([speaker.identifiers containsObject:identifier])
             {
                 [speaker suspend:duration];
                 break;
@@ -272,7 +279,7 @@ static CCTalkService *sharedInstance = nil;
     @synchronized(_monitor) {
         for (CCSpeaker *speaker in _speakers)
         {
-            if ([speaker.identifier isEqualToString:identifier])
+            if ([speaker.identifiers containsObject:identifier])
             {
                 [speaker resume:startTime];
                 break;
@@ -286,7 +293,7 @@ static CCTalkService *sharedInstance = nil;
     CCSpeaker *speaker = nil;
     for (CCSpeaker *s in _speakers)
     {
-        if ([s.identifier isEqualToString:identifier])
+        if ([s.identifiers containsObject:identifier])
         {
             speaker = s;
             break;
@@ -299,7 +306,7 @@ static CCTalkService *sharedInstance = nil;
     }
 
     // 发送原语
-    return [speaker speak:primitive];
+    return [speaker speak:identifier primitive:primitive];
 }
 //------------------------------------------------------------------------------
 - (BOOL)talk:(NSString *)identifier dialect:(CCDialect *)dialect
@@ -314,7 +321,7 @@ static CCTalkService *sharedInstance = nil;
     @synchronized(_monitor) {
         for (CCSpeaker *s in _speakers)
         {
-            if ([s.identifier isEqualToString:identifier])
+            if ([s.identifiers containsObject:identifier])
             {
                 speaker = s;
                 break;
@@ -336,7 +343,7 @@ static CCTalkService *sharedInstance = nil;
     @synchronized(_monitor) {
         for (CCSpeaker *s in _speakers)
         {
-            if ([s.identifier isEqualToString:identifier])
+            if ([s.identifiers containsObject:identifier])
             {
                 speaker = s;
                 break;
