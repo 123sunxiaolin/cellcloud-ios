@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -74,6 +74,9 @@ typedef enum _CCStuffType
 - (id)initWithULong:(unsigned long)value;
 /**
  */
+- (id)initWithLongLong:(long long)value;
+/**
+ */
 - (id)initWithBool:(BOOL)value;
 /**
  */
@@ -110,6 +113,9 @@ typedef enum _CCStuffType
 /**
  */
 - (unsigned long)getValueAsULong;
+/**
+ */
+- (long long)getValueAsLongLong;
 /**
  */
 - (BOOL)getValueAsBoolean;

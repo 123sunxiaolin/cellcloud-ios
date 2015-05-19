@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -68,24 +68,34 @@ typedef void (^action_block_t)(CCActionDialect*);
 - (id)initWithAction:(NSString *)action;
 
 /**
- * 添加动作键值对。
+ * 添加动作键值对参数。
  */
 - (void)appendParam:(NSString *)name stringValue:(NSString *)value;
 
 /**
- * 添加动作键值对。
+ * 添加动作键值对参数。
  */
 - (void)appendParam:(NSString *)name intValue:(int)value;
 
 /**
- * 添加动作键值对。
+ * 添加动作键值对参数。
  */
 - (void)appendParam:(NSString *)name longValue:(long)value;
 
 /**
- * 添加动作键值对。
+ * 添加动作键值对参数。
+ */
+- (void)appendParam:(NSString *)name longlongValue:(long long)value;
+
+/**
+ * 添加动作键值对参数。
  */
 - (void)appendParam:(NSString *)name boolValue:(BOOL)value;
+
+/**
+ * 添加动作键值对参数。
+ */
+- (void)appendParam:(NSString *)name json:(NSDictionary *)value;
 
 /**
  * 返回指定名称的参数值。
@@ -105,7 +115,17 @@ typedef void (^action_block_t)(CCActionDialect*);
 /**
  * 返回指定名称的参数值。
  */
+- (long long)getParamAsLongLong:(NSString *)name;
+
+/**
+ * 返回指定名称的参数值。
+ */
 - (BOOL)getParamAsBool:(NSString *)name;
+
+/**
+ * 返回指定名称的参数值。
+ */
+- (NSDictionary *)getParamAsJson:(NSString *)name;
 
 /**
  * 判断指定名称的参数是否存在。

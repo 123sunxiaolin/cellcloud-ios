@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,8 @@
 #import "CellVersion.h"
 
 #define CC_MAJOR 1
-#define CC_MINOR 1
-#define CC_REVISION 1
+#define CC_MINOR 2
+#define CC_REVISION 0
 #define CC_NAME @"Journey"
 
 @implementation CCVersion

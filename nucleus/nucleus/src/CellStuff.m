@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -89,6 +89,17 @@
     {
         _value = [[NSString alloc] initWithFormat:@"%lu", value];
         self.literalBase = CCLiteralBaseULong;
+        [self willInitType];
+    }
+    return self;
+}
+//------------------------------------------------------------------------------
+- (id)initWithLongLong:(long long)value
+{
+    if ((self = [super init]))
+    {
+        _value = [[NSString alloc] initWithFormat:@"%qi", value];
+        self.literalBase = CCLiteralBaseLong;
         [self willInitType];
     }
     return self;
@@ -201,6 +212,11 @@
 }
 //------------------------------------------------------------------------------
 - (unsigned long)getValueAsULong
+{
+    return [_value longLongValue];
+}
+//------------------------------------------------------------------------------
+- (long long)getValueAsLongLong
 {
     return [_value longLongValue];
 }

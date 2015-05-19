@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -118,11 +118,29 @@
     [_params setObject:strValue forKey:name];
 }
 //------------------------------------------------------------------------------
+- (void)appendParam:(NSString *)name longlongValue:(long long)value
+{
+    NSString *strValue = [NSString stringWithFormat:@"%qi", value];
+    [_params setObject:strValue forKey:name];
+}
+//------------------------------------------------------------------------------
 - (void)appendParam:(NSString *)name boolValue:(BOOL)value
 {
     NSString *strValue = [NSString stringWithFormat:@"%@", value ? @"true" : @"false"];
     [_params setObject:strValue forKey:name];
 }
+//------------------------------------------------------------------------------
+- (void)appendParam:(NSString *)name json:(NSDictionary *)value
+{
+    __autoreleasing NSError *error = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    NSString *strValue = [[NSString alloc] initWithData:jsonData
+                                               encoding:NSUTF8StringEncoding];
+    [_params setObject:strValue forKey:name];
+}
+
 //------------------------------------------------------------------------------
 - (NSString *)getParamAsString:(NSString *)name
 {
@@ -147,6 +165,15 @@
         return 0;
 }
 //------------------------------------------------------------------------------
+- (long long)getParamAsLongLong:(NSString *)name
+{
+    NSString *value = [_params objectForKey:name];
+    if (nil != value)
+        return [value longLongValue];
+    else
+        return 0;
+}
+//------------------------------------------------------------------------------
 - (BOOL)getParamAsBool:(NSString *)name
 {
     NSString *value = [_params objectForKey:name];
@@ -154,6 +181,24 @@
         return [value isEqualToString:@"true"] ? TRUE : FALSE;
     else
         return FALSE;
+}
+//------------------------------------------------------------------------------
+- (NSDictionary *)getParamAsJson:(NSString *)name
+{
+    NSString *value = [_params objectForKey:name];
+    if (nil != value)
+    {
+        __autoreleasing NSError *error = nil;
+        NSData *jsonData = [value dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *ret = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                            options:NSJSONReadingAllowFragments
+                                                              error:&error];
+        return ret;
+    }
+    else
+    {
+        return nil;
+    }
 }
 //------------------------------------------------------------------------------
 - (BOOL)existParam:(NSString *)name

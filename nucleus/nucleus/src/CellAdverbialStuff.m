@@ -60,6 +60,11 @@
     return [[CCAdverbialStuff alloc] initWithULong:value];
 }
 //------------------------------------------------------------------------------
++ (CCAdverbialStuff *)stuffWithLongLong:(long long)value
+{
+    return [[CCAdverbialStuff alloc] initWithLongLong:value];
+}
+//------------------------------------------------------------------------------
 + (CCAdverbialStuff *)stuffWithBool:(BOOL)value
 {
     return [[CCAdverbialStuff alloc] initWithBool:value];

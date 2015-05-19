@@ -45,6 +45,9 @@
 + (CCAdverbialStuff *)stuffWithULong:(unsigned long)value;
 /**
  */
++ (CCAdverbialStuff *)stuffWithLongLong:(long long)value;
+/**
+ */
 + (CCAdverbialStuff *)stuffWithBool:(BOOL)value;
 /**
  */

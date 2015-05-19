@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -58,6 +58,11 @@
 + (CCObjectiveStuff *)stuffWithULong:(unsigned long)value
 {
     return [[CCObjectiveStuff alloc] initWithULong:value];
+}
+//------------------------------------------------------------------------------
++ (CCObjectiveStuff *)stuffWithLongLong:(long long)value
+{
+    return [[CCObjectiveStuff alloc] initWithLongLong:value];
 }
 //------------------------------------------------------------------------------
 + (CCObjectiveStuff *)stuffWithBool:(BOOL)value
