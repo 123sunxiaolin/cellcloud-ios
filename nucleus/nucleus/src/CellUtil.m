@@ -41,7 +41,13 @@
 {
     struct timeval time;
     gettimeofday(&time, NULL);
-    int64_t millis = (time.tv_sec * 1000) + (time.tv_usec / 1000);
+
+    float us = roundf(time.tv_usec);
+    us = us / 1000.0f;
+    us = roundf(us);
+
+    int64_t millis = (time.tv_sec * (int64_t)1000l) + (int64_t)(us);
+
     return millis;
 }
 //------------------------------------------------------------------------------

@@ -117,7 +117,7 @@ static CCTalkService *sharedInstance = nil;
         _daemonTimer = nil;
     }
 
-    _daemonTimer = [NSTimer scheduledTimerWithTimeInterval:5
+    _daemonTimer = [NSTimer scheduledTimerWithTimeInterval:10
                                                     target:self
                                                     selector:@selector(handleDaemonTimer:)
                                                     userInfo:nil
@@ -141,7 +141,7 @@ static CCTalkService *sharedInstance = nil;
     ++_hbCounts;
     if (_hbCounts >= 12)
     {
-        // 60 秒一次心跳，计数器周期是 5 秒
+        // 120 秒一次心跳，计数器周期是 10 秒
         if (_speakers.count > 0)
         {
             for (CCSpeaker *spr in _speakers)
