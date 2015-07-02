@@ -62,6 +62,31 @@
 
 @end
 
+/**
+ * 会话代理。
+ *
+ * @author Jiangwei Xu
+ */
+@protocol CCTalkDelegate <NSObject>
+
+/** 发送回调。
+ */
+- (BOOL)doTalk:(NSString *)identifier withDialect:(CCDialect *)dialect;
+
+/** 已经发送回调。
+ */
+- (void)didTalk:(NSString *)identifier withDialect:(CCDialect *)dialect;
+
+/** 接收回调。
+ */
+- (BOOL)doDialogue:(NSString *)identifier withDialect:(CCDialect *)dialect;
+
+/** 已经接收回调。
+ */
+- (void)didDialogue:(NSString *)identifier withDialect:(CCDialect *)dialect;
+
+@end
+
 
 /**
  * 会话服务。
@@ -72,6 +97,9 @@
 
 /// 会话监听器
 @property (nonatomic, strong) id<CCTalkListener> listener;
+
+/// 会话代理
+@property (nonatomic, assign) id<CCTalkDelegate> delegate;
 
 /** 返回单例。
  */

@@ -87,6 +87,6 @@
 /**
  * 反序列化原语。
  */
-+ (CCPrimitive *)read:(NSData *)stream;
++ (CCPrimitive *)read:(NSData *)stream andTag:(NSString *)tag;
 
 @end

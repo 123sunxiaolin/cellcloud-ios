@@ -43,6 +43,8 @@
 		44EDB03C1655E98E0023B73B /* CellAttributiveStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 44EDB03B1655E98D0023B73B /* CellAttributiveStuff.m */; };
 		44EDB0421655EC460023B73B /* CellAdverbialStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 44EDB0411655EC460023B73B /* CellAdverbialStuff.m */; };
 		44EDB0481655ED8F0023B73B /* CellComplementStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 44EDB0471655ED8E0023B73B /* CellComplementStuff.m */; };
+		844E98C71B3A931D0078987E /* CellChunkDialect.m in Sources */ = {isa = PBXBuildFile; fileRef = 844E98C61B3A931D0078987E /* CellChunkDialect.m */; };
+		844E98CA1B3A962B0078987E /* CellChunkDialectFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 844E98C91B3A962B0078987E /* CellChunkDialectFactory.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -135,6 +137,10 @@
 		44EDB0411655EC460023B73B /* CellAdverbialStuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellAdverbialStuff.m; path = src/CellAdverbialStuff.m; sourceTree = "<group>"; };
 		44EDB0461655ED850023B73B /* CellComplementStuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellComplementStuff.h; path = include/CellComplementStuff.h; sourceTree = "<group>"; };
 		44EDB0471655ED8E0023B73B /* CellComplementStuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellComplementStuff.m; path = src/CellComplementStuff.m; sourceTree = "<group>"; };
+		844E98C61B3A931D0078987E /* CellChunkDialect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellChunkDialect.m; path = src/CellChunkDialect.m; sourceTree = "<group>"; };
+		844E98C91B3A962B0078987E /* CellChunkDialectFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellChunkDialectFactory.m; path = src/CellChunkDialectFactory.m; sourceTree = "<group>"; };
+		EEEC781F1B42742D00B5851D /* CellChunkDialect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellChunkDialect.h; path = include/CellChunkDialect.h; sourceTree = "<group>"; };
+		EEEC78201B42742D00B5851D /* CellChunkDialectFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellChunkDialectFactory.h; path = include/CellChunkDialectFactory.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +192,10 @@
 				447741B1166F4C40008D6CCE /* CellDialectFactory.m */,
 				447741A4166F1E9C008D6CCE /* CellDialectMetaData.h */,
 				447741A5166F1EAA008D6CCE /* CellDialectMetaData.m */,
+				EEEC781F1B42742D00B5851D /* CellChunkDialect.h */,
+				844E98C61B3A931D0078987E /* CellChunkDialect.m */,
+				EEEC78201B42742D00B5851D /* CellChunkDialectFactory.h */,
+				844E98C91B3A962B0078987E /* CellChunkDialectFactory.m */,
 			);
 			name = Dialect;
 			sourceTree = "<group>";
@@ -391,6 +401,7 @@
 				44BEF6451647BE2100AFD75B /* CellCryptology.m in Sources */,
 				44B7ADD21654C72000E3B116 /* CellPrimitive.m in Sources */,
 				44B7ADDA1654CAB200E3B116 /* CellStuff.m in Sources */,
+				844E98C71B3A931D0078987E /* CellChunkDialect.m in Sources */,
 				44B7ADE01654E95300E3B116 /* CellSubjectStuff.m in Sources */,
 				44EDB0301655E3AB0023B73B /* CellPredicateStuff.m in Sources */,
 				44EDB0361655E7F60023B73B /* CellObjectiveStuff.m in Sources */,
@@ -404,6 +415,7 @@
 				447741A6166F1EAA008D6CCE /* CellDialectMetaData.m in Sources */,
 				447741AC166F4342008D6CCE /* CellDialectEnumerator.m in Sources */,
 				447741B2166F4C40008D6CCE /* CellDialectFactory.m in Sources */,
+				844E98CA1B3A962B0078987E /* CellChunkDialectFactory.m in Sources */,
 				18F96ED816797AA700FCCF59 /* CellActionDialect.m in Sources */,
 				18F96F251679C28C00FCCF59 /* CellActionDialectFactory.m in Sources */,
 			);

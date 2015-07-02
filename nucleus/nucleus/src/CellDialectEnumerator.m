@@ -89,4 +89,54 @@ static CCDialectEnumerator *sharedInstance = nil;
     return [_factories objectForKey:name];
 }
 
+//------------------------------------------------------------------------------
+- (void)shutdownAll
+{
+    for (CCDialectFactory *fact in _factories)
+    {
+        [fact shutdown];
+    }
+}
+
+#pragma mark - CCTalkDelegate
+
+//------------------------------------------------------------------------------
+- (BOOL)doTalk:(NSString *)identifier withDialect:(CCDialect *)dialect
+{
+    CCDialectFactory *fact = [_factories objectForKey:dialect.name];
+    if (nil == fact)
+    {
+        //返回YES,不劫持
+        return YES;
+    }
+    
+    //回调返回
+    return [fact onTalk:identifier andDialect:dialect];
+}
+
+//------------------------------------------------------------------------------
+- (void)didTalk:(NSString *)identifier withDialect:(CCDialect *)dialect
+{
+    //Nothing
+}
+
+//------------------------------------------------------------------------------
+- (BOOL)doDialogue:(NSString *)identifier withDialect:(CCDialect *)dialect
+{
+    CCDialectFactory *fact = [_factories objectForKey:dialect.name];
+    if (nil == fact)
+    {
+        //返回YES,不劫持
+        return YES;
+    }
+    //回调返回
+    return [fact onDialogue:identifier andDialect:dialect];
+}
+
+//------------------------------------------------------------------------------
+- (void)didDialogue:(NSString *)identifier withDialect:(CCDialect *)dialect
+{
+    //Nothing
+}
+
 @end

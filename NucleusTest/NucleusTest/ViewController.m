@@ -59,6 +59,8 @@
     [self setBbiResume:nil];
     [self setBbiTalk:nil];
     [self setBbiDialect:nil];
+    [self setBbiChunk:nil];
+    [self setBbiDownload:nil];
     [super viewDidUnload];
 }
 //------------------------------------------------------------------------------
@@ -71,6 +73,8 @@
     [self.bbiResume setAction:@selector(doResumeHandler:)];
     [self.bbiTalk setAction:@selector(doTalkHandler:)];
     [self.bbiDialect setAction:@selector(doDialectHandler:)];
+    [self.bbiChunk setAction:@selector(doChunkHandler:)];
+    [self.bbiDownload setAction:@selector(doDownloadHandler:)];
 
     self.bbiCall.enabled = TRUE;
     self.bbiHangUp.enabled = FALSE;
@@ -78,6 +82,8 @@
     self.bbiResume.enabled = FALSE;
     self.bbiTalk.enabled = FALSE;
     self.bbiDialect.enabled = FALSE;
+    self.bbiChunk.enabled = FALSE;
+    self.bbiDownload.enabled = FALSE;
 
     NSString *text = [[NSString alloc] initWithFormat:
                       @"Cell Cloud %d.%d.%d (Build iOS - %@)\n"\
@@ -144,6 +150,22 @@
     self.bbiResume.enabled = FALSE;
     self.bbiTalk.enabled = FALSE;
     self.bbiDialect.enabled = FALSE;
+    self.bbiChunk.enabled = FALSE;
+    self.bbiDownload.enabled = FALSE;
+}
+#pragma mark FileManagerDelegate
+//------------------------------------------------------------------------------
+- (void)onSendProgress:(NSData *)file andReceiver:(NSString *)receiver andProcessed:(long)processed andTotal:(long)total
+{
+    //TODO
+    [CCLogger d:[NSString stringWithFormat:@"Send File Progress: receiver : %@, processed: %ld / %ld", receiver, processed, total]];
+}
+
+//------------------------------------------------------------------------------
+- (void)onReceiveProgress:(NSData *)file andSender:(NSString *)sender andProcessed:(long)processed andTotal:(long)total
+{
+    //TODO
+    [CCLogger d:[NSString stringWithFormat:@"Receive File Progress: sender : %@, processed: %ld / %ld", sender, processed, total]];
 }
 
 #pragma mark Talk Listener
@@ -173,6 +195,11 @@
             
             [CCLogger d:@"Action acted (thread:%@)", [NSThread currentThread]];
         }
+        else if ([primitive.dialect.name isEqualToString:CHUNK_DIALECT_NAME])
+        {
+            CCChunkDialect *chunk = (CCChunkDialect *)primitive.dialect;
+            [[FileManager sharedSingleton] receiveChunk:chunk];
+        }
     }
     else
     {
@@ -200,6 +227,10 @@
         self.bbiResume.enabled = YES;
         self.bbiTalk.enabled = YES;
         self.bbiDialect.enabled = YES;
+        self.bbiChunk.enabled = YES;
+        self.bbiDownload.enabled = YES;
+        
+        [FileManager sharedSingleton].delegate = self;
     });
 }
 //------------------------------------------------------------------------------
@@ -294,11 +325,22 @@
 //------------------------------------------------------------------------------
 - (void)doAction:(CCActionDialect *)dialect
 {
-    [CCLogger d:@"Do action '%@' - identifier=%@ tag=%@ (thread:%@)"
-        , dialect.action
-        , dialect.celletIdentifier
-        , dialect.ownerTag
-        , [NSThread currentThread]];
+    if ([dialect.action isEqualToString:@"iOS_ACK"]) {
+        [CCLogger d:@"Do action '%@' - identifier=%@ tag=%@ (thread:%@)"
+         , dialect.action
+         , dialect.celletIdentifier
+         , dialect.ownerTag
+         , [NSThread currentThread]];
+    }
+    else if ([dialect.action isEqualToString:@"Accept_Ack"])
+    {
+        [CCLogger d:@"Do action '%@' - identifier=%@ tag=%@ (thread:%@)"
+         , dialect.action
+         , dialect.celletIdentifier
+         , dialect.ownerTag
+         , [NSThread currentThread]];
+    }
+
 }
 
 #pragma mark Bar Button Item Action
@@ -342,7 +384,7 @@
                 for (CCPrimitive *pri in _helper.primitives)
                 {
                     [[CCTalkService sharedSingleton] talk:@"Dummy" primitive:pri];
-                    [NSThread sleepForTimeInterval:0.1];
+                    [NSThread sleepForTimeInterval:0.1];  
                 }
             });
 }
@@ -394,6 +436,58 @@
                 CCPrimitive *pri = [_helper.primitives objectAtIndex:0];
                 [talker talkWithPrimitive:pri];*/
             });
+}
+//------------------------------------------------------------------------------
+- (void)doChunkHandler:(id)sender
+{
+    [CCLogger d:@"Tap 'Chunk' ..."];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+                   , ^{
+                       NSString *fileName = @"WhatsNewIniPhoneOS.pdf";
+                       NSFileManager *fm = [NSFileManager defaultManager];
+                       NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                       NSString *path = [documentPath stringByAppendingPathComponent:fileName];
+                       
+                       NSString *tmpPath = [[NSBundle mainBundle] pathForResource:@"WhatsNewIniPhoneOS" ofType:@"pdf"];
+                       if (![fm fileExistsAtPath:path]) {
+                           [fm copyItemAtPath:tmpPath toPath:path error:nil];
+                       }
+                       NSData *file = [fm contentsAtPath:path];
+                       
+                    [[FileManager sharedSingleton]sendFile:fileName
+                                       andCelletIdentifier:@"Dummy"
+                                                   andFile:file
+                                                 andSender:@"Ambrose"
+                                               andReceiver:@"Zhu"];
+
+                       
+                       
+//                       CCActionDialect *dialect = (CCActionDialect *)[[CCDialectEnumerator sharedSingleton] createDialect:ACTION_DIALECT_NAME tracker:@"Ambrose"];
+//                       dialect.action = @"iOS";
+//                       [dialect appendParam:@"name" stringValue:@"Ambrose Xu"];
+//                       [dialect appendParam:@"project" stringValue:@"Cell Cloud"];
+//                       
+//                       [[CCTalkService sharedSingleton] talk:@"Dummy" dialect:dialect];
+                   });
+}
+
+- (void)doDownloadHandler:(id)sender
+{
+    
+    [CCLogger d:@"Tap 'Download' ..."];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+                   , ^{
+                       CCActionDialect *dialect = (CCActionDialect *)[[CCDialectEnumerator sharedSingleton] createDialect:ACTION_DIALECT_NAME tracker:@"Ambrose,Zhu"];
+                       dialect.action = @"Accept";
+                       [dialect appendParam:@"fileName" stringValue:@"WhatsNewIniPhoneOS.pdf"];
+                       [dialect appendParam:@"sender" stringValue:@"Ambrose"];
+                       [dialect appendParam:@"receiver" stringValue:@"Zhu"];
+                       
+                       [[CCTalkService sharedSingleton] talk:@"Dummy" dialect:dialect];
+                   });
+
 }
 
 @end

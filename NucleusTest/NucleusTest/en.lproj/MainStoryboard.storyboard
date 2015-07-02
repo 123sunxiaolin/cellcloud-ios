@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -32,6 +32,8 @@
                                     <barButtonItem title="Dialect" id="w0b-U5-NBp"/>
                                     <barButtonItem title="Suspend" id="W9J-iX-kTk"/>
                                     <barButtonItem title="Resume" id="tZd-Fg-0PN"/>
+                                    <barButtonItem title="Chunk" id="rgI-Oo-dJG"/>
+                                    <barButtonItem title="Download" id="Kr8-ae-ChA"/>
                                 </items>
                             </toolbar>
                         </subviews>
@@ -39,7 +41,9 @@
                     </view>
                     <connections>
                         <outlet property="bbiCall" destination="Lkj-Xj-ZvD" id="fIz-oC-vPo"/>
+                        <outlet property="bbiChunk" destination="rgI-Oo-dJG" id="qxl-k2-0VN"/>
                         <outlet property="bbiDialect" destination="w0b-U5-NBp" id="3Jh-1c-m7N"/>
+                        <outlet property="bbiDownload" destination="Kr8-ae-ChA" id="v9s-VV-s3i"/>
                         <outlet property="bbiHangUp" destination="Cri-JG-Lci" id="4Rw-MV-Rdn"/>
                         <outlet property="bbiResume" destination="tZd-Fg-0PN" id="JEU-Rc-JUT"/>
                         <outlet property="bbiSuspend" destination="W9J-iX-kTk" id="iZm-Az-Td1"/>

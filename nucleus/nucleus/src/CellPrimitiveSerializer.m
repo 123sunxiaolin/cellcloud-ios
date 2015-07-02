@@ -211,7 +211,7 @@
     return [NSData dataWithData:stream];
 }
 //------------------------------------------------------------------------------
-+ (CCPrimitive *)deserialize:(NSData *)dataStream
++ (CCPrimitive *)deserialize:(NSData *)dataStream andTag:(NSString *)tag
 {
     /*
     原语序列化格式：
@@ -220,7 +220,7 @@
     [01.00]{sub=cloud:string}{pre=add:string}[FileReader@Ambrose]
     */
 
-    CCPrimitive *primitive = [[CCPrimitive alloc] init];
+    CCPrimitive *primitive = [[CCPrimitive alloc] initWithTag:tag];
 
     // FIXME 跳过版本
     NSData *pridata = [dataStream subdataWithRange:NSMakeRange(7, dataStream.length - 7)];

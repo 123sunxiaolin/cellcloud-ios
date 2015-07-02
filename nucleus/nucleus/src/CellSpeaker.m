@@ -483,16 +483,33 @@
     NSData *data = [packet getSubsegment:0];
     NSString *celletIdentifier = [[NSString alloc] initWithData:[packet getSubsegment:1] encoding:NSUTF8StringEncoding];
 
-    CCPrimitive *primitive = [CCPrimitive read:data];
+//    CCPrimitive *tmpPrimitive = [[CCPrimitive alloc]initWithTag:[_remoteTag getAsString]];
+    CCPrimitive *primitive = [CCPrimitive read:data andTag:[_remoteTag getAsString]];
     if (nil != primitive)
     {
         // 设置对端标签
         primitive.ownerTag = [_remoteTag getAsString];
         primitive.celletIdentifier = celletIdentifier;
+        
+        BOOL delegated = (nil != [CCTalkService sharedSingleton].delegate && primitive.isDialectal);
+        if (delegated)
+        {
+            BOOL ret = [[CCTalkService sharedSingleton].delegate doDialogue:primitive.celletIdentifier withDialect:primitive.dialect];
+            if (!ret)
+            {
+                // 劫持对话
+                return;
+            }
+        }
 
         if (nil != [CCTalkService sharedSingleton].listener)
         {
             [[CCTalkService sharedSingleton].listener dialogue:primitive.celletIdentifier primitive:primitive];
+        }
+        
+        if (delegated)
+        {
+            [[CCTalkService sharedSingleton].delegate didDialogue:primitive.celletIdentifier withDialect:primitive.dialect];
         }
     }
 }
@@ -557,12 +574,12 @@
     NSTimeInterval timestamp = [CCUtil convertDataToTimeInterval:[packet getSubsegment:1]];
 
     NSData *data = [packet getSubsegment:2];
-    CCPrimitive *primitive = [CCPrimitive read:data];
+    CCPrimitive *primitive = [CCPrimitive read:data andTag:[_remoteTag getAsString]];
     if (nil != primitive)
     {
         NSString *identifier = [[NSString alloc] initWithData:[packet getSubsegment:3] encoding:NSUTF8StringEncoding];
         // 设置对端标签
-        primitive.ownerTag = [_remoteTag getAsString];
+//        primitive.ownerTag = [_remoteTag getAsString];
         primitive.celletIdentifier = [NSString stringWithString:identifier];
 
         [self fireResumed:timestamp primitive:primitive];

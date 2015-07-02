@@ -2,7 +2,7 @@
  -----------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2012 Cell Cloud Team - cellcloudproject@gmail.com
+ Copyright (c) 2009-2015 Cell Cloud Team - cellcloudproject@gmail.com
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +24,45 @@
  -----------------------------------------------------------------------------
  */
 
-#import <UIKit/UIKit.h>
-#import <CellLoggerManager.h>
-#import "FileManager.h"
-#import "Cell.h"
+#import <Foundation/Foundation.h>
 
-@interface ViewController : UIViewController <UITextViewDelegate, CCLogDelegate, CCTalkListener, CCActionDelegate, FileManagerDelegate>
+@class  CCChunkDialect;
 
-@property (strong, nonatomic) IBOutlet UITextView *mainTextView;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiCall;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiHangUp;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiSuspend;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiResume;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiTalk;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiDialect;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiChunk;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiDownload;
+@protocol FileManagerDelegate <NSObject>
+
+/*! 发送处理中
+ * \param file
+ * \param receiver
+ * \param processed
+ * \param total
+ */
+- (void)onSendProgress:(NSData *)file andReceiver:(NSString *)receiver andProcessed:(long)processed andTotal:(long)total;
+
+/*! 接收处理中
+ * \param file
+ * \param sender
+ * \param processed
+ * \param total
+ */
+- (void)onReceiveProgress:(NSData *)file andSender:(NSString *)sender andProcessed:(long)processed andTotal:(long)total;
+
+@end
+
+@interface FileManager : NSObject
+
+@property (nonatomic, assign) id<FileManagerDelegate> delegate;
+
+@property (nonatomic, strong) NSMutableData *fileData;
+
++ (FileManager *)sharedSingleton;
+
+- (BOOL)sendFile:(NSString *)fileName
+andCelletIdentifier:(NSString *)identifier
+         andFile:(NSData *)file
+       andSender:(NSString *)sender
+     andReceiver:(NSString *)receiver;
+
+
+- (void)receiveChunk:(CCChunkDialect *)dialect;
 
 @end

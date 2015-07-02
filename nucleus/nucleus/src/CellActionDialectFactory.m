@@ -59,4 +59,22 @@
     return [[CCActionDialect alloc] initWithTracker:tracker];
 }
 
+//------------------------------------------------------------------------------
+- (void)shutdown
+{
+    //Nothing
+}
+
+//------------------------------------------------------------------------------
+- (BOOL)onTalk:(NSString *)identifier andDialect:(CCDialect *)dialect
+{
+    return YES;
+}
+
+//------------------------------------------------------------------------------
+- (BOOL)onDialogue:(NSString *)identifier andDialect:(CCDialect *)dialect
+{
+    return YES;
+}
+
 @end

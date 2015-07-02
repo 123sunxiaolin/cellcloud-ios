@@ -31,6 +31,8 @@
 
 #import "CellActionDialect.h"
 #import "CellActionDialectFactory.h"
+#import "CellChunkDialect.h"
+#import "CellChunkDialectFactory.h"
 #import "CellAdverbialStuff.h"
 #import "CellAttributiveStuff.h"
 #import "CellComplementStuff.h"

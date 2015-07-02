@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -24,33 +24,73 @@
  ------------------------------------------------------------------------------
  */
 
-#include "CellPrerequisites.h"
-#import "CellTalkService.h"
+#import "CellDialectFactory.h"
 
-@interface CCDialectEnumerator : NSObject <CCTalkDelegate>
-
-/** 返回单例。
+/**
+ * 块数据传输方言工厂。
+ *
+ * @author Jiangwei Xu
  */
-+ (CCDialectEnumerator *)sharedSingleton;
+@interface CCChunkDialectFactory : CCDialectFactory
 
-/** 创建方言。
- */
-- (CCDialect *)createDialect:(NSString *)name tracker:(NSString *)tracker;
+- (void)write:(CCChunkDialect *)chunk;
 
-/** 添加方言工厂。
- */
-- (void)addFactory:(CCDialectFactory *)fact;
+- (BOOL)checkCompleted:(NSString *)tag withSign:(NSString *)sign;
 
-/** 移除方言工厂。
- */
-- (void)removeFactory:(CCDialectFactory *)fact;
+- (int)read:(NSString *)tag withSign:(NSString *)sign withIndex:(int)index
+   withData:(NSData *)outPut;
 
-/** 返回指定名称的方言工厂。
- */
-- (CCDialectFactory *)getFactory:(NSString *)name;
+- (void)clear:(NSString *)tag withSign:(NSString *)sign;
 
-/** 关闭所有方言工厂。
+
+
+@end
+
+/**
+ * 内部缓存。
  */
-- (void)shutdownAll;
+@interface Cache : NSObject
+
+@property (nonatomic, strong) NSString *tag;
+
+@property (nonatomic, assign) long dataSize;
+
+- (id)initWithTag:(NSString *)tag;
+
+- (void)offer:(CCChunkDialect *)chunk;
+
+- (CCChunkDialect *)getChunk:(NSString *)sign atIndex:(int)index;
+
+- (BOOL)checkCompleted:(NSString *)sign;
+
+- (long)clear:(NSString *)sign;
+
+- (BOOL)isEmpty;
+
+- (long long)getFirstTime;
+
+- (long)clearFirst;
+
+@end
+
+/**
+ * 队列
+ */
+
+@interface Queue : NSObject
+
+@property (nonatomic, assign) int ackIndex;
+
+@property (nonatomic, assign) int chunkNum;
+
+- (id)initWithTarget:(NSString *)target andChunkNum:(int)chunkNum;;
+
+- (void)enqueue:(CCChunkDialect *)chunk;
+
+- (CCChunkDialect *)dequeue;
+
+- (int)size;
+
+- (long)remainingChunkLength;
 
 @end

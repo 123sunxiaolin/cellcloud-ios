@@ -74,6 +74,8 @@
 @class CCDialectMetaData;
 @class CCActionDialect;
 @class CCActionDialectFactory;
+@class CCChunkDialect;
+@class CCChunkDialectFactory;
 @class CCPrimitive;
 @class CCSubjectStuff;
 @class CCPredicateStuff;

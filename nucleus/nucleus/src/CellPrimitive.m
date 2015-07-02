@@ -276,9 +276,9 @@
     return [CCPrimitiveSerializer serialize:primitive];
 }
 //------------------------------------------------------------------------------
-+ (CCPrimitive *)read:(NSData *)stream
++ (CCPrimitive *)read:(NSData *)stream andTag:(NSString *)tag
 {
-    return [CCPrimitiveSerializer deserialize:stream];
+    return [CCPrimitiveSerializer deserialize:stream andTag:(NSString *)tag];
 }
 
 @end

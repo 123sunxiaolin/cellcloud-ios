@@ -36,6 +36,6 @@
 /**
  * 反序列化。
  */
-+ (CCPrimitive *)deserialize:(NSData *)dataStream;
++ (CCPrimitive *)deserialize:(NSData *)dataStream andTag:(NSString *)tag;
 
 @end

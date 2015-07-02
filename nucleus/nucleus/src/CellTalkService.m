@@ -30,6 +30,7 @@
 #import "CellDialect.h"
 #import "CellDialectEnumerator.h"
 #import "CellActionDialectFactory.h"
+#import "CellChunkDialectFactory.h"
 #import "CellTalkCapacity.h"
 #import "CellInetAddress.h"
 #import "CellLogger.h"
@@ -56,6 +57,8 @@
 
 @implementation CCTalkService
 
+@synthesize delegate = _delegate;
+
 /// 实例
 static CCTalkService *sharedInstance = nil;
 
@@ -80,6 +83,10 @@ static CCTalkService *sharedInstance = nil;
 
         // 添加默认方言工厂
         [[CCDialectEnumerator sharedSingleton] addFactory:[[CCActionDialectFactory alloc] init]];
+        [[CCDialectEnumerator sharedSingleton] addFactory:[[CCChunkDialectFactory alloc] init]];
+        
+        //TODO
+        _delegate = [CCDialectEnumerator sharedSingleton];
     }
 
     return self;
@@ -131,6 +138,8 @@ static CCTalkService *sharedInstance = nil;
         [_daemonTimer invalidate];
         _daemonTimer = nil;
     }
+    
+    [[CCDialectEnumerator sharedSingleton] shutdownAll];
 }
 //------------------------------------------------------------------------------
 - (void)handleDaemonTimer:(NSTimer *)timer
@@ -311,8 +320,31 @@ static CCTalkService *sharedInstance = nil;
 //------------------------------------------------------------------------------
 - (BOOL)talk:(NSString *)identifier dialect:(CCDialect *)dialect
 {
+    //通知代理
+    if (nil != _delegate)
+    {
+        BOOL ret = [_delegate doTalk:identifier withDialect:dialect];
+        
+        if (!ret)
+        {
+            //代理劫持
+            return YES;
+        }
+    }
+    
     CCPrimitive *primitive = [dialect translate];
-    return [self talk:identifier primitive:primitive];
+    if (nil != primitive)
+    {
+        BOOL ret = [self talk:identifier primitive:primitive];
+        
+        //发送成功
+        if (ret && nil != _delegate)
+        {
+            [_delegate didTalk:identifier withDialect:dialect];
+        }
+        return ret;
+    }
+    return NO;
 }
 //------------------------------------------------------------------------------
 - (BOOL)isCalled:(NSString *)identifier

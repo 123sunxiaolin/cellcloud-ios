@@ -36,4 +36,18 @@
  */
 - (CCDialect *)create:(NSString *)tracker;
 
+
+/** 关闭。
+ */
+- (void)shutdown;
+
+/** 发送回调。
+ */
+- (BOOL)onTalk:(NSString *)identifier andDialect:(CCDialect *)dialect;
+
+/** 接收回调。
+ */
+- (BOOL)onDialogue:(NSString *)identifier andDialect:(CCDialect *)dialect;
+
+
 @end
