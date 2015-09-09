@@ -42,6 +42,10 @@
  */
 + (long)randomLong;
 
+/** 返回随机字符串
+ */
++ (NSString *)randomString:(int)length;
+
 /** 转换 NSData 为 NSTimeInterval
  */
 + (NSTimeInterval)convertDataToTimeInterval:(NSData *)data;
