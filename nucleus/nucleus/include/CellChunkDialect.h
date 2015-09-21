@@ -27,7 +27,7 @@
 #import "CellDialect.h"
 
 #define CHUNK_DIALECT_NAME @"ChunkDialect"
-#define CHUNK_SIZE 7168
+#define CHUNK_SIZE 4096
 
 @class CCChunkDialect;
 
@@ -99,4 +99,5 @@
 - (void)resetRead;
 
 - (void)clearAll;
+
 @end
