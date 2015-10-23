@@ -148,14 +148,15 @@ static CCTalkService *sharedInstance = nil;
     _tickTime = date.timeIntervalSince1970;
 
     ++_hbCounts;
-    if (_hbCounts >= 12)
+    if (_hbCounts >= 18)
     {
-        // 120 秒一次心跳，计数器周期是 10 秒
+        // 180 秒一次心跳，计数器周期是 10 秒
         if (_speakers.count > 0)
         {
             for (CCSpeaker *spr in _speakers)
             {
                 [spr heartbeat];
+                [CCLogger d:@"heartbeat"];
             }
         }
 
