@@ -59,6 +59,8 @@ typedef enum _CCSpeakerState
 @property (nonatomic, strong) CCTalkCapacity *capacity;
 @property (nonatomic, assign) NSTimeInterval timestamp;
 @property (atomic, assign) CCSpeakerState state;
+@property (nonatomic, assign) int retryCounts;
+@property (nonatomic, assign) BOOL retryEnd;
 
 /** 初始化。 */
 - (id)initWith:(CCInetAddress *)address;
@@ -69,6 +71,8 @@ typedef enum _CCSpeakerState
 - (BOOL)call:(NSArray *)identifiers;
 
 - (BOOL)recall;
+
+- (void)fireRetryEnd;
 
 /** 中断与 Cellet 服务。 */
 - (void)hangUp;
@@ -89,6 +93,6 @@ typedef enum _CCSpeakerState
 - (BOOL)speak:(NSString *)identifier primitive:(CCPrimitive *)primitive;
 
 /** 心跳。 */
-- (void)heartbeat;
+- (BOOL)heartbeat;
 
 @end

@@ -346,6 +346,21 @@
         _session = nil;
         _asyncSocket = nil;
         break;
+    case 51:
+        // Network is unreachable
+        [self fireErrorOccurred:CCMessageErrorConnectFailed];
+        [self fireSessionDestroyed];
+        _session = nil;
+        _asyncSocket = nil;
+        break;
+
+    case 57:
+        // Socket is not connected
+        [self fireErrorOccurred:CCMessageErrorConnectFailed];
+        [self fireSessionDestroyed];
+        _session = nil;
+        _asyncSocket = nil;
+        break;
 
     case 60:
         // Operation timeout

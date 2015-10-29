@@ -108,6 +108,8 @@
 @synthesize identifiers = _identifierList;
 @synthesize address = _address;
 @synthesize remoteTag = _remoteTag;
+@synthesize retryCounts = _retryCounts;
+@synthesize retryEnd = _retryEnd;
 
 //------------------------------------------------------------------------------
 - (id)init
@@ -217,8 +219,26 @@
 //------------------------------------------------------------------------------
 - (BOOL)recall
 {
+    if (CCSpeakerStateSuspended == self.state)
+    {
+        // 挂起 返回 false
+        return FALSE;
+    }
+    return [self call:_identifierList];
+}
+
+//------------------------------------------------------------------------------
+- (void)fireRetryEnd
+{
     // TODO
-    return FALSE;
+    CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc]
+                                     initWithSource:CCFailureRetryEnd
+                                     file:__FILE__
+                                     line:__LINE__
+                                     function:__FUNCTION__];
+    failure.sourceDescription = @"retryEnd";
+    failure.sourceCelletIdentifiers = _identifierList;
+    [self fireFailed:failure];
 }
 //------------------------------------------------------------------------------
 - (void)hangUp
@@ -334,8 +354,14 @@
     return self.state == CCSpeakerStateSuspended;
 }
 //------------------------------------------------------------------------------
-- (void)heartbeat
+- (BOOL)heartbeat
 {
+    if (nil == _connector
+        || ![_connector isConnected]
+        || _state != CCSpeakerStateCalled)
+    {
+        return FALSE;
+    }
     // 心跳包（无包体）
     char ptag[] = TPT_HEARTBEAT;
     CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:9 major:1 minor:0];
@@ -345,6 +371,7 @@
         CCMessage *message = [CCMessage messageWithData:data];
         [_connector write:message];
     }
+    return TRUE;
 }
 
 #pragma mark - Private Method
@@ -683,14 +710,18 @@
 //------------------------------------------------------------------------------
 - (void)sessionCreated:(CCSession *)session
 {
+     // Nothing
 }
 //------------------------------------------------------------------------------
 - (void)sessionDestroyed:(CCSession *)session
 {
+    // Nothing
+    _state = CCSpeakerStateHangUp;
 }
 //------------------------------------------------------------------------------
 - (void)sessionOpened:(CCSession *)session
 {
+    // Nothing
 }
 //------------------------------------------------------------------------------
 - (void)sessionClosed:(CCSession *)session
@@ -702,12 +733,12 @@
             // 更新状态
             _state = CCSpeakerStateSuspended;
             [self fireSuspended:[CCUtil currentTimeInterval] mode:CCSuspendModePassive];
-
+            
             // 自动重连
             [[CCTalkService sharedSingleton] markLostSpeaker:self];
         }
     }
-
+    
     // 判断是否为异常网络中断
     if (CCSpeakerStateCalling == _state)
     {
@@ -718,7 +749,7 @@
         failure.sourceDescription = @"No network device";
         failure.sourceCelletIdentifiers = _identifierList;
         [self fireFailed:failure];
-
+        
         // 标记为丢失
         [[CCTalkService sharedSingleton] markLostSpeaker:self];
     }
@@ -731,18 +762,19 @@
         failure.sourceDescription = @"Network fault, connection closed";
         failure.sourceCelletIdentifiers = _identifierList;
         [self fireFailed:failure];
-
+        
         // 标记为丢失
         [[CCTalkService sharedSingleton] markLostSpeaker:self];
     }
-
+    
     _state = CCSpeakerStateHangUp;
-
+    
     // 通知退出
     for (NSString *identifier in _identifierList)
     {
         [self fireQuitted:identifier];
     }
+
 }
 //------------------------------------------------------------------------------
 - (void)messageReceived:(CCSession *)session message:(CCMessage *)message
@@ -751,7 +783,7 @@
     if (nil != packet)
     {
         [self interpret:session packet:packet];
-    }
+    }   
 }
 //------------------------------------------------------------------------------
 - (void)messageSent:(CCSession *)session message:(CCMessage *)message
@@ -762,8 +794,7 @@
 {
     [CCLogger d:@"errorOccurred - %d - %p", errorCode, session];
 
-    if (errorCode == CCMessageErrorConnectTimeout
-        || errorCode == CCMessageErrorConnectFailed)
+    if (errorCode == CCMessageErrorConnectTimeout)
     {
         CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc]
                                          initWithSource:CCFailureCallFailed
@@ -774,6 +805,47 @@
         failure.sourceCelletIdentifiers = _identifierList;
         [self fireFailed:failure];
 
+        // 标记为丢失
+        [[CCTalkService sharedSingleton] markLostSpeaker:self];
+    }
+    else if (errorCode == CCMessageErrorConnectFailed)
+    {
+        CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc]
+                                         initWithSource:CCFailureCallFailed
+                                         file:__FILE__
+                                         line:__LINE__
+                                         function:__FUNCTION__];
+        failure.sourceDescription = @"Attempt to connect to host failed";
+        failure.sourceCelletIdentifiers = _identifierList;
+        [self fireFailed:failure];
+        
+        // 标记为丢失
+        [[CCTalkService sharedSingleton] markLostSpeaker:self];
+    }
+    else if (errorCode >= CCMessageErrorSocketFailed)
+    {
+        CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc]
+                                         initWithSource:CCFailureTalkLost
+                                         file:__FILE__
+                                         line:__LINE__
+                                         function:__FUNCTION__];
+        failure.sourceDescription = @"No network available";
+        failure.sourceCelletIdentifiers = _identifierList;
+        [self fireFailed:failure];
+
+        // 标记为丢失
+        [[CCTalkService sharedSingleton] markLostSpeaker:self];
+    }
+    else
+    {
+        CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc]
+                                         initWithSource:CCFailureCallFailed
+                                         file:__FILE__
+                                         line:__LINE__
+                                         function:__FUNCTION__];
+        failure.sourceDescription = @"Unknown network error";
+        failure.sourceCelletIdentifiers = _identifierList;
+        [self fireFailed:failure];
         // 标记为丢失
         [[CCTalkService sharedSingleton] markLostSpeaker:self];
     }

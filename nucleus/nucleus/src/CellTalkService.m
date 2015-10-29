@@ -1,4 +1,4 @@
-/*
+ /*
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
@@ -156,7 +156,9 @@ static CCTalkService *sharedInstance = nil;
             for (CCSpeaker *spr in _speakers)
             {
                 [spr heartbeat];
-                [CCLogger d:@"heartbeat"];
+                [CCLogger d:@"Speaker heartbeat to %@:%d"
+                 , spr.address.host
+                 , spr.address.port];
             }
         }
 
@@ -171,15 +173,36 @@ static CCTalkService *sharedInstance = nil;
 
             for (CCSpeaker *spr in _lostSpeakers)
             {
-                if (nil != spr.capacity && _tickTime - spr.timestamp >= spr.capacity.retryInterval)
+                if (nil != spr)
                 {
-                    [CCLogger d:@"Retry call cellet at %@:%d"
-                        , spr.address.host
-                        , spr.address.port];
-
-                    [discardedItems addObject:spr];
-
-                    [spr recall];
+                    // 最大重连次数
+                    if (spr.retryCounts >= spr.capacity.retryAttempts)
+                    {
+                        // TODO retryEnd
+                        if (!spr.retryEnd) {
+                            spr.retryEnd = TRUE;
+                            [spr fireRetryEnd];
+                        }else
+                        {
+                            return;
+                        }
+                    }else
+                    {
+                        spr.retryEnd = FALSE;
+                    }
+                    
+                    if (nil != spr.capacity && _tickTime - spr.timestamp >= spr.capacity.retryInterval)
+                    {
+                        [CCLogger d:@"Retry call cellet at %@:%d"
+                         , spr.address.host
+                         , spr.address.port];
+                        
+                        [discardedItems addObject:spr];
+                        
+                        ++spr.retryCounts;
+                        
+                        [spr recall];
+                    }
                 }
             }
 
@@ -195,7 +218,8 @@ static CCTalkService *sharedInstance = nil;
 //------------------------------------------------------------------------------
 - (BOOL)call:(NSArray *)identifiers hostAddress:(CCInetAddress *)address
 {
-    return [self call:identifiers hostAddress:address capacity:nil];
+    CCTalkCapacity *capacity = [[CCTalkCapacity alloc]init];
+    return [self call:identifiers hostAddress:address capacity:capacity];
 }
 //------------------------------------------------------------------------------
 - (BOOL)call:(NSArray *)identifiers hostAddress:(CCInetAddress *)address capacity:(CCTalkCapacity *)capacity

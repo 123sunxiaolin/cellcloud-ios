@@ -34,12 +34,39 @@
 {
     if (self = [super init])
     {
+        self.autoSuspend = FALSE;
+        self.suspendDuration = 0;
         // 默认重试间隔：10 秒
         self.retryInterval = 10;
+        
+        // 默认重连次数：
+        self.retryAttempts = 60;
     }
     return self;
 }
-
+//------------------------------------------------------------------------------
+- (id)initWithAutoSuspend:(BOOL)autoSuspend andSuspendDuration:(long)duration
+{
+    self = [super init];
+    if (self) {
+        self.autoSuspend = autoSuspend;
+        self.suspendDuration = duration;
+    }
+    return self;
+}
+//------------------------------------------------------------------------------
+- (id)initWithRetryAttemts:(int)attemts andRetryInterval:(int)interval
+{
+    self = [super init];
+    if (self) {
+        if (attemts == INT_MAX) {
+            self.retryAttempts -= 1;
+        }
+        self.retryAttempts = attemts;
+        self.retryInterval = interval;
+    }
+    return self;
+}
 //------------------------------------------------------------------------------
 + (NSData *)serialize:(CCTalkCapacity *)capacity
 {
