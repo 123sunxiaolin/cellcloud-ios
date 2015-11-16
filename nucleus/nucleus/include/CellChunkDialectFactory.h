@@ -37,12 +37,9 @@
 
 - (BOOL)checkCompleted:(NSString *)tag withSign:(NSString *)sign;
 
-- (int)read:(NSString *)tag withSign:(NSString *)sign withIndex:(int)index
-   withData:(NSData *)outPut;
+- (int)read:(NSString *)tag withSign:(NSString *)sign withIndex:(int)index withData:(NSData *)outPut;
 
 - (void)clear:(NSString *)tag withSign:(NSString *)sign;
-
-
 
 @end
 

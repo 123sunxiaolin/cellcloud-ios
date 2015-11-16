@@ -92,6 +92,8 @@
 
 - (BOOL)hasCompleted;
 
+- (BOOL)isLast;
+
 - (int)read:(int)index andData:(NSData *)buffer;
 
 - (int)read:(NSData *)buffer;

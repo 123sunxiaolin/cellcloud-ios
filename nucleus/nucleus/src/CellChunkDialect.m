@@ -46,8 +46,9 @@
     self = [super initWithName:CHUNK_DIALECT_NAME tracker:@"none"];
     if (self)
     {
-        
+        _ack = NO;
     }
+
     return self;
 }
 //------------------------------------------------------------------------------
@@ -57,22 +58,23 @@
     {
         _ack = NO;
     }
-    
+
     return self;
 }
 //------------------------------------------------------------------------------
 - (id)initWithSign:(NSString *)sign totalLength:(long)totalLength chunkIndex:(int)chunkIndex
           chunkNum:(int)chunkNum data:(NSData *)data length:(int)length
 {
- if (self = [super initWithName:CHUNK_DIALECT_NAME tracker:@"none"])
- {
-     _sign = sign;
-     _totalLength = totalLength;
-     _chunkIndex = chunkIndex;
-     _chunkNum = chunkNum;
-     _data = data;
-     _length = length;
- }
+    if (self = [super initWithName:CHUNK_DIALECT_NAME tracker:@"none"])
+    {
+        _ack = NO;
+        _sign = sign;
+        _totalLength = totalLength;
+        _chunkIndex = chunkIndex;
+        _chunkNum = chunkNum;
+        _data = data;
+        _length = length;
+    }
  
     return self;
 }
@@ -82,6 +84,7 @@
 {
     if (self = [super initWithName:CHUNK_DIALECT_NAME tracker:tracker])
     {
+        _ack = NO;
         _sign = sign;
         _totalLength = totalLength;
         _chunkIndex = chunkIndex;
@@ -171,6 +174,12 @@
 {
     CCChunkDialectFactory *factory = (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
     return [factory checkCompleted: self.ownerTag withSign:_sign];
+}
+
+//------------------------------------------------------------------------------
+- (BOOL)isLast
+{
+    return (_chunkIndex + 1 == _chunkNum) && !_ack;
 }
 
 //------------------------------------------------------------------------------

@@ -120,7 +120,7 @@
 - (BOOL)onDialogue:(NSString *)identifier andDialect:(CCDialect *)dialect
 {
     CCChunkDialect *chunk = (CCChunkDialect *)dialect;
-    
+
     if (chunk.ack)
     {
         //收到ACK，发送下一个
@@ -138,13 +138,12 @@
                     [[CCTalkService sharedSingleton] talk:identifier dialect:response];
                 }
             });
-            
+
             //检查
             if (queue.ackIndex == chunk.chunkNum - 1)
             {
                 [self checkAndClearQueue];
             }
-            
         }
         else
         {
@@ -157,9 +156,9 @@
     {
         //回送确认
         NSString *sign = chunk.sign;
-        CCChunkDialect *ack = [[CCChunkDialect alloc]initWithTracker:chunk.tracker];
+        CCChunkDialect *ack = [[CCChunkDialect alloc] initWithTracker:chunk.tracker];
         [ack setAckWithSign:sign chunkIndex:chunk.chunkIndex chunkNum:chunk.chunkNum];
-        
+
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [[CCTalkService sharedSingleton] talk:identifier dialect:ack];
         });
@@ -193,7 +192,7 @@
     {
         [CCLogger i:@"Cache memory size: %ld Bytes", _cacheMemorySize];
     }
-    
+
     if (_cacheMemorySize > CLEAR_THRESHOLD)
     {
         if (!_clearRunning)
@@ -321,7 +320,7 @@
             
             [CCLogger d:@"Clear chunk factory queue: %@", sign];
         }
-        
+
         [deleteList removeAllObjects];
     }
     deleteList = nil;
@@ -367,14 +366,14 @@
     if (nil != list)
     {
         [list addObject:chunk];
-        //更新数据大小
+        // 更新数据大小
         _dataSize += chunk.length;
     }
     else
     {
         list = [[NSMutableArray alloc]initWithCapacity:2];
         [list addObject:chunk];
-        //更新数据大小
+        // 更新数据大小
         _dataSize += chunk.length;
         [_data setObject:list forKey:chunk.sign];
         [_signQueue addObject:chunk.sign];
@@ -453,9 +452,7 @@
 
 /**
  * 对列
- *
  */
-
 @interface Queue ()
 {
     NSString *_target;
@@ -482,7 +479,7 @@
 
 - (void)enqueue:(CCChunkDialect *)chunk
 {
-    //标识为已污染
+    // 标识为已污染
     chunk.infectant = YES;
     [_queue addObject:chunk];
     
@@ -513,7 +510,7 @@
     {
         return 0;
     }
-    
+
     long remaining = 0;
     for (CCChunkDialect *chunk in _queue)
     {
