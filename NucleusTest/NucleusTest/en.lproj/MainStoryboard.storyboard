@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -30,8 +30,6 @@
                                     <barButtonItem title="Hang Up" id="Cri-JG-Lci"/>
                                     <barButtonItem title="Talk" id="Ytf-Ai-wHA"/>
                                     <barButtonItem title="Dialect" id="w0b-U5-NBp"/>
-                                    <barButtonItem title="Suspend" id="W9J-iX-kTk"/>
-                                    <barButtonItem title="Resume" id="tZd-Fg-0PN"/>
                                     <barButtonItem title="Chunk" id="rgI-Oo-dJG"/>
                                     <barButtonItem title="Download" id="Kr8-ae-ChA"/>
                                 </items>
@@ -45,8 +43,6 @@
                         <outlet property="bbiDialect" destination="w0b-U5-NBp" id="3Jh-1c-m7N"/>
                         <outlet property="bbiDownload" destination="Kr8-ae-ChA" id="v9s-VV-s3i"/>
                         <outlet property="bbiHangUp" destination="Cri-JG-Lci" id="4Rw-MV-Rdn"/>
-                        <outlet property="bbiResume" destination="tZd-Fg-0PN" id="JEU-Rc-JUT"/>
-                        <outlet property="bbiSuspend" destination="W9J-iX-kTk" id="iZm-Az-Td1"/>
                         <outlet property="bbiTalk" destination="Ytf-Ai-wHA" id="ES3-vP-ooi"/>
                         <outlet property="mainTextView" destination="E4h-ez-uKw" id="dlC-hQ-JWq"/>
                     </connections>
@@ -55,9 +51,4 @@
             </objects>
         </scene>
     </scenes>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination"/>
-    </simulatedMetricsContainer>
 </document>

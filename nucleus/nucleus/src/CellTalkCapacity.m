@@ -34,23 +34,14 @@
 {
     if (self = [super init])
     {
-        self.autoSuspend = FALSE;
-        self.suspendDuration = 0;
+        // 默认不加密
+        self.secure = FALSE;
+
+        // 默认重连次数
+        self.retryAttempts = 60;
+
         // 默认重试间隔：10 秒
         self.retryInterval = 10;
-        
-        // 默认重连次数：
-        self.retryAttempts = 60;
-    }
-    return self;
-}
-//------------------------------------------------------------------------------
-- (id)initWithAutoSuspend:(BOOL)autoSuspend andSuspendDuration:(long)duration
-{
-    self = [super init];
-    if (self) {
-        self.autoSuspend = autoSuspend;
-        self.suspendDuration = duration;
     }
     return self;
 }
@@ -58,8 +49,12 @@
 - (id)initWithRetryAttemts:(int)attemts andRetryInterval:(int)interval
 {
     self = [super init];
-    if (self) {
-        if (attemts == INT_MAX) {
+    if (self)
+    {
+        self.secure = FALSE;
+
+        if (attemts == INT_MAX)
+        {
             self.retryAttempts -= 1;
         }
         self.retryAttempts = attemts;
@@ -70,22 +65,31 @@
 //------------------------------------------------------------------------------
 + (NSData *)serialize:(CCTalkCapacity *)capacity
 {
-    NSString *str = [[NSString alloc] initWithFormat:@"%@|%.0f"
-                     , capacity.autoSuspend ? @"Y" : @"N"
-                     , capacity.suspendDuration * 1000];
+    NSString *str = [[NSString alloc] initWithFormat:@"1|%@|%d|%.0f"
+                     , capacity.secure ? @"Y" : @"N"
+                     , capacity.retryAttempts
+                     , capacity.retryInterval * 1000];
     return [str dataUsingEncoding:NSUTF8StringEncoding];
 }
 //------------------------------------------------------------------------------
 + (CCTalkCapacity *)deserialize:(NSData *)data
 {
     NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    NSRange range = [str rangeOfString:@"|"];
-    NSString *szAutoSuspend = [str substringWithRange:NSMakeRange(0, range.location)];
-    NSString *szDuration = [str substringFromIndex:(range.location + range.location)];
+    NSArray *items = [str componentsSeparatedByString:@"|"];
+    if (items.count < 4)
+    {
+        return nil;
+    }
+
+    //NSString *szVersion = [items objectAtIndex:0];
+    NSString *szSecure = [items objectAtIndex:1];
+    NSString *szRetryAttempts = [items objectAtIndex:2];
+    NSString *szRetryInterval = [items objectAtIndex:3];
 
     CCTalkCapacity *tc = [[CCTalkCapacity alloc] init];
-    tc.autoSuspend = [szAutoSuspend isEqualToString:@"Y"] ? TRUE : FALSE;
-    tc.suspendDuration = ((NSTimeInterval)[szDuration longLongValue]) / 1000.0f;
+    tc.secure = [szSecure isEqualToString:@"Y"] ? TRUE : FALSE;
+    tc.retryAttempts = (int) [szRetryAttempts integerValue];
+    tc.retryInterval = ((NSTimeInterval)[szRetryInterval longLongValue]) / 1000.0f;
 
     return tc;
 }

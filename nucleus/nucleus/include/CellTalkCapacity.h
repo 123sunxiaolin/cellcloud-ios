@@ -33,23 +33,14 @@
  */
 @interface CCTalkCapacity : NSObject
 
-/// 是否自动挂起。
-@property (nonatomic, assign) BOOL autoSuspend;
-/// 挂起有效时长。
-@property (nonatomic, assign) NSTimeInterval suspendDuration;
+/// 是否为加密会话
+@property (nonatomic, assign) BOOL secure;
 
 /// 重复尝试连接的次数
 @property (nonatomic, assign) int retryAttempts;
 
 /// 对话失败时，尝试重新建立会话的操作间隔
 @property (nonatomic, assign) NSTimeInterval retryInterval;
-
-/**
- * 构造函数
- * @param autoSuspend 是否自动挂起。
- * @param duration 挂起有效时长。
- */
-- (id)initWithAutoSuspend:(BOOL)autoSuspend andSuspendDuration:(long)duration;
 
 /**
  * 构造函数

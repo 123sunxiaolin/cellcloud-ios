@@ -421,9 +421,9 @@
             size += chunk.length;
         }
     }
-    
-    int index = [_signQueue indexOfObject:sign];
-    if (index >= 0)
+
+    NSUInteger index = [_signQueue indexOfObject:sign];
+    if (index != NSNotFound)
     {
         [_signQueue removeObjectAtIndex:index];
         [_signTimeQueue removeObjectAtIndex:index];
@@ -504,7 +504,7 @@
 
 - (int)size
 {
-    return _queue.count;
+    return (int) _queue.count;
 }
 
 - (long)remainingChunkLength

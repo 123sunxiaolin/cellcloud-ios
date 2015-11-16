@@ -294,34 +294,6 @@ static CCTalkService *sharedInstance = nil;
     }
 }
 //------------------------------------------------------------------------------
-- (void)suspend:(NSString *)identifier duration:(NSTimeInterval)duration
-{
-    @synchronized(_monitor) {
-        for (CCSpeaker *speaker in _speakers)
-        {
-            if ([speaker.identifiers containsObject:identifier])
-            {
-                [speaker suspend:duration];
-                break;
-            }
-        }
-    }
-}
-//------------------------------------------------------------------------------
-- (void)resume:(NSString *)identifier startTime:(NSTimeInterval)startTime
-{
-    @synchronized(_monitor) {
-        for (CCSpeaker *speaker in _speakers)
-        {
-            if ([speaker.identifiers containsObject:identifier])
-            {
-                [speaker resume:startTime];
-                break;
-            }
-        }
-    }
-}
-//------------------------------------------------------------------------------
 - (BOOL)talk:(NSString *)identifier primitive:(CCPrimitive *)primitive
 {
     CCSpeaker *speaker = nil;
@@ -392,28 +364,6 @@ static CCTalkService *sharedInstance = nil;
     }
 
     return [speaker isCalled];
-}
-//------------------------------------------------------------------------------
-- (BOOL)isSuspended:(NSString *)identifier
-{
-    CCSpeaker *speaker = nil;
-    @synchronized(_monitor) {
-        for (CCSpeaker *s in _speakers)
-        {
-            if ([s.identifiers containsObject:identifier])
-            {
-                speaker = s;
-                break;
-            }
-        }
-    }
-
-    if (nil == speaker)
-    {
-        return FALSE;
-    }
-
-    return [speaker isSuspended];
 }
 //------------------------------------------------------------------------------
 - (void)markLostSpeaker:(CCSpeaker *)speaker

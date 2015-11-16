@@ -34,8 +34,6 @@
 @property (strong, nonatomic) IBOutlet UITextView *mainTextView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiCall;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiHangUp;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiSuspend;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiResume;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiTalk;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiDialect;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *bbiChunk;

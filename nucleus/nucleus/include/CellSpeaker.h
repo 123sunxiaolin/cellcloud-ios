@@ -39,10 +39,7 @@ typedef enum _CCSpeakerState
     CCSpeakerStateCalling,
 
     /// 已经请求服务
-    CCSpeakerStateCalled,
-
-    /// 挂起状态
-    CCSpeakerStateSuspended
+    CCSpeakerStateCalled
 
 } CCSpeakerState;
 
@@ -77,17 +74,8 @@ typedef enum _CCSpeakerState
 /** 中断与 Cellet 服务。 */
 - (void)hangUp;
 
-/** 挂起与 Cellet 服务。 */
-- (void)suspend:(NSTimeInterval)duration;
-
-/** 恢复与 Cellet 服务。 */
-- (void)resume:(NSTimeInterval)startTime;
-
 /** 是否已经调用了 Cellet 。 */
 - (BOOL)isCalled;
-
-/** 是否已挂起 Cellet 会话。 */
-- (BOOL)isSuspended;
 
 /** 向 Cellet 发送原语。 */
 - (BOOL)speak:(NSString *)identifier primitive:(CCPrimitive *)primitive;

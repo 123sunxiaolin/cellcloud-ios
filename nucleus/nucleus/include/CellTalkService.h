@@ -46,16 +46,6 @@
  */
 - (void)quitted:(NSString *)identifier tag:(NSString *)tag;
 
-/** 当前访问会话被挂起。
- */
-- (void)suspended:(NSString *)identifier tag:(NSString *)tag
-        timestamp:(NSTimeInterval)timestamp mode:(CCSuspendMode)mode;
-
-/** 恢复之前被挂起的会话原语。
- */
-- (void)resumed:(NSString *)identifier tag:(NSString *)tag
-      timestamp:(NSTimeInterval)timestamp primitive:(CCPrimitive *)primitive;
-
 /** 发生错误。
  */
 - (void)failed:(CCTalkServiceFailure *)failure;
@@ -127,16 +117,6 @@
 - (void)hangUp:(NSString *)identifier;
 
 /**
- * 挂起指定的 Cellet 服务。
- */
-- (void)suspend:(NSString *)identifier duration:(NSTimeInterval)duration;
-
-/**
- * 恢复指定的 Cellet 服务。
- */
-- (void)resume:(NSString *)identifier startTime:(NSTimeInterval)startTime;
-
-/**
  * 向 Cellet 发送原语。
  */
 - (BOOL)talk:(NSString *)identifier primitive:(CCPrimitive *)primitive;
@@ -150,11 +130,6 @@
  * 是否已经与 Cellet 建立服务。
  */
 - (BOOL)isCalled:(NSString *)identifier;
-
-/**
- * Cellet 服务是否已经被挂起。
- */
-- (BOOL)isSuspended:(NSString *)identifier;
 
 /** 标记指定 Speaker 为连接丢失。
  */

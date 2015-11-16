@@ -69,15 +69,6 @@
 /// 处理请求返回
 - (void)processRequest:(CCPacket *)packet session:(CCSession *)session;
 
-/// 处理协商
-- (void)processConsult:(CCPacket *)packet session:(CCSession *)session;
-
-/// 处理挂起
-- (void)processSuspend:(CCPacket *)packet session:(CCSession *)session;
-
-/// 处理恢复
-- (void)processResume:(CCPacket *)packet session:(CCSession *)session;
-
 /// 会话
 - (void)processDialogue:(CCPacket *)packet session:(CCSession *)session;
 
@@ -91,10 +82,6 @@
 - (void)fireContacted:(NSString *)celletIdentifier;
 ///
 - (void)fireQuitted:(NSString *)celletIdentifier;
-///
-- (void)fireSuspended:(NSTimeInterval)timestamp mode:(CCSuspendMode)mode;
-///
-- (void)fireResumed:(NSTimeInterval)timestamp primitive:(CCPrimitive *)primitive;
 ///
 - (void)fireFailed:(CCTalkServiceFailure *)failure;
 
@@ -219,11 +206,6 @@
 //------------------------------------------------------------------------------
 - (BOOL)recall
 {
-    if (CCSpeakerStateSuspended == self.state)
-    {
-        // 挂起 返回 false
-        return FALSE;
-    }
     return [self call:_identifierList];
 }
 
@@ -255,60 +237,6 @@
         [_identifierList removeAllObjects];
 
         self.state = CCSpeakerStateHangUp;
-    }
-}
-//------------------------------------------------------------------------------
-- (void)suspend:(NSTimeInterval)duration
-{
-    if (self.state == CCSpeakerStateCalled)
-    {
-        // 包格式：内核标签|有效时长
-
-        char tag[] = TPT_SUSPEND;
-        CCPacket *packet = [[CCPacket alloc] initWithTag:tag sn:5 major:1 minor:0];
-
-        NSString *nucleusTag = [[CCNucleus sharedSingleton].tag getAsString];
-        [packet appendSubsegment:[nucleusTag dataUsingEncoding:NSUTF8StringEncoding]];
-
-        NSString *szDuration = [NSString stringWithFormat:@"%.0f", duration * 1000];
-        [packet appendSubsegment:[szDuration dataUsingEncoding:NSUTF8StringEncoding]];
-
-        NSData *data = [CCPacket pack:packet];
-        if (nil != data)
-        {
-            CCMessage *message = [CCMessage messageWithData:data];
-            [_connector write:message];
-
-            // 更新状态
-            _state = CCSpeakerStateSuspended;
-        }
-    }
-}
-//------------------------------------------------------------------------------
-- (void)resume:(NSTimeInterval)startTime
-{
-    if (_state == CCSpeakerStateSuspended
-        || _state == CCSpeakerStateCalled)
-    {
-        // 包格式：内核标签|需要恢复的原语起始时间戳
-        char tag[] = TPT_RESUME;
-        CCPacket *packet = [[CCPacket alloc] initWithTag:tag sn:6 major:1 minor:0];
-
-        NSString *nucleusTag = [[CCNucleus sharedSingleton].tag getAsString];
-        [packet appendSubsegment:[nucleusTag dataUsingEncoding:NSUTF8StringEncoding]];
-
-        NSString *szDuration = [NSString stringWithFormat:@"%.0f", startTime * 1000];
-        [packet appendSubsegment:[szDuration dataUsingEncoding:NSUTF8StringEncoding]];
-
-        NSData *data = [CCPacket pack:packet];
-        if (nil != data)
-        {
-            CCMessage *message = [CCMessage messageWithData:data];
-            [_connector write:message];
-
-            // 恢复状态
-            _state = CCSpeakerStateCalled;
-        }
     }
 }
 //------------------------------------------------------------------------------
@@ -349,11 +277,6 @@
     return self.state == CCSpeakerStateCalled;
 }
 //------------------------------------------------------------------------------
-- (BOOL)isSuspended
-{
-    return self.state == CCSpeakerStateSuspended;
-}
-//------------------------------------------------------------------------------
 - (BOOL)heartbeat
 {
     if (nil == _connector
@@ -385,14 +308,6 @@
     if (tag[2] == TPT_DIALOGUE_B3 && tag[3] == TPT_DIALOGUE_B4)
     {
         [self processDialogue:packet session:session];
-    }
-    else if (tag[2] == TPT_RESUME_B3 && tag[3] == TPT_RESUME_B4)
-    {
-        [self processResume:packet session:session];
-    }
-    else if (tag[2] == TPT_SUSPEND_B3 && tag[3] == TPT_SUSPEND_B4)
-    {
-        [self processSuspend:packet session:session];
     }
     else if (tag[2] == TPT_CONSULT_B3 && tag[3] == TPT_CONSULT_B4)
     {
@@ -551,65 +466,19 @@
         return;
     }
 
-    // 进行对比
+    // 更新
     if (nil != self.capacity)
     {
-        if (newCapacity.autoSuspend != self.capacity.autoSuspend
-            || newCapacity.suspendDuration != self.capacity.suspendDuration)
-        {
-            [CCLogger w:@"Talk capacity has changed from '%@' : AutoSuspend=%d SuspendDuration=%f"
-                , self.remoteTag
-                , newCapacity.autoSuspend
-                , newCapacity.suspendDuration];
-        }
+        self.capacity = newCapacity;
     }
 
-    // 更新
-    self.capacity.autoSuspend = newCapacity.autoSuspend;
-    self.capacity.suspendDuration = newCapacity.suspendDuration;
-}
-//------------------------------------------------------------------------------
-- (void)processSuspend:(CCPacket *)packet session:(CCSession *)session
-{
-    // 包格式：请求方标签|成功码|时间戳
-    NSData *code = [packet getSubsegment:1];
-    char sc[4] = {0x0};
-    [code getBytes:sc length:code.length];
-    
-    char success[] = CCTS_SUCCESS;
-    if (sc[0] == success[0] && sc[1] == success[1]
-        && sc[2] == success[2] && sc[3] == success[3])
+    if (nil != self.capacity)
     {
-        // 更新状态
-        _state = CCSpeakerStateSuspended;
-
-        NSData *data = [packet getSubsegment:2];
-        NSTimeInterval timestamp = [CCUtil convertDataToTimeInterval:data];
-
-        [self fireSuspended:timestamp mode:CCSuspendModeInitative];
-    }
-    else
-    {
-        // 更新状态
-        _state = CCSpeakerStateCalled;
-    }
-}
-//------------------------------------------------------------------------------
-- (void)processResume:(CCPacket *)packet session:(CCSession *)session
-{
-    // 包格式：目标标签|时间戳|原语序列|Cellet
-    NSTimeInterval timestamp = [CCUtil convertDataToTimeInterval:[packet getSubsegment:1]];
-
-    NSData *data = [packet getSubsegment:2];
-    CCPrimitive *primitive = [CCPrimitive read:data andTag:[_remoteTag getAsString]];
-    if (nil != primitive)
-    {
-        NSString *identifier = [[NSString alloc] initWithData:[packet getSubsegment:3] encoding:NSUTF8StringEncoding];
-        // 设置对端标签
-//        primitive.ownerTag = [_remoteTag getAsString];
-        primitive.celletIdentifier = [NSString stringWithString:identifier];
-
-        [self fireResumed:timestamp primitive:primitive];
+        [CCLogger w:@"Talk capacity has changed from '%@' : secure=%d attempts=%d delay=%f"
+         , self.remoteTag
+         , newCapacity.secure
+         , newCapacity.retryAttempts
+         , newCapacity.retryInterval];
     }
 }
 //------------------------------------------------------------------------------
@@ -668,30 +537,6 @@
     }
 }
 //------------------------------------------------------------------------------
-- (void)fireSuspended:(NSTimeInterval)timestamp mode:(CCSuspendMode)mode
-{
-    if (nil != [CCTalkService sharedSingleton].listener)
-    {
-        /* TODO
-        [[CCTalkService sharedSingleton].listener suspended:_identifier
-                                                        tag:[_remoteTag getAsString]
-                                                  timestamp:timestamp
-                                                       mode:mode];*/
-    }
-}
-//------------------------------------------------------------------------------
-- (void)fireResumed:(NSTimeInterval)timestamp primitive:(CCPrimitive *)primitive
-{
-    if (nil != [CCTalkService sharedSingleton].listener)
-    {
-        /* TODO
-        [[CCTalkService sharedSingleton].listener resumed:_identifier
-                                                      tag:[_remoteTag getAsString]
-                                                timestamp:timestamp
-                                                primitive:primitive];*/
-    }
-}
-//------------------------------------------------------------------------------
 - (void)fireFailed:(CCTalkServiceFailure *)failure
 {
     if (failure.code == CCFailureCallFailed)
@@ -726,19 +571,6 @@
 //------------------------------------------------------------------------------
 - (void)sessionClosed:(CCSession *)session
 {
-    if (nil != self.capacity && _state == CCSpeakerStateCalled)
-    {
-        if (self.capacity.autoSuspend)
-        {
-            // 更新状态
-            _state = CCSpeakerStateSuspended;
-            [self fireSuspended:[CCUtil currentTimeInterval] mode:CCSuspendModePassive];
-            
-            // 自动重连
-            [[CCTalkService sharedSingleton] markLostSpeaker:self];
-        }
-    }
-    
     // 判断是否为异常网络中断
     if (CCSpeakerStateCalling == _state)
     {
@@ -766,9 +598,9 @@
         // 标记为丢失
         [[CCTalkService sharedSingleton] markLostSpeaker:self];
     }
-    
+
     _state = CCSpeakerStateHangUp;
-    
+
     // 通知退出
     for (NSString *identifier in _identifierList)
     {

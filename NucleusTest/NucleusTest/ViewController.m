@@ -55,8 +55,6 @@
     [self setMainTextView:nil];
     [self setBbiCall:nil];
     [self setBbiHangUp:nil];
-    [self setBbiSuspend:nil];
-    [self setBbiResume:nil];
     [self setBbiTalk:nil];
     [self setBbiDialect:nil];
     [self setBbiChunk:nil];
@@ -69,8 +67,6 @@
     self.mainTextView.delegate = self;
     [self.bbiCall setAction:@selector(doCallHandler:)];
     [self.bbiHangUp setAction:@selector(doHangUpHandler:)];
-    [self.bbiSuspend setAction:@selector(doSuspendHandler:)];
-    [self.bbiResume setAction:@selector(doResumeHandler:)];
     [self.bbiTalk setAction:@selector(doTalkHandler:)];
     [self.bbiDialect setAction:@selector(doDialectHandler:)];
     [self.bbiChunk setAction:@selector(doChunkHandler:)];
@@ -78,8 +74,6 @@
 
     self.bbiCall.enabled = TRUE;
     self.bbiHangUp.enabled = FALSE;
-    self.bbiSuspend.enabled = FALSE;
-    self.bbiResume.enabled = FALSE;
     self.bbiTalk.enabled = FALSE;
     self.bbiDialect.enabled = FALSE;
     self.bbiChunk.enabled = FALSE;
@@ -146,8 +140,6 @@
 {
     self.bbiCall.enabled = FALSE;
     self.bbiHangUp.enabled = FALSE;
-    self.bbiSuspend.enabled = FALSE;
-    self.bbiResume.enabled = FALSE;
     self.bbiTalk.enabled = FALSE;
     self.bbiDialect.enabled = FALSE;
     self.bbiChunk.enabled = FALSE;
@@ -223,8 +215,6 @@
 
     dispatch_async(dispatch_get_main_queue(), ^{
         self.bbiHangUp.enabled = YES;
-        self.bbiSuspend.enabled = YES;
-        self.bbiResume.enabled = YES;
         self.bbiTalk.enabled = YES;
         self.bbiDialect.enabled = YES;
         self.bbiChunk.enabled = YES;
@@ -401,26 +391,6 @@
                 [dialect appendParam:@"project" stringValue:@"Cell Cloud"];
 
                 [[CCTalkService sharedSingleton] talk:@"Dummy" dialect:dialect];
-            });
-}
-//------------------------------------------------------------------------------
-- (void)doSuspendHandler:(id)sender
-{
-    [CCLogger d:@"Tap 'Suspend' ..."];
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-            , ^{
-                [[CCTalkService sharedSingleton] suspend:@"Dummy" duration:5*60];
-            });
-}
-//------------------------------------------------------------------------------
-- (void)doResumeHandler:(id)sender
-{
-    [CCLogger d:@"Tap 'Resume' ..."];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-            , ^{
-                [[CCTalkService sharedSingleton] resume:@"Dummy" startTime:0];
             });
 }
 //------------------------------------------------------------------------------
