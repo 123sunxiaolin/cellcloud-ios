@@ -46,4 +46,8 @@
  */
 - (id)initWithBytes:(const void *)bytes length:(NSUInteger)length;
 
+- (void)reset:(NSData *)data;
+
+- (void)reset:(const void *)bytes length:(NSUInteger)length;
+
 @end

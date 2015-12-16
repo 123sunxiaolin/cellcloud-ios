@@ -50,6 +50,14 @@
 - (id)initWithRetryAttemts:(int)attemts andRetryInterval:(int)interval;
 
 /**
+ * 构造函数
+ * @param secure 是否使用安全连接。
+ * @param attemts 最大重连次数。
+ * @param interval 重连时间间隔。
+ */
+- (id)initWithSecure:(BOOL)secure andAttempts:(int)attemts andRetryInterval:(int)interval;
+
+/**
  * 序列化。
  */
 + (NSData *)serialize:(CCTalkCapacity *)capacity;

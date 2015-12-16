@@ -46,6 +46,26 @@
  */
 - (CCInetAddress *)getAddress;
 
+/** 是否是安全连接。
+ */
+- (BOOL)isSecure;
+
+/** 激活密钥。
+ */
+- (BOOL)activeSecretKey:(const char *)key keyLength:(int)keyLength;
+
+/** 吊销密钥。
+ */
+- (void)deactiveSecretKey;
+
+/** 返回安全密钥。
+ */
+- (const char *)getSecretKey;
+
+/** 复制密钥，并返回密钥长度。
+ */
+- (int)copySecretKey:(char *)out;
+
 /** 写消息。
  */
 - (void)write:(CCMessage *)message;

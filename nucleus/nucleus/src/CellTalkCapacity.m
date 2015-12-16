@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2016 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@
         self.secure = FALSE;
 
         // 默认重连次数
-        self.retryAttempts = 60;
+        self.retryAttempts = 9;
 
         // 默认重试间隔：10 秒
         self.retryInterval = 10;
@@ -52,6 +52,23 @@
     if (self)
     {
         self.secure = FALSE;
+
+        if (attemts == INT_MAX)
+        {
+            self.retryAttempts -= 1;
+        }
+        self.retryAttempts = attemts;
+        self.retryInterval = interval;
+    }
+    return self;
+}
+//------------------------------------------------------------------------------
+- (id)initWithSecure:(BOOL)secure andAttempts:(int)attemts andRetryInterval:(int)interval
+{
+    self = [super init];
+    if (self)
+    {
+        self.secure = secure;
 
         if (attemts == INT_MAX)
         {

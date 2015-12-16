@@ -34,6 +34,10 @@
     long _id;
     CCMessageService *_service;
     CCInetAddress *_address;
+
+    // 安全密钥
+    char *_secretKey;
+    int _keyLength;
 }
 @end
 
@@ -47,9 +51,21 @@
         _service = service;
         _address = address;
         _id = [CCUtil randomLong];
+        _secretKey = NULL;
+        _keyLength = 0;
     }
 
     return self;
+}
+//------------------------------------------------------------------------------
+- (void)dealloc
+{
+    if (_keyLength > 0 && _secretKey)
+    {
+        free(_secretKey);
+        _secretKey = NULL;
+        _keyLength = 0;
+    }
 }
 //------------------------------------------------------------------------------
 - (long)getId
@@ -65,6 +81,47 @@
 - (CCInetAddress *)getAddress
 {
     return _address;
+}
+//------------------------------------------------------------------------------
+- (BOOL)isSecure
+{
+    return (_keyLength > 0);
+}
+//------------------------------------------------------------------------------
+- (BOOL)activeSecretKey:(const char *)key keyLength:(int)keyLength
+{
+    if (_secretKey && _keyLength > 0)
+    {
+        free(_secretKey);
+        _keyLength = 0;
+    }
+
+    _secretKey = malloc(keyLength);
+    memcpy(_secretKey, key, keyLength);
+
+    _keyLength = keyLength;
+    return YES;
+}
+//------------------------------------------------------------------------------
+- (void)deactiveSecretKey
+{
+    if (_secretKey && _keyLength > 0)
+    {
+        free(_secretKey);
+        _secretKey = NULL;
+        _keyLength = 0;
+    }
+}
+//------------------------------------------------------------------------------
+- (const char *)getSecretKey
+{
+    return _secretKey;
+}
+//------------------------------------------------------------------------------
+- (int)copySecretKey:(char *)out
+{
+    memcpy(out, _secretKey, _keyLength);
+    return _keyLength;
 }
 //------------------------------------------------------------------------------
 - (void)write:(CCMessage *)message

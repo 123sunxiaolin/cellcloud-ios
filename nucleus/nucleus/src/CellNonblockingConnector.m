@@ -29,6 +29,7 @@
 #import "CellSession.h"
 #import "CellMessage.h"
 #import "CellLogger.h"
+#import "CellCryptology.h"
 
 // 私有接口
 @interface CCNonblockingConnector ()
@@ -58,6 +59,10 @@
 
 /** 处理接收数据。 */
 - (void)processReceived:(NSData *)data;
+
+- (void)encryptMessage:(CCMessage *)message key:(const char *)key keyLength:(int)length;
+
+- (void)decryptMessage:(CCMessage *)message key:(const char *)key keyLength:(int)length;
 
 @end
 
@@ -167,6 +172,11 @@
         return;
     }
 
+    if ([session isSecure])
+    {
+        [self encryptMessage:message key:[session getSecretKey] keyLength:8];
+    }
+
     if ([self existDataMark])
     {
         char *buf = malloc(message.length + _headLength + _tailLength);
@@ -264,13 +274,59 @@
                 data.length - _headLength - _tailLength);
         NSData *cur = [data subdataWithRange:range];
         CCMessage *message = [[CCMessage alloc] initWithData:cur];
+
+        // 如果是安全连接，解密
+        if ([_session isSecure])
+        {
+            [self decryptMessage:message key:[_session getSecretKey] keyLength:8];
+        }
+
         [self fireMessageReceived:message];
     }
     else
     {
         CCMessage *message = [[CCMessage alloc] initWithData:data];
+
+        // 如果是安全连接，解密
+        if ([_session isSecure])
+        {
+            [self decryptMessage:message key:[_session getSecretKey] keyLength:8];
+        }
+
         [self fireMessageReceived:message];
     }
+}
+//------------------------------------------------------------------------------
+- (void)encryptMessage:(CCMessage *)message key:(const char *)key keyLength:(int)length
+{
+    const char *plaintext = [message.data bytes];
+    NSUInteger len = message.length;
+
+    char *ciphertext = malloc(len);
+    memset(ciphertext, 0x0, len);
+
+    NSUInteger newlen = [[CCCryptology sharedSingleton] simpleEncrypt:ciphertext text:plaintext length:(int)len key:key];
+
+    // 重新填写消息数据
+    [message reset:ciphertext length:newlen];
+
+    free(ciphertext);
+}
+//------------------------------------------------------------------------------
+- (void)decryptMessage:(CCMessage *)message key:(const char *)key keyLength:(int)length
+{
+    const char *ciphertext = [message.data bytes];
+    NSUInteger len = message.length;
+
+    char *plaintext = malloc(len);
+    memset(plaintext, 0x0, len);
+
+    NSUInteger newlen = [[CCCryptology sharedSingleton] simpleDecrypt:plaintext text:ciphertext length:(int)len key:key];
+
+    // 重新填写消息数据
+    [message reset:plaintext length:newlen];
+
+    free(plaintext);
 }
 
 

@@ -67,5 +67,19 @@
 
     return self;
 }
+//------------------------------------------------------------------------------
+- (void)reset:(NSData *)data
+{
+    _data = nil;
+    _data = [[NSData alloc] initWithData:data];
+    _length = _data.length;
+}
+//------------------------------------------------------------------------------
+- (void)reset:(const void *)bytes length:(NSUInteger)length
+{
+    _data = nil;
+    _data = [[NSData alloc] initWithBytes:bytes length:length];
+    _length = length;
+}
 
 @end

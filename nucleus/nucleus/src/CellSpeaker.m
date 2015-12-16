@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2016 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -52,9 +52,13 @@
     CCInetAddress *_address;
     CCNonblockingConnector *_connector;
 
+    NSData *_secretKey;
+
     CCNucleusTag *_remoteTag;
 
     NSObject *_monitor;
+
+    NSTimer *_contactedTimer;
 }
 
 /// 数据处理入口
@@ -76,7 +80,7 @@
 - (void)requestCellets:(CCSession *)session;
 
 /// 协商能力
-- (void)consult:(CCTalkCapacity *)capacity;
+- (void)requestConsult;
 
 ///
 - (void)fireContacted:(NSString *)celletIdentifier;
@@ -105,6 +109,8 @@
     {
         _monitor = [[NSObject alloc] init];
         _identifierList = [[NSMutableArray alloc] initWithCapacity:2];
+        _contactedTimer = nil;
+        self.capacity = nil;
         self.state = CCSpeakerStateHangUp;
     }
 
@@ -118,6 +124,8 @@
         _monitor = [[NSObject alloc] init];
         _identifierList = [[NSMutableArray alloc] initWithCapacity:2];
         _address = address;
+        _contactedTimer = nil;
+        self.capacity = nil;
         self.state = CCSpeakerStateHangUp;
     }
 
@@ -131,6 +139,7 @@
         _monitor = [[NSObject alloc] init];
         _identifierList = [[NSMutableArray alloc] initWithCapacity:2];
         _address = address;
+        _contactedTimer = nil;
         self.capacity = capacity;
         self.state = CCSpeakerStateHangUp;
     }
@@ -140,8 +149,17 @@
 //------------------------------------------------------------------------------
 - (void)dealloc
 {
+    self.capacity = nil;
+
     _address = nil;
     _monitor = nil;
+    _secretKey = nil;
+
+    if (nil != _contactedTimer)
+    {
+        [_contactedTimer invalidate];
+        _contactedTimer = nil;
+    }
 }
 
 #pragma mark - Public Method
@@ -309,13 +327,13 @@
     {
         [self processDialogue:packet session:session];
     }
-    else if (tag[2] == TPT_CONSULT_B3 && tag[3] == TPT_CONSULT_B4)
-    {
-        [self processConsult:packet session:session];
-    }
     else if (tag[2] == TPT_REQUEST_B3 && tag[3] == TPT_REQUEST_B4)
     {
         [self processRequest:packet session:session];
+    }
+    else if (tag[2] == TPT_CONSULT_B3 && tag[3] == TPT_CONSULT_B4)
+    {
+        [self processConsult:packet session:session];
     }
     else if (tag[2] == TPT_CHECK_B3 && tag[3] == TPT_CHECK_B4)
     {
@@ -336,6 +354,10 @@
     char key[16] = {0x0};
     NSData *kData = [packet getSubsegment:1];
     [kData getBytes:key length:kData.length];
+
+    // 保存密钥
+    _secretKey = nil;
+    _secretKey = [[NSData alloc] initWithBytes:key length:kData.length];
 
     // 解密
     char plaintext[32] = {0x0};
@@ -366,8 +388,8 @@
     // 设置对端标签
     _remoteTag = [[CCNucleusTag alloc] initWithString:[[NSString alloc] initWithFormat:@"%s", tag]];
 
-    // 请求 Cellet
-    [self requestCellets:session];
+    // 请求进行协商
+    [self requestConsult];
 }
 //------------------------------------------------------------------------------
 - (void)processRequest:(CCPacket *)packet session:(CCSession *)session
@@ -411,12 +433,6 @@
         // 关闭连接
         [_connector disconnect];
     }
-
-    // 如果调用成功，则进行能力协商
-    if (_state == CCSpeakerStateCalled && nil != self.capacity)
-    {
-        [self consult:self.capacity];
-    }
 }
 //------------------------------------------------------------------------------
 - (void)processDialogue:(CCPacket *)packet session:(CCSession *)session
@@ -459,26 +475,56 @@
 - (void)processConsult:(CCPacket *)packet session:(CCSession *)session
 {
     // 包格式：源标签|能力描述序列化串
-    
+
     CCTalkCapacity *newCapacity = [CCTalkCapacity deserialize:[packet getSubsegment:1]];
     if (nil == newCapacity)
     {
+        // 请求 Cellet
+        [self requestCellets:session];
+
         return;
     }
 
     // 更新
-    if (nil != self.capacity)
+    if (nil == self.capacity)
     {
         self.capacity = newCapacity;
     }
-
-    if (nil != self.capacity)
+    else
     {
-        [CCLogger w:@"Talk capacity has changed from '%@' : secure=%d attempts=%d delay=%f"
+        self.capacity.secure = newCapacity.secure;
+        self.capacity.retryAttempts = newCapacity.retryAttempts;
+        self.capacity.retryInterval = newCapacity.retryInterval;
+    }
+
+    [CCLogger w:@"Talk capacity has changed from '%@' : secure=%d attempts=%d delay=%f"
          , self.remoteTag
          , newCapacity.secure
          , newCapacity.retryAttempts
          , newCapacity.retryInterval];
+
+    // 请求 Cellet
+    [self requestCellets:session];
+}
+//------------------------------------------------------------------------------
+- (void)requestConsult
+{
+    if (nil == self.capacity)
+    {
+        self.capacity = [[CCTalkCapacity alloc] init];
+    }
+    
+    // 包格式：源标签|能力描述序列化数据
+    char ptag[] = TPT_CONSULT;
+    CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:4 major:1 minor:0];
+    [packet appendSubsegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
+    [packet appendSubsegment:[CCTalkCapacity serialize:self.capacity]];
+    
+    NSData *data = [CCPacket pack:packet];
+    if (nil != data)
+    {
+        CCMessage *message = [CCMessage messageWithData:data];
+        [_connector write:message];
     }
 }
 //------------------------------------------------------------------------------
@@ -505,36 +551,58 @@
     });
 }
 //------------------------------------------------------------------------------
-- (void)consult:(CCTalkCapacity *)capacity
+- (void)handleContactedTimer:(NSTimer *)timer
 {
-    // 包格式：源标签|能力描述序列化数据
-    char ptag[] = TPT_CONSULT;
-    CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:4 major:1 minor:0];
-    [packet appendSubsegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
-    [packet appendSubsegment:[CCTalkCapacity serialize:capacity]];
-
-    NSData *data = [CCPacket pack:packet];
-    if (nil != data)
+    if (self.capacity.secure)
     {
-        CCMessage *message = [CCMessage messageWithData:data];
-        [_connector write:message];
+        [[_connector getSession] activeSecretKey:[_secretKey bytes] keyLength:(int)_secretKey.length];
+        [CCLogger i:@"Active secret key for server: %@:%d", _address.host, _address.port];
+    }
+    else
+    {
+        [[_connector getSession] deactiveSecretKey];
+    }
+
+    if (nil != [CCTalkService sharedSingleton].listener)
+    {
+        for (NSString *celletIdentifier in _identifierList)
+        {
+            [[CCTalkService sharedSingleton].listener contacted:celletIdentifier tag:[_remoteTag getAsString]];
+        }
     }
 }
 //------------------------------------------------------------------------------
 - (void)fireContacted:(NSString *)celletIdentifier
 {
-    if (nil != [CCTalkService sharedSingleton].listener)
+    NSTimeInterval interval = 0.2f;
+
+    if (nil != _contactedTimer)
     {
-        [[CCTalkService sharedSingleton].listener contacted:celletIdentifier tag:[_remoteTag getAsString]];
+        [_contactedTimer invalidate];
+        _contactedTimer = nil;
     }
+
+    _contactedTimer = [NSTimer scheduledTimerWithTimeInterval:interval
+                                                       target:self
+                                                     selector:@selector(handleContactedTimer:)
+                                                     userInfo:celletIdentifier
+                                                      repeats:NO];
 }
 //------------------------------------------------------------------------------
 - (void)fireQuitted:(NSString *)celletIdentifier
 {
+    if (nil != _contactedTimer)
+    {
+        [_contactedTimer invalidate];
+        _contactedTimer = nil;
+    }
+
     if (nil != [CCTalkService sharedSingleton].listener)
     {
         [[CCTalkService sharedSingleton].listener quitted:celletIdentifier tag:[_remoteTag getAsString]];
     }
+
+    [[_connector getSession] deactiveSecretKey];
 }
 //------------------------------------------------------------------------------
 - (void)fireFailed:(CCTalkServiceFailure *)failure
