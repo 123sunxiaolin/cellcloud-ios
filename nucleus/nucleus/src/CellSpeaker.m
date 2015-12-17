@@ -570,23 +570,28 @@
             [[CCTalkService sharedSingleton].listener contacted:celletIdentifier tag:[_remoteTag getAsString]];
         }
     }
+
+    _contactedTimer = nil;
 }
 //------------------------------------------------------------------------------
 - (void)fireContacted:(NSString *)celletIdentifier
 {
-    NSTimeInterval interval = 0.2f;
+    NSTimeInterval interval = 0.5f;
 
     if (nil != _contactedTimer)
     {
         [_contactedTimer invalidate];
         _contactedTimer = nil;
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _contactedTimer = [NSTimer scheduledTimerWithTimeInterval:interval
+                                                           target:self
+                                                         selector:@selector(handleContactedTimer:)
+                                                         userInfo:celletIdentifier
+                                                          repeats:NO];
+    });
 
-    _contactedTimer = [NSTimer scheduledTimerWithTimeInterval:interval
-                                                       target:self
-                                                     selector:@selector(handleContactedTimer:)
-                                                     userInfo:celletIdentifier
-                                                      repeats:NO];
 }
 //------------------------------------------------------------------------------
 - (void)fireQuitted:(NSString *)celletIdentifier
