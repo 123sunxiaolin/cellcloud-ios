@@ -157,8 +157,10 @@
 
     if (nil != _contactedTimer)
     {
-        [_contactedTimer invalidate];
-        _contactedTimer = nil;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_contactedTimer invalidate];
+            _contactedTimer = nil;
+        });
     }
 }
 
@@ -578,13 +580,13 @@
 {
     NSTimeInterval interval = 0.5f;
 
-    if (nil != _contactedTimer)
-    {
-        [_contactedTimer invalidate];
-        _contactedTimer = nil;
-    }
-    
     dispatch_async(dispatch_get_main_queue(), ^{
+        if (nil != _contactedTimer)
+        {
+            [_contactedTimer invalidate];
+            _contactedTimer = nil;
+        }
+
         _contactedTimer = [NSTimer scheduledTimerWithTimeInterval:interval
                                                            target:self
                                                          selector:@selector(handleContactedTimer:)
@@ -596,11 +598,13 @@
 //------------------------------------------------------------------------------
 - (void)fireQuitted:(NSString *)celletIdentifier
 {
-    if (nil != _contactedTimer)
-    {
-        [_contactedTimer invalidate];
-        _contactedTimer = nil;
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (nil != _contactedTimer)
+        {
+            [_contactedTimer invalidate];
+            _contactedTimer = nil;
+        }
+    });
 
     if (nil != [CCTalkService sharedSingleton].listener)
     {
