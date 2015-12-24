@@ -98,6 +98,9 @@
 /** 启动守护任务。 */
 - (void)startDaemon;
 
+/** 启动后台守护任务 */
+- (void)backgroundKeepAlive;
+
 /** 停止守护任务。 */
 - (void)stopDaemon;
 

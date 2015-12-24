@@ -182,6 +182,15 @@
 			attributes = {
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = Ambrose;
+				TargetAttributes = {
+					448404B01615FFA700D94AB5 = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+				};
 			};
 			buildConfigurationList = 448404AB1615FFA700D94AB5 /* Build configuration list for PBXProject "NucleusTest" */;
 			compatibilityVersion = "Xcode 3.2";

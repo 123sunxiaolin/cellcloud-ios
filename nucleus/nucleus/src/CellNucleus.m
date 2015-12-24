@@ -142,5 +142,23 @@ static CCNucleus *sharedInstance = nil;
 
     [[CCTalkService sharedSingleton] shutdown];
 }
+//------------------------------------------------------------------------------
+- (void)setBackgroundActiveEnabled:(BOOL)enabled
+{
+    if (enabled)
+    {
+        [CCLogger i:@"*-*-* Cell Enabled Background  *-*-*"];
+        
+        BOOL backgroundAccepted = [[UIApplication sharedApplication] setKeepAliveTimeout:600.0f handler:^{
+            //keep-alive
+            [[CCTalkService sharedSingleton] backgroundKeepAlive];
+        }];
+        
+        if (backgroundAccepted)
+        {
+            [CCLogger i:@"*-*-* Cell Did Keep-Alive *-*-*"];
+        }
+    }
+}
 
 @end

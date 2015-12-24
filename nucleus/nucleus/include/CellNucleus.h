@@ -32,6 +32,8 @@
 
 @property (nonatomic, strong, readonly) CCNucleusTag *tag;
 
+@property (nonatomic, setter=setBackgroundActiveEnabled:) BOOL backgroundEnable;
+
 /** 返回单例。
  */
 + (CCNucleus *)sharedSingleton;

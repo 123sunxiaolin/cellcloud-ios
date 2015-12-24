@@ -131,6 +131,11 @@ static CCTalkService *sharedInstance = nil;
                                                     repeats:TRUE];
 }
 //------------------------------------------------------------------------------
+- (void)backgroundKeepAlive
+{
+    [self heartbeat];
+}
+//------------------------------------------------------------------------------
 - (void)stopDaemon
 {
     if (nil != _daemonTimer)
@@ -151,17 +156,8 @@ static CCTalkService *sharedInstance = nil;
     if (_hbCounts >= 18)
     {
         // 180 秒一次心跳，计数器周期是 10 秒
-        if (_speakers.count > 0)
-        {
-            for (CCSpeaker *spr in _speakers)
-            {
-                [spr heartbeat];
-                [CCLogger d:@"Speaker heartbeat to %@:%d"
-                 , spr.address.host
-                 , spr.address.port];
-            }
-        }
-
+        [self heartbeat];
+        
         _hbCounts = 0;
     }
 
@@ -211,6 +207,23 @@ static CCTalkService *sharedInstance = nil;
     }
 
     date = nil;
+}
+
+#pragma mark - Private Method
+
+//------------------------------------------------------------------------------
+- (void)heartbeat
+{
+    if (_speakers.count > 0)
+    {
+        for (CCSpeaker *spr in _speakers)
+        {
+            [spr heartbeat];
+            [CCLogger d:@"Speaker heartbeat to %@:%d"
+             , spr.address.host
+             , spr.address.port];
+        }
+    }
 }
 
 #pragma mark - Client Interfaces

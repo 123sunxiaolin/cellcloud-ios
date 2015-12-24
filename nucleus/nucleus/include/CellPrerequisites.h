@@ -28,6 +28,7 @@
 #define CellPrerequisites_h
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIApplication.h>
 
 #pragma mark Servie Protocol
 
