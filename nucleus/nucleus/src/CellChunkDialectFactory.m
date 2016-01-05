@@ -31,7 +31,7 @@
 #import "CellUtil.h"
 #import "CellLogger.h"
 
-#define CLEAR_THRESHOLD  100 * 1024 * 1024
+#define CLEAR_THRESHOLD  10 * 1024 * 1024
 
 @interface CCChunkDialectFactory ()
 {
