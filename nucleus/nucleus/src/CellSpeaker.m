@@ -264,7 +264,7 @@
 {
     if (nil == _connector
         || ![_connector isConnected]
-        || _state != CCSpeakerStateCalled)
+        || self.state != CCSpeakerStateCalled)
     {
         return FALSE;
     }
@@ -301,7 +301,7 @@
 {
     if (nil == _connector
         || ![_connector isConnected]
-        || _state != CCSpeakerStateCalled)
+        || self.state != CCSpeakerStateCalled)
     {
         return FALSE;
     }
@@ -618,6 +618,7 @@
 {
     if (failure.code == CCFailureCallFailed)
     {
+        // 变更状态
         self.state = CCSpeakerStateHangUp;
     }
 
@@ -638,7 +639,7 @@
 - (void)sessionDestroyed:(CCSession *)session
 {
     // Nothing
-    _state = CCSpeakerStateHangUp;
+    self.state = CCSpeakerStateHangUp;
 }
 //------------------------------------------------------------------------------
 - (void)sessionOpened:(CCSession *)session
@@ -649,7 +650,7 @@
 - (void)sessionClosed:(CCSession *)session
 {
     // 判断是否为异常网络中断
-    if (CCSpeakerStateCalling == _state)
+    if (CCSpeakerStateCalling == self.state)
     {
         CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc] initWithSource:CCFailureCallFailed
                                                                                 file:__FILE__
@@ -662,7 +663,7 @@
         // 标记为丢失
         [[CCTalkService sharedSingleton] markLostSpeaker:self];
     }
-    else if (CCSpeakerStateCalled == _state)
+    else if (CCSpeakerStateCalled == self.state)
     {
         CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc] initWithSource:CCFailureTalkLost
                                                                                 file:__FILE__
@@ -676,14 +677,13 @@
         [[CCTalkService sharedSingleton] markLostSpeaker:self];
     }
 
-    _state = CCSpeakerStateHangUp;
+    self.state = CCSpeakerStateHangUp;
 
     // 通知退出
     for (NSString *identifier in _identifierList)
     {
         [self fireQuitted:identifier];
     }
-
 }
 //------------------------------------------------------------------------------
 - (void)messageReceived:(CCSession *)session message:(CCMessage *)message
@@ -758,6 +758,9 @@
         // 标记为丢失
         [[CCTalkService sharedSingleton] markLostSpeaker:self];
     }
+
+    // 变更状态
+    self.state = CCSpeakerStateHangUp;
 }
 
 @end

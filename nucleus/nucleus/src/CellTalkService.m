@@ -174,15 +174,17 @@ static CCTalkService *sharedInstance = nil;
                     // 最大重连次数
                     if (spr.retryCounts >= spr.capacity.retryAttempts)
                     {
-                        // TODO retryEnd
-                        if (!spr.retryEnd) {
+                        if (!spr.retryEnd)
+                        {
                             spr.retryEnd = TRUE;
                             [spr fireRetryEnd];
-                        }else
-                        {
-                            return;
                         }
-                    }else
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    else
                     {
                         spr.retryEnd = FALSE;
                     }
@@ -202,7 +204,10 @@ static CCTalkService *sharedInstance = nil;
                 }
             }
 
-            [_lostSpeakers removeObjectsInArray:discardedItems];
+            if (discardedItems.count > 0)
+            {
+                [_lostSpeakers removeObjectsInArray:discardedItems];
+            }
         }
     }
 
