@@ -116,7 +116,12 @@
     // 创建 Socket
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     _asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:queue];
-    
+
+    // 启用 IPv6/IPv4
+    _asyncSocket.IPv4Enabled = YES;
+    _asyncSocket.IPv6Enabled = YES;
+    _asyncSocket.IPv4PreferredOverIPv6 = NO;
+
     // 注册为 VoIP Socket
     [_asyncSocket enableBackgroundingOnSocket];
 

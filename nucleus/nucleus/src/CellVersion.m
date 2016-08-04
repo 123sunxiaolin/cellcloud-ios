@@ -28,7 +28,7 @@
 
 #define CC_MAJOR 1
 #define CC_MINOR 3
-#define CC_REVISION 7
+#define CC_REVISION 8
 #define CC_NAME @"Journey"
 
 @implementation CCVersion
