@@ -36,9 +36,12 @@
 {
     if ((self = [super init]))
     {
-        _headMark = NULL;
+        _headMark = malloc(8);
+        memset(_headMark, 0x0, 8);
         _headLength = 0;
-        _tailMark = NULL;
+
+        _tailMark = malloc(8);
+        memset(_tailMark, 0x0, 8);
         _tailLength = 0;
     }
     
@@ -50,10 +53,13 @@
     if ((self = [super init]))
     {
         _delegate = delegate;
-        
-        _headMark = NULL;
+
+        _headMark = malloc(8);
+        memset(_headMark, 0x0, 8);
         _headLength = 0;
-        _tailMark = NULL;
+
+        _tailMark = malloc(8);
+        memset(_tailMark, 0x0, 8);
         _tailLength = 0;
     }
     
@@ -62,17 +68,13 @@
 //------------------------------------------------------------------------------
 - (void)dealloc
 {
-    if (NULL != _headMark)
-    {
-        free(_headMark);
-        _headMark = NULL;
-    }
+    free(_headMark);
+    _headMark = NULL;
+    _headLength = 0;
 
-    if (NULL != _tailMark)
-    {
-        free(_tailMark);
-        _tailMark = NULL;
-    }
+    free(_tailMark);
+    _tailMark = NULL;
+    _tailLength = 0;
 }
 //------------------------------------------------------------------------------
 - (void)setDelegate:(id<CCMessageHandler>)delegate
@@ -83,23 +85,9 @@
 - (void)defineDataMark:(char *)headMark headLength:(size_t)headLength
             tailMark:(char *)tailMark tailLength:(size_t)tailLength
 {
-    if (NULL != _headMark)
-    {
-        free(_headMark);
-        _headMark = NULL;
-    }
-    
-    _headMark = malloc(headLength);
     _headLength = headLength;
     memcpy(_headMark, headMark, headLength);
-    
-    if (NULL != _tailMark)
-    {
-        free(_tailMark);
-        _tailMark = NULL;
-    }
 
-    _tailMark = malloc(tailLength);
     _tailLength = tailLength;
     memcpy(_tailMark, tailMark, tailLength);
 }
