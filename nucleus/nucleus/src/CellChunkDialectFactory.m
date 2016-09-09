@@ -181,7 +181,7 @@
         [_cacheDic setObject:cache forKey:tag];
     }
     
-    //更新内存大小
+    // 更新内存大小
     _cacheMemorySize += chunk.length;
     
     if (_cacheMemorySize > 1024)
@@ -243,7 +243,7 @@
 
 //------------------------------------------------------------------------------
 - (int)read:(NSString *)tag withSign:(NSString *)sign withIndex:(int)index
-   withData:(NSData *)outPut;
+   withData:(NSMutableData *)outPut;
 {
     if (index < 0)
     {
@@ -256,7 +256,17 @@
         CCChunkDialect *cd = [cache getChunk:sign atIndex:index];
         NSData *buf = cd.data;
         int len = cd.length;
-        outPut = [NSData dataWithData:buf];
+
+        // 清空
+        if (outPut.length > 0)
+        {
+            [outPut resetBytesInRange:NSMakeRange(0, outPut.length)];
+            [outPut setLength:0];
+        }
+
+        // 填充数据
+        [outPut appendData:buf];
+
         return len;
     }
     return -1;

@@ -94,9 +94,9 @@
 
 - (BOOL)isLast;
 
-- (int)read:(int)index andData:(NSData *)buffer;
+- (int)read:(int)index andData:(NSMutableData *)buffer;
 
-- (int)read:(NSData *)buffer;
+- (int)read:(NSMutableData *)buffer;
 
 - (void)resetRead;
 

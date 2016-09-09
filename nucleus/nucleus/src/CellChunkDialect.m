@@ -183,14 +183,14 @@
 }
 
 //------------------------------------------------------------------------------
-- (int)read:(int)index andData:(NSData *)buffer
+- (int)read:(int)index andData:(NSMutableData *)buffer
 {
     CCChunkDialectFactory *factory = (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
     return [factory read:self.ownerTag withSign:_sign withIndex:index withData:buffer];
 }
 
 //------------------------------------------------------------------------------
-- (int)read:(NSData *)buffer
+- (int)read:(NSMutableData *)buffer
 {
     if (_readIndex >= _chunkNum)
     {
