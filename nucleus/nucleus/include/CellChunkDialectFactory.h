@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
+ Copyright (c) 2009-2016 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -35,59 +35,59 @@
 
 - (void)write:(CCChunkDialect *)chunk;
 
-- (BOOL)checkCompleted:(NSString *)tag withSign:(NSString *)sign;
+- (BOOL)checkCompleted:(NSString *)sign;
 
-- (int)read:(NSString *)tag withSign:(NSString *)sign withIndex:(int)index withData:(NSMutableData *)outPut;
+- (int)read:(NSString *)sign withIndex:(int)index withData:(NSMutableData *)outPut;
 
-- (void)clear:(NSString *)tag withSign:(NSString *)sign;
+- (void)clear:(NSString *)sign;
 
 @end
+
+
 
 /**
  * 内部缓存。
  */
 @interface Cache : NSObject
 
-@property (nonatomic, strong) NSString *tag;
-
+@property (nonatomic, strong) NSString *sign;
+@property (nonatomic, strong) NSMutableArray *dataQueue;
+@property (nonatomic, assign) long long timestamp;
 @property (nonatomic, assign) long dataSize;
 
-- (id)initWithTag:(NSString *)tag;
+- (id)initWithSign:(NSString *)sign andCapacity:(int)capacity;
 
 - (void)offer:(CCChunkDialect *)chunk;
 
-- (CCChunkDialect *)getChunk:(NSString *)sign atIndex:(int)index;
+- (CCChunkDialect *)getAtIndex:(int)index;
 
-- (BOOL)checkCompleted:(NSString *)sign;
+- (BOOL)checkCompleted;
 
-- (long)clear:(NSString *)sign;
+- (long)clear;
 
 - (BOOL)isEmpty;
 
-- (long long)getFirstTime;
-
-- (long)clearFirst;
-
 @end
 
+
+
 /**
- * 队列
+ * 发送清单。
  */
+@interface ChunkList : NSObject
 
-@interface Queue : NSObject
-
-@property (nonatomic, assign) int ackIndex;
-
+@property (nonatomic, assign) long long timestamp;
+@property (nonatomic, strong) NSString *target;
 @property (nonatomic, assign) int chunkNum;
 
 - (id)initWithTarget:(NSString *)target andChunkNum:(int)chunkNum;;
 
-- (void)enqueue:(CCChunkDialect *)chunk;
+- (void)append:(CCChunkDialect *)chunk;
 
-- (CCChunkDialect *)dequeue;
+- (BOOL)isComplete;
 
-- (int)size;
+- (void)reset:(int)chunkNum;
 
-- (long)remainingChunkLength;
+- (void)process;
 
 @end

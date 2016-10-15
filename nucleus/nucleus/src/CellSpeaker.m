@@ -238,7 +238,7 @@
                                      file:__FILE__
                                      line:__LINE__
                                      function:__FUNCTION__];
-    failure.sourceDescription = @"retryEnd";
+    failure.sourceDescription = @"Retry End";
     failure.sourceCelletIdentifiers = _identifierList;
     [self fireFailed:failure];
 }
@@ -443,7 +443,6 @@
     NSData *data = [packet getSubsegment:0];
     NSString *celletIdentifier = [[NSString alloc] initWithData:[packet getSubsegment:1] encoding:NSUTF8StringEncoding];
 
-//    CCPrimitive *tmpPrimitive = [[CCPrimitive alloc]initWithTag:[_remoteTag getAsString]];
     CCPrimitive *primitive = [CCPrimitive read:data andTag:[_remoteTag getAsString]];
     if (nil != primitive)
     {

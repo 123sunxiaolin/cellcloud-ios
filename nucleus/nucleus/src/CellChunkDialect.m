@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
+ Copyright (c) 2009-2016 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,6 @@
 
 @synthesize delegate = _delegate;
 @synthesize sign = _sign;
-@synthesize ack = _ack;
 @synthesize chunkIndex = _chunkIndex;
 @synthesize chunkNum = _chunkNum;
 @synthesize length = _length;
@@ -43,12 +42,14 @@
 
 - (id)init
 {
-    self = [super initWithName:CHUNK_DIALECT_NAME tracker:@"none"];
-    if (self)
+    if (self = [super initWithName:CHUNK_DIALECT_NAME tracker:@"none"])
     {
-        _ack = NO;
-    }
+        _sign = nil;
+        _chunkIndex = -1;
 
+        self.infectant = NO;
+        self.readIndex = 0;
+    }
     return self;
 }
 //------------------------------------------------------------------------------
@@ -56,9 +57,9 @@
 {
     if (self = [super initWithName:CHUNK_DIALECT_NAME tracker:tracker])
     {
-        _ack = NO;
+        self.infectant = NO;
+        self.readIndex = 0;
     }
-
     return self;
 }
 //------------------------------------------------------------------------------
@@ -67,128 +68,111 @@
 {
     if (self = [super initWithName:CHUNK_DIALECT_NAME tracker:@"none"])
     {
-        _ack = NO;
         _sign = sign;
         _totalLength = totalLength;
         _chunkIndex = chunkIndex;
         _chunkNum = chunkNum;
-        _data = data;
+        _data = [data base64EncodedStringWithOptions:0];
         _length = length;
+
+        self.infectant = NO;
+        self.readIndex = 0;
     }
  
     return self;
 }
 //------------------------------------------------------------------------------
-- (id)initWithTracker:(NSString *)tracker Sign:(NSString *)sign totalLength:(long)totalLength
+- (id)initWithTracker:(NSString *)tracker sign:(NSString *)sign totalLength:(long)totalLength
            chunkIndex:(int)chunkIndex chunkNum:(int)chunkNum data:(NSData *)data length:(int)length
 {
     if (self = [super initWithName:CHUNK_DIALECT_NAME tracker:tracker])
     {
-        _ack = NO;
         _sign = sign;
         _totalLength = totalLength;
         _chunkIndex = chunkIndex;
         _chunkNum = chunkNum;
-        _data = data;
+        _data = [data base64EncodedStringWithOptions:0];
         _length = length;
+
+        self.infectant = NO;
+        self.readIndex = 0;
     }
-    
+
     return self;
 }
-//------------------------------------------------------------------------------
 
-- (void)setAckWithSign:(NSString *)sign chunkIndex:(int)chunkIndex chunkNum:(int)chunkNum
-{
-    _sign = sign;
-    _chunkIndex = chunkIndex;
-    _chunkNum = chunkNum;
-    _ack = YES;
-}
 //------------------------------------------------------------------------------
 - (void)fireProgress:(NSString *)target
 {
-    if (nil != _delegate && [_delegate respondsToSelector:@selector(onProgress:andTraget:)]) {
+    if (nil != _delegate && [_delegate respondsToSelector:@selector(onProgress:andTraget:)])
+    {
         [_delegate onProgress:self andTraget:target];
+        if (_chunkIndex + 1 < _chunkNum)
+        {
+            _delegate = nil;
+        }
+    }
+}
+//------------------------------------------------------------------------------
+- (void)fireCompleted:(NSString *)target
+{
+    if (nil != _delegate && [_delegate respondsToSelector:@selector(onCompleted:andTarget:)])
+    {
+        [_delegate onCompleted:self andTarget:target];
+    }
+}
+//------------------------------------------------------------------------------
+- (void)fireFailed:(NSString *)target
+{
+    if (nil != _delegate && [_delegate respondsToSelector:@selector(onFailed:andTarget:)])
+    {
+        [_delegate onFailed:self andTarget:target];
     }
 }
 //------------------------------------------------------------------------------
 - (CCPrimitive *)translate
 {
     CCPrimitive *primitive = [super translate];
-    CCPredicateStuff *ackStuff = [CCPredicateStuff stuffWithBool:_ack];
-    [primitive commit:ackStuff];
-    
-    if (_ack)
-    {
-        [primitive commit:[CCSubjectStuff stuffWithString:_sign]];
-        [primitive commit:[CCSubjectStuff stuffWithInt:_chunkIndex]];
-        [primitive commit:[CCSubjectStuff stuffWithInt:_chunkNum]];
-        
-    }
-    else
-    {
-        [primitive commit:[CCSubjectStuff stuffWithString:_sign]];
-        [primitive commit:[CCSubjectStuff stuffWithInt:_chunkIndex]];
-        [primitive commit:[CCSubjectStuff stuffWithInt:_chunkNum]];
-        [primitive commit:[CCSubjectStuff stuffWithString:[_data base64EncodedStringWithOptions:0]]];
-        [primitive commit:[CCSubjectStuff stuffWithInt:_length]];
-        [primitive commit:[CCSubjectStuff stuffWithLong:_totalLength]];
-    }
+
+    [primitive commit:[CCSubjectStuff stuffWithString:_sign]];
+    [primitive commit:[CCSubjectStuff stuffWithInt:_chunkIndex]];
+    [primitive commit:[CCSubjectStuff stuffWithInt:_chunkNum]];
+    [primitive commit:[CCSubjectStuff stuffWithString:_data]];
+    [primitive commit:[CCSubjectStuff stuffWithInt:_length]];
+    [primitive commit:[CCSubjectStuff stuffWithLong:_totalLength]];
+
     return primitive;
 }
 //------------------------------------------------------------------------------
 - (void)build:(CCPrimitive *)primitive
 {
-    NSMutableArray *predicates = primitive.predicates;
-    BOOL ack = [(CCPredicateStuff *)[predicates objectAtIndex:0] getValueAsBoolean];
-    _ack = ack;
-    if (_ack)
-    {
-        NSMutableArray *list = primitive.subjects;
-        _sign = [(CCSubjectStuff *)[list objectAtIndex:0] getValueAsString];
-        _chunkIndex = [(CCSubjectStuff *)[list objectAtIndex:1] getValueAsInt];
-        _chunkNum = [(CCSubjectStuff *)[list objectAtIndex:2] getValueAsInt];
-    }
-    else
-    {
-        NSMutableArray *list = primitive.subjects;
-        _sign = [(CCSubjectStuff *)[list objectAtIndex:0] getValueAsString];
-        _chunkIndex = [(CCSubjectStuff *)[list objectAtIndex:1] getValueAsInt];
-        _chunkNum = [(CCSubjectStuff *)[list objectAtIndex:2] getValueAsInt];
-        NSString *base64String = [(CCSubjectStuff *)[list objectAtIndex:3] getValueAsString];
-        NSData *decodedData = [[NSData alloc]initWithBase64EncodedString:base64String options:0];
-        _data  =  decodedData;
-        _length = [(CCSubjectStuff *)[list objectAtIndex:4] getValueAsInt];
-        _totalLength = [(CCSubjectStuff *)[list objectAtIndex:5] getValueAsLong];
-        
-        if (nil != _data)
-        {
-            CCChunkDialectFactory *factory = (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
-            [factory write:self];
-        }
-    }
+    NSMutableArray *list = primitive.subjects;
+    _sign = [(CCSubjectStuff *)[list objectAtIndex:0] getValueAsString];
+    _chunkIndex = [(CCSubjectStuff *)[list objectAtIndex:1] getValueAsInt];
+    _chunkNum = [(CCSubjectStuff *)[list objectAtIndex:2] getValueAsInt];
+    _data = [(CCSubjectStuff *)[list objectAtIndex:3] getValueAsString];
+    _length = [(CCSubjectStuff *)[list objectAtIndex:4] getValueAsInt];
+    _totalLength = [(CCSubjectStuff *)[list objectAtIndex:5] getValueAsLong];
 }
-
 //------------------------------------------------------------------------------
 - (BOOL)hasCompleted
 {
-    CCChunkDialectFactory *factory = (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
-    return [factory checkCompleted: self.ownerTag withSign:_sign];
+    CCChunkDialectFactory *factory =
+            (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
+    return [factory checkCompleted:_sign];
 }
-
 //------------------------------------------------------------------------------
 - (BOOL)isLast
 {
-    return (_chunkIndex + 1 == _chunkNum) && !_ack;
+    return (_chunkIndex + 1 == _chunkNum);
 }
-
 //------------------------------------------------------------------------------
 - (int)read:(int)index andData:(NSMutableData *)buffer
 {
-    CCChunkDialectFactory *factory = (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
-    return [factory read:self.ownerTag withSign:_sign withIndex:index withData:buffer];
+    CCChunkDialectFactory *factory =
+            (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
+    return [factory read:_sign withIndex:index withData:buffer];
 }
-
 //------------------------------------------------------------------------------
 - (int)read:(NSMutableData *)buffer
 {
@@ -197,24 +181,23 @@
         return -1;
     }
     
-    CCChunkDialectFactory *factory = (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
-    int length = [factory read:self.ownerTag withSign:_sign withIndex:_readIndex withData:buffer];
-    ++ _readIndex;
+    CCChunkDialectFactory *factory =
+            (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
+    int length = [factory read:_sign withIndex:_readIndex withData:buffer];
+    ++_readIndex;
     return length;
 }
-
 //------------------------------------------------------------------------------
 - (void)resetRead
 {
     _readIndex = 0;
 }
-
 //------------------------------------------------------------------------------
 - (void)clearAll
 {
-    CCChunkDialectFactory *factory = (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
-    [factory clear:self.ownerTag withSign:_sign];
+    CCChunkDialectFactory *factory =
+            (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
+    [factory clear:_sign];
 }
-
 
 @end

@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
+ Copyright (c) 2009-2016 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -39,9 +39,19 @@
 @protocol CCChunkDelegate <NSObject>
 
 /**
- * 执行区块时被线程回调的执行方法。
+ * 区块数据正在处理时回调。
  */
 - (void)onProgress:(CCChunkDialect *)dialect andTraget:(NSString *)traget;
+
+/**
+ * 区块数据处理完成时回调。
+ */
+- (void)onCompleted:(CCChunkDialect *)dialect andTarget:(NSString *)target;
+
+/**
+ * 区块数据处理失败时回调。
+ */
+- (void)onFailed:(CCChunkDialect *)dialect andTarget:(NSString *)target;
 
 @end
 
@@ -56,23 +66,22 @@
 @property (nonatomic, assign) id<CCChunkDelegate> delegate;
 
 /// 块签名
-@property (nonatomic, strong) NSString *sign;
-/// 是否收到回包
-@property (nonatomic, assign) BOOL ack;
+@property (nonatomic, strong, readonly) NSString *sign;
 /// 块索引
-@property (nonatomic, assign) int chunkIndex;
+@property (nonatomic, assign, readonly) int chunkIndex;
 /// 块总数
-@property (nonatomic, assign) int chunkNum;
+@property (nonatomic, assign, readonly) int chunkNum;
 /// 块数据
-@property (nonatomic, strong) NSData *data;
-
-/// 块长度
-@property (nonatomic, assign) int length;
+@property (nonatomic, strong, readonly) NSString *data;
+/// 块数据长度
+@property (nonatomic, assign, readonly) int length;
 /// 总长度
-@property (nonatomic, assign) long totalLength;
+@property (nonatomic, assign, readonly) long totalLength;
+
 /// 用于标识该区块是否能写入缓存队列
 /// 如果为 true ，表示已经“污染”，不能进入队列，必须直接发送
 @property (nonatomic, assign) BOOL infectant;
+
 ///
 @property (nonatomic, assign) int readIndex;
 
@@ -84,11 +93,14 @@
 - (id)initWithSign:(NSString *)sign totalLength:(long)totalLength chunkIndex:(int)chunkIndex
           chunkNum:(int)chunkNum data:(NSData *)data length:(int)length;
 
-- (id)initWithTracker:(NSString *)tracker Sign:(NSString *)sign totalLength:(long)totalLength
+- (id)initWithTracker:(NSString *)tracker sign:(NSString *)sign totalLength:(long)totalLength
            chunkIndex:(int)chunkIndex chunkNum:(int)chunkNum data:(NSData *)data length:(int)length;
+
 - (void)fireProgress:(NSString *)target;
 
-- (void)setAckWithSign:(NSString *)sign chunkIndex:(int)chunkIndex chunkNum:(int)chunkNum;
+- (void)fireCompleted:(NSString *)target;
+
+- (void)fireFailed:(NSString *)target;
 
 - (BOOL)hasCompleted;
 
