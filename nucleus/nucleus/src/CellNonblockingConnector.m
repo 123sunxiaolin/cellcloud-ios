@@ -131,7 +131,11 @@
     if (![_asyncSocket connectToHost:address onPort:port withTimeout:_timeout error:&error])
     {
         [CCLogger e:@"Error connecting: %@", error];
-        _asyncSocket = nil;
+        
+        if (_asyncSocket)
+        {
+            _asyncSocket = nil;
+        }
 
         [self fireErrorOccurred:CCMessageErrorSocketFailed];
     }
