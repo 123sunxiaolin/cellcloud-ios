@@ -49,7 +49,7 @@
         CCPrimitive *pri = [[CCPrimitive alloc] init];
         [pri commit:[CCSubjectStuff stuffWithString:@"I'am a SubjectStuff"]];
         [pri commit:[CCPredicateStuff stuffWithInt:1981+i]];
-        [pri commit:[CCObjectiveStuff stuffWithLong:198111242012l - i]];
+        [pri commit:[CCObjectiveStuff stuffWithLongLong:198111242012l - i]];
         [pri commit:[CCAttributiveStuff stuffWithBool:(i % 2 == 0 ? TRUE : FALSE)]];
         [pri commit:[CCComplementStuff stuffWithInt:i]];
         [self.primitives addObject:pri];

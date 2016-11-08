@@ -83,7 +83,7 @@ andCelletIdentifier:(NSString *)identifier
     // 生成 Tracker
     NSString *tracker = [NSString stringWithFormat:@"%@,%@",sender, receiver];
     
-    int len = 0;
+    long len = 0;
     long processed = 0;
     int chunkIndex = 0;
     for (int i = 0; i < chunkNum; ++i)
@@ -105,7 +105,7 @@ andCelletIdentifier:(NSString *)identifier
         }
         chunkIndex = i;
         
-        CCChunkDialect *chunk = [[CCChunkDialect alloc]initWithTracker:tracker Sign:fileName totalLength:file.length chunkIndex:chunkIndex chunkNum:chunkNum data:subData length:len];
+        CCChunkDialect *chunk = [[CCChunkDialect alloc] initWithTracker:tracker sign:fileName totalLength:file.length chunkIndex:chunkIndex chunkNum:chunkNum data:subData length:len];
         [[CCTalkService sharedSingleton] talk:identifier dialect:chunk];
         
         if (nil != _delegate)
@@ -126,7 +126,7 @@ andCelletIdentifier:(NSString *)identifier
     NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *path = [documentPath stringByAppendingPathComponent:fileName];
     
-    NSData *tmp = dialect.data;
+    NSData *tmp = [[NSData alloc] initWithBase64EncodedString:dialect.data options:0];
     [_fileData appendData:tmp];
 
     long processed = 0;

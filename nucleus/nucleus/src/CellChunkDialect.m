@@ -64,7 +64,7 @@
 }
 //------------------------------------------------------------------------------
 - (id)initWithSign:(NSString *)sign totalLength:(long)totalLength chunkIndex:(int)chunkIndex
-          chunkNum:(int)chunkNum data:(NSData *)data length:(int)length
+          chunkNum:(int)chunkNum data:(NSData *)data length:(long)length
 {
     if (self = [super initWithName:CHUNK_DIALECT_NAME tracker:@"none"])
     {
@@ -83,7 +83,7 @@
 }
 //------------------------------------------------------------------------------
 - (id)initWithTracker:(NSString *)tracker sign:(NSString *)sign totalLength:(long)totalLength
-           chunkIndex:(int)chunkIndex chunkNum:(int)chunkNum data:(NSData *)data length:(int)length
+           chunkIndex:(int)chunkIndex chunkNum:(int)chunkNum data:(NSData *)data length:(long)length
 {
     if (self = [super initWithName:CHUNK_DIALECT_NAME tracker:tracker])
     {

@@ -74,7 +74,7 @@
 /// 块数据
 @property (nonatomic, strong, readonly) NSString *data;
 /// 块数据长度
-@property (nonatomic, assign, readonly) int length;
+@property (nonatomic, assign, readonly) long length;
 /// 总长度
 @property (nonatomic, assign, readonly) long totalLength;
 
@@ -91,10 +91,10 @@
 - (id)initWithTracker:(NSString *)tracker;
 
 - (id)initWithSign:(NSString *)sign totalLength:(long)totalLength chunkIndex:(int)chunkIndex
-          chunkNum:(int)chunkNum data:(NSData *)data length:(int)length;
+          chunkNum:(int)chunkNum data:(NSData *)data length:(long)length;
 
 - (id)initWithTracker:(NSString *)tracker sign:(NSString *)sign totalLength:(long)totalLength
-           chunkIndex:(int)chunkIndex chunkNum:(int)chunkNum data:(NSData *)data length:(int)length;
+           chunkIndex:(int)chunkIndex chunkNum:(int)chunkNum data:(NSData *)data length:(long)length;
 
 - (void)fireProgress:(NSString *)target;
 
