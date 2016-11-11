@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
+ Copyright (c) 2009-2016 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -24,34 +24,20 @@
  ------------------------------------------------------------------------------
  */
 
-#import "CellVersion.h"
+#import "CellMessageConnector.h"
+#import "GCDAsyncUdpSocket.h"
 
-#define CC_MAJOR 1
-#define CC_MINOR 3
-#define CC_REVISION 11
-#define CC_NAME @"Journey"
+#ifndef CellDatagramConnector_h
+#define CellDatagramConnector_h
 
-@implementation CCVersion
+/** 数据报消息连接器。
+ */
+@interface CCDatagramConnector : CCMessageConnector <GCDAsyncUdpSocketDelegate>
 
-//------------------------------------------------------------------------------
-+ (int)major
-{
-    return CC_MAJOR;
-}
-//------------------------------------------------------------------------------
-+ (int)minor
-{
-    return CC_MINOR;
-}
-//------------------------------------------------------------------------------
-+ (int)revision
-{
-    return CC_REVISION;
-}
-//------------------------------------------------------------------------------
-+ (NSString *)name
-{
-    return CC_NAME;
-}
+/**
+ */
+- (id)init:(id<CCMessageHandler>)delegate;
 
 @end
+
+#endif /* CellDatagramConnector_h */

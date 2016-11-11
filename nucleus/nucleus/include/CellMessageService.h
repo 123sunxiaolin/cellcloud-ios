@@ -94,7 +94,7 @@ typedef enum _CCMessageErrorCode
 {
 @protected
     id<CCMessageHandler> _delegate;
-    
+
 @protected
     char *_headMark;
     size_t _headLength;
@@ -124,9 +124,5 @@ typedef enum _CCMessageErrorCode
 /** 向指定的会话写入消息。
  */
 - (void)write:(CCSession *)session message:(CCMessage *)message;
-
-/** 从指定的会话读取消息。
- */
-- (void)read:(CCMessage *)message session:(CCSession *)session;
 
 @end

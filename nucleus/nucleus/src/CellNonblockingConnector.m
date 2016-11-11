@@ -40,6 +40,10 @@
     CCSession *_session;
     
     NSTimeInterval _timeout;
+
+    NSMutableDictionary *_writeQueue;
+
+    NSUInteger _blockSize;
 }
 
 /** 创建连接会话。 */
@@ -77,6 +81,8 @@
     if ((self = [super init]))
     {
         _timeout = 10.0;
+        _blockSize = 16 * 1024;
+        _writeQueue = [NSMutableDictionary dictionaryWithCapacity:4];
     }
 
     return self;
@@ -93,6 +99,8 @@
                 tailMark:tailMark tailLength:tailLength];
         
         _timeout = 10.0;
+        _blockSize = 16 * 1024;
+        _writeQueue = [NSMutableDictionary dictionaryWithCapacity:4];
     }
 
     return self;
@@ -131,7 +139,7 @@
     if (![_asyncSocket connectToHost:address onPort:port withTimeout:_timeout error:&error])
     {
         [CCLogger e:@"Error connecting: %@", error];
-        
+
         if (_asyncSocket)
         {
             _asyncSocket = nil;
@@ -162,6 +170,8 @@
     {
         _session = nil;
     }
+
+    [_writeQueue removeAllObjects];
 }
 //------------------------------------------------------------------------------
 - (CCSession *)getSession
@@ -186,6 +196,9 @@
         [self encryptMessage:message key:[session getSecretKey] keyLength:8];
     }
 
+    // 关联 Tag
+    [_writeQueue setObject:message forKey:[message.tag stringValue]];
+
     if ([self existDataMark])
     {
         char *buf = malloc(message.length + _headLength + _tailLength);
@@ -195,15 +208,15 @@
         memcpy(buf + _headLength + message.length, _tailMark, _tailLength);
         NSData *data = [NSData dataWithBytes:buf length:_headLength + _tailLength + message.length];
         free(buf);
-        [_asyncSocket writeData:data withTimeout:60 tag:0];
+        [_asyncSocket writeData:data withTimeout:60 tag:[message.tag longValue]];
     }
     else
     {
-        [_asyncSocket writeData:message.data withTimeout:60 tag:0];
+        [_asyncSocket writeData:message.data withTimeout:60 tag:[message.tag longValue]];
     }
 
     // 回调消息发送
-    [self fireMessageSent:message];
+    //[self fireMessageSent:message];
 }
 //------------------------------------------------------------------------------
 - (void)write:(CCMessage *)message
@@ -317,7 +330,7 @@
     NSUInteger newlen = [[CCCryptology sharedSingleton] simpleEncrypt:ciphertext text:plaintext length:(int)len key:key];
 
     // 重新填写消息数据
-    [message reset:ciphertext length:newlen];
+    [message resetData:ciphertext length:newlen];
 
     free(ciphertext);
 }
@@ -333,7 +346,7 @@
     NSUInteger newlen = [[CCCryptology sharedSingleton] simpleDecrypt:plaintext text:ciphertext length:(int)len key:key];
 
     // 重新填写消息数据
-    [message reset:plaintext length:newlen];
+    [message resetData:plaintext length:newlen];
 
     free(plaintext);
 }
@@ -363,13 +376,26 @@
     }
     else
     {
-        [_asyncSocket readDataToLength:32 withTimeout:-1.0 tag:0];
+        [_asyncSocket readDataToLength:_blockSize withTimeout:-1.0 tag:0];
     }
 }
 //------------------------------------------------------------------------------
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag
 {
 //    [CCLogger d:@"didWriteDataWithTag - tag:%ld", tag];
+
+    NSString *key = [[NSNumber numberWithLong:tag] stringValue];
+    CCMessage *message = [_writeQueue objectForKey:key];
+    if (nil != message)
+    {
+        // 回调已发送
+        [self fireMessageSent:message];
+
+        // 删除
+        [_writeQueue removeObjectForKey:key];
+    }
+
+    key = nil;
 }
 //------------------------------------------------------------------------------
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
@@ -385,7 +411,7 @@
     }
     else
     {
-        [_asyncSocket readDataToLength:32 withTimeout:-1.0 tag:0];
+        [_asyncSocket readDataToLength:_blockSize withTimeout:-1.0 tag:0];
     }
 }
 //------------------------------------------------------------------------------

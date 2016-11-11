@@ -160,9 +160,14 @@
 {
     NSString *value = [_params objectForKey:name];
     if (nil != value)
-        return [value longLongValue];
+    {
+        return [NSNumber numberWithLongLong:[value longLongValue]].longValue;
+        //return [value longLongValue];
+    }
     else
+    {
         return 0;
+    }
 }
 //------------------------------------------------------------------------------
 - (long long)getParamAsLongLong:(NSString *)name

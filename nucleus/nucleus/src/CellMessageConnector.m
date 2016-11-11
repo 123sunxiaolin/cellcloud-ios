@@ -27,10 +27,6 @@
 #import "CellMessageConnector.h"
 
 @interface CCMessageConnector ()
-{
-    NSString *_address;
-    NSUInteger _port;
-}
 
 @end
 

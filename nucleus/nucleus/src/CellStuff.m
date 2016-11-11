@@ -208,12 +208,14 @@
 //------------------------------------------------------------------------------
 - (long)getValueAsLong
 {
-    return [_value longLongValue];
+    return [NSNumber numberWithLongLong:[_value longLongValue]].longValue;
+    //return ((long) [_value longLongValue]);
 }
 //------------------------------------------------------------------------------
 - (unsigned long)getValueAsULong
 {
-    return [_value longLongValue];
+    return [NSNumber numberWithLongLong:[_value longLongValue]].unsignedLongValue;
+    //return (unsigned long)[_value longLongValue];
 }
 //------------------------------------------------------------------------------
 - (long long)getValueAsLongLong
