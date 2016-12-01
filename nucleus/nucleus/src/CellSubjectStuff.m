@@ -89,5 +89,10 @@
 {
     return [[CCSubjectStuff alloc] initWithDouble:value];
 }
+//------------------------------------------------------------------------------
++ (CCSubjectStuff *)stuffWithData:(NSData *)value
+{
+    return [[CCSubjectStuff alloc] initWithBin:value];
+}
 
 @end

@@ -31,7 +31,7 @@
 #import "CellUtil.h"
 #import "CellLogger.h"
 
-#define CLEAR_THRESHOLD  10 * 1024 * 1024
+#define CLEAR_THRESHOLD  10L * 1024L * 1024L
 
 @interface CCChunkDialectFactory ()
 {
@@ -142,6 +142,11 @@
 //------------------------------------------------------------------------------
 - (void)write:(CCChunkDialect *)chunk
 {
+    if (chunk.chunkIndex == 0)
+    {
+        [self clear:chunk.sign];
+    }
+
     Cache *cache = (Cache *)[_cacheDic objectForKey:chunk.sign];
     if (nil != cache)
     {
@@ -159,7 +164,7 @@
 
     if (_cacheMemorySize > 1024)
     {
-        [CCLogger i:@"Cache memory size: %ld KB", (long)(_cacheMemorySize / 1024)];
+        [CCLogger i:@"Cache memory size: %ld KB", (long)(_cacheMemorySize / 1024L)];
     }
     else
     {
@@ -202,7 +207,7 @@
                     // 更新内存大小记录
                     _cacheMemorySize -= size;
 
-                    [CCLogger i:@"Cache memory size: %ld KB", (long)(_cacheMemorySize / 1024)];
+                    [CCLogger i:@"Cache memory size: %ld KB", (long)(_cacheMemorySize / 1024L)];
                 }
 
                 if (0 != emptyList.count)
@@ -231,8 +236,7 @@
     if (nil != cache)
     {
         CCChunkDialect *cd = [cache getAtIndex:index];
-        // Base64 解码
-        NSData *buf = [[NSData alloc]initWithBase64EncodedString:cd.data options:0];
+        NSData *buf = cd.data;
         int len = cd.length;
 
         // 清空

@@ -44,6 +44,7 @@ typedef enum _CCStuffType
     CCStuffTypeAdverbial = 5,
     /// 补语
     CCStuffTypeComplement = 6
+
 } CCStuffType;
 
 
@@ -92,12 +93,18 @@ typedef enum _CCStuffType
 - (id)initWithDouble:(double)value;
 /**
  */
+- (id)initWithBin:(NSData *)value;
+/**
+ */
 - (id)initWithData:(NSData *)data literal:(CCLiteralBase)literal;
 
 
 /** 仅用于子类覆盖 */
 - (void)willInitType;
 
+/**
+ */
+- (NSData *)getValue;
 /**
  */
 - (NSString *)getValueAsString;

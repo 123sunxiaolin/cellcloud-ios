@@ -105,7 +105,7 @@ andCelletIdentifier:(NSString *)identifier
         }
         chunkIndex = i;
         
-        CCChunkDialect *chunk = [[CCChunkDialect alloc]initWithTracker:tracker Sign:fileName totalLength:file.length chunkIndex:chunkIndex chunkNum:chunkNum data:subData length:len];
+        CCChunkDialect *chunk = [[CCChunkDialect alloc]initWithTracker:tracker sign:fileName totalLength:file.length chunkIndex:chunkIndex chunkNum:chunkNum data:subData length:len];
         [[CCTalkService sharedSingleton] talk:identifier dialect:chunk];
         
         if (nil != _delegate)

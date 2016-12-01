@@ -27,8 +27,8 @@
 #import "CellVersion.h"
 
 #define CC_MAJOR 1
-#define CC_MINOR 3
-#define CC_REVISION 11
+#define CC_MINOR 5
+#define CC_REVISION 0
 #define CC_NAME @"Journey"
 
 @implementation CCVersion

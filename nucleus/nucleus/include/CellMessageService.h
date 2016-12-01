@@ -52,6 +52,8 @@ typedef enum _CCMessageErrorCode
     CCMessageErrorConnectFailed = 300,
     /// 连接超时。
     CCMessageErrorConnectTimeout = 301,
+    /// 连接正常结束
+    CCMessageErrorConnectEnd = 305,
 
     /// 写数据超时。
     CCMessageErrorWriteTimeout = 401,

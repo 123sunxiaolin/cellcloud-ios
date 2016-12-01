@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2016 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -49,5 +49,26 @@
 /** 转换 NSData 为 NSTimeInterval
  */
 + (NSTimeInterval)convertDataToTimeInterval:(NSData *)data;
+
+
++ (unsigned int)intToBytes:(char *)output input:(int)input;
+
++ (unsigned int)longToBytes:(char *)output input:(long long)input;
+
++ (unsigned int)floatToBytes:(char *)output input:(float)input;
+
++ (unsigned int)doubleToBytes:(char *)output input:(double)input;
+
++ (unsigned int)boolToBytes:(char *)output input:(BOOL)input;
+
++ (int)bytesToInt:(char *)input;
+
++ (long long)bytesToLong:(char *)input;
+
++ (float)bytesToFloat:(char *)input;
+
++ (double)bytesToDouble:(char *)input;
+
++ (BOOL)bytesToBool:(char *)input;
 
 @end

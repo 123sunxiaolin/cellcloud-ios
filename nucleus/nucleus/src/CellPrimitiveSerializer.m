@@ -38,17 +38,17 @@
 #import "CellDialectFactory.h"
 #import "CellLogger.h"
 
-#define PS_MAJOR 1
+#define PS_MAJOR 2
 #define PS_MINOR 0
 
 #define TOKEN_OPEN_BRACKET '['
 #define TOKEN_CLOSE_BRACKET ']'
 #define TOKEN_OPEN_BRACE '{'
 #define TOKEN_CLOSE_BRACE '}'
-#define TOKEN_POINT '.'
 #define TOKEN_OPERATE_ASSIGN '='
 #define TOKEN_OPERATE_DECLARE ':'
 #define TOKEN_AT '@'
+#define TOKEN_ESCAPE '\\'
 
 #define TOKEN_OPEN_BRACKET_STR "["
 #define TOKEN_CLOSE_BRACKET_STR "]"
@@ -57,6 +57,7 @@
 #define TOKEN_OPERATE_ASSIGN_STR "="
 #define TOKEN_OPERATE_DECLARE_STR ":"
 #define TOKEN_AT_STR "@"
+#define TOKEN_ESCAPE_STR "\\"
 
 #define TOKEN_AT_NSSTRING @"@"
 
@@ -83,6 +84,7 @@
 #define LITERALBASE_DOUBLE "double"
 #define LITERALBASE_BOOL "bool"
 #define LITERALBASE_JSON "json"
+#define LITERALBASE_BIN "bin"
 #define LITERALBASE_XML "xml"
 
 #define LITERALBASE_STRING_NSSTRING @"string"
@@ -94,6 +96,7 @@
 #define LITERALBASE_DOUBLE_NSSTRING @"double"
 #define LITERALBASE_BOOL_NSSTRING @"bool"
 #define LITERALBASE_JSON_NSSTRING @"json"
+#define LITERALBASE_BIN_NSSTRING @"bin"
 #define LITERALBASE_XML_NSSTRING @"xml"
 
 #define PARSE_PHASE_UNKNOWN 0
@@ -134,15 +137,15 @@
     原语序列化格式：
     [version]{sutff}...{stuff}[dialect@tracker]
     示例：
-    [01.00]{sub=cloud:string}{pre=add:string}[FileReader@Ambrose]
+    [00100]{sub=cloud:string}{pre=add:string}[ActionDialect@tracker]
     */
-    
+
     NSMutableData *stream = [[NSMutableData alloc] init];
     
     // 版本
     char version[8] = {0x0};
-    sprintf(version, "%c%02d%c%02d%c", TOKEN_OPEN_BRACKET,
-        PS_MAJOR, TOKEN_POINT, PS_MINOR, TOKEN_CLOSE_BRACKET);
+    sprintf(version, "%c%03d%02d%c", TOKEN_OPEN_BRACKET,
+        PS_MAJOR, PS_MINOR, TOKEN_CLOSE_BRACKET);
     [stream appendBytes:version length:7];
 
     // 序列化各语素
@@ -217,7 +220,7 @@
     原语序列化格式：
     [version]{sutff}...{stuff}[dialect@tracker]
     示例：
-    [01.00]{sub=cloud:string}{pre=add:string}[FileReader@Ambrose]
+    [00100]{sub=cloud:string}{pre=add:string}[ActionDialect@tracker]
     */
 
     CCPrimitive *primitive = [[CCPrimitive alloc] initWithTag:tag];
@@ -249,14 +252,15 @@
         {
         case PARSE_PHASE_VALUE:
             // 判断转义
-            if (byte == '\\')
+            if (byte == TOKEN_ESCAPE)
             {
                 // 读取下一个字符
                 char next = src[srcCursor];
                 if (next == TOKEN_OPEN_BRACE
                     || next == TOKEN_CLOSE_BRACE
                     || next == TOKEN_OPERATE_ASSIGN
-                    || next == TOKEN_OPERATE_DECLARE)
+                    || next == TOKEN_OPERATE_DECLARE
+                    || next == TOKEN_ESCAPE)
                 {
                     buf[bufCursor] = next;
                     ++bufCursor;
@@ -386,9 +390,10 @@
         if (c == TOKEN_OPEN_BRACE
             || c == TOKEN_CLOSE_BRACE
             || c == TOKEN_OPERATE_ASSIGN
-            || c == TOKEN_OPERATE_DECLARE)
+            || c == TOKEN_OPERATE_DECLARE
+            || c == TOKEN_ESCAPE)
         {
-            dest[destCoursor] = '\\';
+            dest[destCoursor] = TOKEN_ESCAPE;
             ++destCoursor;
         }
 
@@ -460,6 +465,9 @@
     case CCLiteralBaseBool:
         ret = [NSData dataWithBytes:LITERALBASE_BOOL length:strlen(LITERALBASE_BOOL)];
         break;
+    case CCLiteralBaseBin:
+        ret = [NSData dataWithBytes:LITERALBASE_BIN length:strlen(LITERALBASE_BIN)];
+        break;
     case CCLiteralBaseFloat:
         ret = [NSData dataWithBytes:LITERALBASE_FLOAT length:strlen(LITERALBASE_FLOAT)];
         break;
@@ -486,6 +494,8 @@
         literalBase = CCLiteralBaseLong;
     else if ([szLiteral isEqualToString:LITERALBASE_BOOL_NSSTRING])
         literalBase = CCLiteralBaseBool;
+    else if ([szLiteral isEqualToString:LITERALBASE_BIN_NSSTRING])
+        literalBase = CCLiteralBaseBin;
     else if ([szLiteral isEqualToString:LITERALBASE_FLOAT_NSSTRING])
         literalBase = CCLiteralBaseFloat;
     else if ([szLiteral isEqualToString:LITERALBASE_DOUBLE_NSSTRING])

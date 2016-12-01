@@ -422,6 +422,14 @@
 
     switch (errCode)
     {
+    case 0:
+        // Socket end
+        [self fireErrorOccurred:CCMessageErrorConnectEnd];
+        [self fireSessionDestroyed];
+        _session = nil;
+        _asyncSocket = nil;
+        break;
+
     case 3:
         // Attempt to connect to host timed out
         [self fireErrorOccurred:CCMessageErrorConnectTimeout];

@@ -61,5 +61,8 @@
 /**
  */
 + (CCComplementStuff *)stuffWithDouble:(double)value;
+/**
+ */
++ (CCComplementStuff *)stuffWithData:(NSData *)value;
 
 @end

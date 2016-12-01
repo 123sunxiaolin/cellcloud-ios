@@ -61,5 +61,8 @@
 /**
  */
 + (CCPredicateStuff *)stuffWithDouble:(double)value;
+/**
+ */
++ (CCPredicateStuff *)stuffWithData:(NSData *)value;
 
 @end

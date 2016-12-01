@@ -72,10 +72,9 @@
 
     for (NSString *key in _params)
     {
-        NSString *value = [_params objectForKey:key];
-
         CCSubjectStuff *keyStuff = [CCSubjectStuff stuffWithString:key];
-        CCObjectiveStuff *valueStuff = [CCObjectiveStuff stuffWithString:value];
+        CCObjectiveStuff *valueStuff = [_params objectForKey:key];
+
         [primitive commit:keyStuff];
         [primitive commit:valueStuff];
     }
@@ -95,7 +94,7 @@
         for (NSUInteger i = 0, size = primitive.subjects.count; i < size; ++i)
         {
             NSString *key = [[primitive.subjects objectAtIndex:i] getValueAsString];
-            NSString *value = [[primitive.objectives objectAtIndex:i] getValueAsString];
+            CCObjectiveStuff *value = [primitive.objectives objectAtIndex:i];
             [_params setObject:value forKey:key];
         }
     }
@@ -103,112 +102,90 @@
 //------------------------------------------------------------------------------
 - (void)appendParam:(NSString *)name stringValue:(NSString *)value
 {
-    [_params setObject:value forKey:name];
+    CCObjectiveStuff *stuff = [CCObjectiveStuff stuffWithString:value];
+    [_params setObject:stuff forKey:name];
 }
 //------------------------------------------------------------------------------
 - (void)appendParam:(NSString *)name intValue:(int)value
 {
-    NSString *strValue = [NSString stringWithFormat:@"%d", value];
-    [_params setObject:strValue forKey:name];
+//    NSString *strValue = [NSString stringWithFormat:@"%d", value];
+    CCObjectiveStuff *stuff = [CCObjectiveStuff stuffWithInt:value];
+    [_params setObject:stuff forKey:name];
 }
 //------------------------------------------------------------------------------
 - (void)appendParam:(NSString *)name longValue:(long)value
 {
-    NSString *strValue = [NSString stringWithFormat:@"%ld", value];
-    [_params setObject:strValue forKey:name];
+//    NSString *strValue = [NSString stringWithFormat:@"%ld", value];
+    CCObjectiveStuff *stuff = [CCObjectiveStuff stuffWithLong:value];
+    [_params setObject:stuff forKey:name];
 }
 //------------------------------------------------------------------------------
 - (void)appendParam:(NSString *)name longlongValue:(long long)value
 {
-    NSString *strValue = [NSString stringWithFormat:@"%qi", value];
-    [_params setObject:strValue forKey:name];
+//    NSString *strValue = [NSString stringWithFormat:@"%qi", value];
+    CCObjectiveStuff *stuff = [CCObjectiveStuff stuffWithLongLong:value];
+    [_params setObject:stuff forKey:name];
 }
 //------------------------------------------------------------------------------
 - (void)appendParam:(NSString *)name boolValue:(BOOL)value
 {
-    NSString *strValue = [NSString stringWithFormat:@"%@", value ? @"true" : @"false"];
-    [_params setObject:strValue forKey:name];
+//    NSString *strValue = [NSString stringWithFormat:@"%@", value ? @"true" : @"false"];
+    CCObjectiveStuff *stuff = [CCObjectiveStuff stuffWithBool:value];
+    [_params setObject:stuff forKey:name];
 }
 //------------------------------------------------------------------------------
 - (void)appendParam:(NSString *)name json:(NSDictionary *)value
 {
-    __autoreleasing NSError *error = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value
-                                                       options:NSJSONWritingPrettyPrinted
-                                                         error:&error];
-    NSString *strValue = [[NSString alloc] initWithData:jsonData
-                                               encoding:NSUTF8StringEncoding];
-    [_params setObject:strValue forKey:name];
+//    __autoreleasing NSError *error = nil;
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value
+//                                                       options:NSJSONWritingPrettyPrinted
+//                                                         error:&error];
+//    NSString *strValue = [[NSString alloc] initWithData:jsonData
+//                                               encoding:NSUTF8StringEncoding];
+    CCObjectiveStuff *stuff = [CCObjectiveStuff stuffWithDictionary:value];
+    [_params setObject:stuff forKey:name];
 }
 
 //------------------------------------------------------------------------------
 - (NSString *)getParamAsString:(NSString *)name
 {
-    return [_params objectForKey:name];
+    CCObjectiveStuff *stuff = [_params objectForKey:name];
+    return [stuff getValueAsString];
 }
 //------------------------------------------------------------------------------
 - (int)getParamAsInt:(NSString *)name
 {
-    NSString *value = [_params objectForKey:name];
-    if (nil != value)
-        return [value intValue];
-    else
-        return 0;
+    CCObjectiveStuff *stuff = [_params objectForKey:name];
+    return [stuff getValueAsInt];
 }
 //------------------------------------------------------------------------------
 - (long)getParamAsLong:(NSString *)name
 {
-    NSString *value = [_params objectForKey:name];
-    if (nil != value)
-    {
-        return [NSNumber numberWithLongLong:[value longLongValue]].longValue;
-        //return [value longLongValue];
-    }
-    else
-    {
-        return 0;
-    }
+    CCObjectiveStuff *stuff = [_params objectForKey:name];
+    return [stuff getValueAsLong];
 }
 //------------------------------------------------------------------------------
 - (long long)getParamAsLongLong:(NSString *)name
 {
-    NSString *value = [_params objectForKey:name];
-    if (nil != value)
-        return [value longLongValue];
-    else
-        return 0;
+    CCObjectiveStuff *stuff = [_params objectForKey:name];
+    return [stuff getValueAsLongLong];
 }
 //------------------------------------------------------------------------------
 - (BOOL)getParamAsBool:(NSString *)name
 {
-    NSString *value = [_params objectForKey:name];
-    if (nil != value)
-        return [value isEqualToString:@"true"] ? TRUE : FALSE;
-    else
-        return FALSE;
+    CCObjectiveStuff *stuff = [_params objectForKey:name];
+    return [stuff getValueAsBoolean];
 }
 //------------------------------------------------------------------------------
 - (NSDictionary *)getParamAsJson:(NSString *)name
 {
-    NSString *value = [_params objectForKey:name];
-    if (nil != value)
-    {
-        __autoreleasing NSError *error = nil;
-        NSData *jsonData = [value dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary *ret = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                            options:NSJSONReadingAllowFragments
-                                                              error:&error];
-        return ret;
-    }
-    else
-    {
-        return nil;
-    }
+    CCObjectiveStuff *stuff = [_params objectForKey:name];
+    return [stuff getValueAsDictionary];
 }
 //------------------------------------------------------------------------------
 - (BOOL)existParam:(NSString *)name
 {
-    return [_params objectForKey:name] != nil ? TRUE : FALSE;
+    return [_params objectForKey:name] != nil ? YES : NO;
 }
 //------------------------------------------------------------------------------
 - (void)act:(id<CCActionDelegate>)delegate

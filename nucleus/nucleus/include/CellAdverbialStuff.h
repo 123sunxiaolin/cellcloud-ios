@@ -61,5 +61,8 @@
 /**
  */
 + (CCAdverbialStuff *)stuffWithDouble:(double)value;
+/**
+ */
++ (CCAdverbialStuff *)stuffWithData:(NSData *)value;
 
 @end

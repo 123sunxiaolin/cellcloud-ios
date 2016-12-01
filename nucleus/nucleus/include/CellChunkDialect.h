@@ -27,7 +27,7 @@
 #import "CellDialect.h"
 
 #define CHUNK_DIALECT_NAME @"ChunkDialect"
-#define CHUNK_SIZE 4096
+#define CHUNK_SIZE 2048
 
 @class CCChunkDialect;
 
@@ -72,7 +72,7 @@
 /// 块总数
 @property (nonatomic, assign, readonly) int chunkNum;
 /// 块数据
-@property (nonatomic, strong, readonly) NSString *data;
+@property (nonatomic, strong, readonly) NSData *data;
 /// 块数据长度
 @property (nonatomic, assign, readonly) int length;
 /// 总长度
