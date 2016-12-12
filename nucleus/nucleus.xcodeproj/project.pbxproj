@@ -30,6 +30,8 @@
 		44B7ADD21654C72000E3B116 /* CellPrimitive.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B7ADD11654C72000E3B116 /* CellPrimitive.m */; };
 		44B7ADDA1654CAB200E3B116 /* CellStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B7ADD91654CAB200E3B116 /* CellStuff.m */; };
 		44B7ADE01654E95300E3B116 /* CellSubjectStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B7ADDF1654E95300E3B116 /* CellSubjectStuff.m */; };
+		44BBD0CA1DD5A38400FFA6E0 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BBD0C91DD5A38400FFA6E0 /* GCDAsyncUdpSocket.m */; };
+		44BBD0CD1DD5A73100FFA6E0 /* CellDatagramConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BBD0CC1DD5A73100FFA6E0 /* CellDatagramConnector.m */; };
 		44BEF6451647BE2100AFD75B /* CellCryptology.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BEF6441647BE2100AFD75B /* CellCryptology.m */; };
 		44CAE9C3162BAF0E0048E04B /* CellMessageConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CAE9C2162BAF0E0048E04B /* CellMessageConnector.m */; };
 		44CAE9C9162BE5180048E04B /* CellNonblockingConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CAE9C8162BE5180048E04B /* CellNonblockingConnector.m */; };
@@ -110,6 +112,10 @@
 		44B7ADD91654CAB200E3B116 /* CellStuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellStuff.m; path = src/CellStuff.m; sourceTree = "<group>"; };
 		44B7ADDE1654E94900E3B116 /* CellSubjectStuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellSubjectStuff.h; path = include/CellSubjectStuff.h; sourceTree = "<group>"; };
 		44B7ADDF1654E95300E3B116 /* CellSubjectStuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellSubjectStuff.m; path = src/CellSubjectStuff.m; sourceTree = "<group>"; };
+		44BBD0C81DD5A37800FFA6E0 /* GCDAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncUdpSocket.h; path = include/GCDAsyncUdpSocket.h; sourceTree = "<group>"; };
+		44BBD0C91DD5A38400FFA6E0 /* GCDAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncUdpSocket.m; path = src/GCDAsyncUdpSocket.m; sourceTree = "<group>"; };
+		44BBD0CB1DD5A70E00FFA6E0 /* CellDatagramConnector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CellDatagramConnector.h; path = include/CellDatagramConnector.h; sourceTree = "<group>"; };
+		44BBD0CC1DD5A73100FFA6E0 /* CellDatagramConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellDatagramConnector.m; path = src/CellDatagramConnector.m; sourceTree = "<group>"; };
 		44BEF63E164791AF00AFD75B /* CellTalkDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellTalkDefinition.h; path = include/CellTalkDefinition.h; sourceTree = "<group>"; };
 		44BEF6431647BE1A00AFD75B /* CellCryptology.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellCryptology.h; path = include/CellCryptology.h; sourceTree = "<group>"; };
 		44BEF6441647BE2100AFD75B /* CellCryptology.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellCryptology.m; path = src/CellCryptology.m; sourceTree = "<group>"; };
@@ -268,6 +274,8 @@
 			children = (
 				44CAE9CA162BFA7F0048E04B /* GCDAsyncSocket.h */,
 				44CAE9CB162BFA860048E04B /* GCDAsyncSocket.m */,
+				44BBD0C81DD5A37800FFA6E0 /* GCDAsyncUdpSocket.h */,
+				44BBD0C91DD5A38400FFA6E0 /* GCDAsyncUdpSocket.m */,
 			);
 			name = Dependence;
 			sourceTree = "<group>";
@@ -286,6 +294,8 @@
 			children = (
 				44BEF6431647BE1A00AFD75B /* CellCryptology.h */,
 				44BEF6441647BE2100AFD75B /* CellCryptology.m */,
+				44BBD0CB1DD5A70E00FFA6E0 /* CellDatagramConnector.h */,
+				44BBD0CC1DD5A73100FFA6E0 /* CellDatagramConnector.m */,
 				4486E90F1625170D004C11C8 /* CellInetAddress.h */,
 				4486E91016251714004C11C8 /* CellInetAddress.m */,
 				44CAE9D4162C03140048E04B /* CellLogger.h */,
@@ -396,6 +406,7 @@
 				44CAE9CC162BFA860048E04B /* GCDAsyncSocket.m in Sources */,
 				44CAE9D6162C031C0048E04B /* CellLogger.m in Sources */,
 				444B2B80162E497F00C938AD /* CellTalkService.m in Sources */,
+				44BBD0CD1DD5A73100FFA6E0 /* CellDatagramConnector.m in Sources */,
 				444B2B86162E60F400C938AD /* CellSpeaker.m in Sources */,
 				44CE237D1638EF7E00DDE0F3 /* CellPacket.m in Sources */,
 				44BEF6451647BE2100AFD75B /* CellCryptology.m in Sources */,
@@ -411,6 +422,7 @@
 				44D9ADBB1657722100E22351 /* CellPrimitiveSerializer.m in Sources */,
 				4412F67B165B228000C0941B /* CellTalkServiceFailure.m in Sources */,
 				44DB3D501665AC00000E312D /* CellTalkCapacity.m in Sources */,
+				44BBD0CA1DD5A38400FFA6E0 /* GCDAsyncUdpSocket.m in Sources */,
 				447741A0166EFD2E008D6CCE /* CellDialect.m in Sources */,
 				447741A6166F1EAA008D6CCE /* CellDialectMetaData.m in Sources */,
 				447741AC166F4342008D6CCE /* CellDialectEnumerator.m in Sources */,

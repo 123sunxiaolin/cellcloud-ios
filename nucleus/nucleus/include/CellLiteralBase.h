@@ -56,6 +56,9 @@ typedef enum _CCLiteralBase
     /// JSON 类型。
     CCLiteralBaseJSON,
 
+    /// 二进制类型
+    CCLiteralBaseBin,
+
     /// XML 类型。
     CCLiteralBaseXML
     

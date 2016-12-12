@@ -75,7 +75,7 @@
     
     char data[length];
     
-    for (int i=0; i<length; ++i)
+    for (int i = 0; i < length; ++i)
     {
         int index = arc4random() % MAX;
         
@@ -83,6 +83,89 @@
     };
     
     return [[NSString alloc] initWithBytes:data length:length encoding:NSUTF8StringEncoding];
+}
+//------------------------------------------------------------------------------
++ (unsigned int)intToBytes:(char *)output input:(int)input
+{
+    output[0] = input & 0xff;
+    output[1] = (input & 0xff00) >> 8;
+    output[2] = (input & 0xff0000) >> 16;
+    output[3] = (input & 0xff000000) >> 24;
+    return 4;
+}
+//------------------------------------------------------------------------------
++ (unsigned int)longToBytes:(char *)output input:(long long)input
+{
+    output[0] = input & 0xff;
+    output[1] = (input >> 8) & 0xff;
+    output[2] = (input >> 16) & 0xff;
+    output[3] = (input >> 24) & 0xff;
+    output[4] = (input >> 32) & 0xff;
+    output[5] = (input >> 40) & 0xff;
+    output[6] = (input >> 48) & 0xff;
+    output[7] = (input >> 56) & 0xff;
+    return 8;
+}
+//------------------------------------------------------------------------------
++ (unsigned int)floatToBytes:(char *)output input:(float)input
+{
+    int r = 0;
+    memcpy(&r, &input, sizeof(int));
+    return [CCUtil intToBytes:output input:r];
+}
+//------------------------------------------------------------------------------
++ (unsigned int)doubleToBytes:(char *)output input:(double)input
+{
+    long long r = 0;
+    memcpy(&r, &input, sizeof(long long));
+    return [CCUtil longToBytes:output input:r];
+}
+//------------------------------------------------------------------------------
++ (unsigned int)boolToBytes:(char *)output input:(BOOL)input
+{
+    output[0] = input ? 1 : 0;
+    return 1;
+}
+//------------------------------------------------------------------------------
++ (int)bytesToInt:(char *)input
+{
+    return (0xff & input[0])
+				| (0xff00 & (input[1] << 8))
+				| (0xff0000 & (input[2] << 16))
+				| (0xff000000 & (input[3] << 24));
+}
+//------------------------------------------------------------------------------
++ (long long)bytesToLong:(char *)input
+{
+    return (0xffL & (long long) input[0])
+				| (0xff00L & ((long long) input[1] << 8))
+				| (0xff0000L & ((long long) input[2] << 16))
+				| (0xff000000L & ((long long) input[3] << 24))
+				| (0xff00000000L & ((long long) input[4] << 32))
+				| (0xff0000000000L & ((long long) input[5] << 40))
+				| (0xff000000000000L & ((long long) input[6] << 48))
+				| (0xff00000000000000L & ((long long) input[7] << 56));
+}
+//------------------------------------------------------------------------------
++ (float)bytesToFloat:(char *)input
+{
+    int r = [CCUtil bytesToInt:input];
+    float f = 0.0f;
+    memcpy(&f, &r, sizeof(int));
+    return f;
+}
+//------------------------------------------------------------------------------
++ (double)bytesToDouble:(char *)input
+{
+    long long r = [CCUtil bytesToLong:input];
+    double d = 0.0;
+    memcpy(&d, &r, sizeof(long long));
+    return d;
+}
+//------------------------------------------------------------------------------
++ (BOOL)bytesToBool:(char *)input
+{
+    return (input[0] == 1) ? YES : NO;
 }
 
 @end

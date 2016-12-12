@@ -89,5 +89,10 @@
 {
     return [[CCPredicateStuff alloc] initWithDouble:value];
 }
+//------------------------------------------------------------------------------
++ (CCPredicateStuff *)stuffWithData:(NSData *)value
+{
+    return [[CCPredicateStuff alloc] initWithBin:value];
+}
 
 @end

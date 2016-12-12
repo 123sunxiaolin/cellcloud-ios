@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
+ Copyright (c) 2009-2016 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -24,45 +24,20 @@
  ------------------------------------------------------------------------------
  */
 
-#import "CellStuff.h"
+#import "CellMessageConnector.h"
+#import "GCDAsyncUdpSocket.h"
 
-@interface CCComplementStuff : CCStuff
+#ifndef CellDatagramConnector_h
+#define CellDatagramConnector_h
+
+/** 数据报消息连接器。
+ */
+@interface CCDatagramConnector : CCMessageConnector <GCDAsyncUdpSocketDelegate>
 
 /**
  */
-+ (CCComplementStuff *)stuffWithString:(NSString *)value;
-/**
- */
-+ (CCComplementStuff *)stuffWithInt:(int)value;
-/**
- */
-+ (CCComplementStuff *)stuffWithUInt:(unsigned int)value;
-/**
- */
-+ (CCComplementStuff *)stuffWithLong:(long)value;
-/**
- */
-+ (CCComplementStuff *)stuffWithULong:(unsigned long)value;
-/**
- */
-+ (CCComplementStuff *)stuffWithLongLong:(long long)value;
-/**
- */
-+ (CCComplementStuff *)stuffWithBool:(BOOL)value;
-/**
- */
-+ (CCComplementStuff *)stuffWithDictionary:(NSDictionary *)value;
-/**
- */
-+ (CCComplementStuff *)stuffWithArray:(NSArray *)value;
-/**
- */
-+ (CCComplementStuff *)stuffWithFloat:(float)value;
-/**
- */
-+ (CCComplementStuff *)stuffWithDouble:(double)value;
-/**
- */
-+ (CCComplementStuff *)stuffWithData:(NSData *)value;
+- (id)init:(id<CCMessageHandler>)delegate;
 
 @end
+
+#endif /* CellDatagramConnector_h */

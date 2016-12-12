@@ -31,6 +31,7 @@
  */
 @interface CCMessage : NSObject
 
+@property (nonatomic, strong, readonly) NSNumber* tag;
 @property (nonatomic, strong, readonly) NSData* data;
 @property (nonatomic, assign, readonly) NSUInteger length;
 
@@ -46,8 +47,8 @@
  */
 - (id)initWithBytes:(const void *)bytes length:(NSUInteger)length;
 
-- (void)reset:(NSData *)data;
+- (void)resetData:(NSData *)data;
 
-- (void)reset:(const void *)bytes length:(NSUInteger)length;
+- (void)resetData:(const void *)bytes length:(NSUInteger)length;
 
 @end

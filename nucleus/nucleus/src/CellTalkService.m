@@ -290,6 +290,11 @@ static CCTalkService *sharedInstance = nil;
         }
     }
 
+    if (nil != current)
+    {
+        [current hangUp];
+    }
+
     @synchronized(_monitor) {
         if (nil != _lostSpeakers && [_lostSpeakers count] > 0)
         {
@@ -306,9 +311,7 @@ static CCTalkService *sharedInstance = nil;
 
     if (nil != current)
     {
-        [current hangUp];
         [_speakers removeObject:current];
-//        [_speakerMap removeObjectForKey:identifier];
     }
 }
 //------------------------------------------------------------------------------

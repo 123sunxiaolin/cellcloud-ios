@@ -25,11 +25,13 @@
  */
 
 #import "CellStuff.h"
+#import "CellUtil.h"
 
 @interface CCStuff ()
 {
 @private
-    NSString *_value;
+//    NSString *_value;
+    NSData *_value;
 }
 @end
 
@@ -43,7 +45,8 @@
 {
     if ((self = [super init]))
     {
-        _value = [NSString stringWithString:value];
+//        _value = [NSString stringWithString:value];
+        _value = [value dataUsingEncoding:NSUTF8StringEncoding];
         self.literalBase = CCLiteralBaseString;
         [self willInitType];
     }
@@ -54,7 +57,10 @@
 {
     if ((self = [super init]))
     {
-        _value = [[NSString alloc] initWithFormat:@"%d", value];
+//        _value = [[NSString alloc] initWithFormat:@"%d", value];
+        char dest[4] = {0, 0, 0, 0};
+        NSUInteger length = [CCUtil intToBytes:dest input:value];
+        _value = [NSData dataWithBytes:dest length:length];
         self.literalBase = CCLiteralBaseInt;
         [self willInitType];
     }
@@ -65,7 +71,10 @@
 {
     if ((self = [super init]))
     {
-        _value = [[NSString alloc] initWithFormat:@"%u", value];
+//        _value = [[NSString alloc] initWithFormat:@"%u", value];
+        char dest[4] = {0, 0, 0, 0};
+        NSUInteger length =[CCUtil intToBytes:dest input:value];
+        _value = [NSData dataWithBytes:dest length:length];
         self.literalBase = CCLiteralBaseUInt;
         [self willInitType];
     }
@@ -76,7 +85,10 @@
 {
     if ((self = [super init]))
     {
-        _value = [[NSString alloc] initWithFormat:@"%ld", value];
+//        _value = [[NSString alloc] initWithFormat:@"%ld", value];
+        char dest[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+        NSUInteger length = [CCUtil longToBytes:dest input:value];
+        _value = [NSData dataWithBytes:dest length:length];
         self.literalBase = CCLiteralBaseLong;
         [self willInitType];
     }
@@ -87,7 +99,10 @@
 {
     if ((self = [super init]))
     {
-        _value = [[NSString alloc] initWithFormat:@"%lu", value];
+//        _value = [[NSString alloc] initWithFormat:@"%lu", value];
+        char dest[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+        NSUInteger length = [CCUtil longToBytes:dest input:value];
+        _value = [NSData dataWithBytes:dest length:length];
         self.literalBase = CCLiteralBaseULong;
         [self willInitType];
     }
@@ -98,7 +113,10 @@
 {
     if ((self = [super init]))
     {
-        _value = [[NSString alloc] initWithFormat:@"%qi", value];
+//        _value = [[NSString alloc] initWithFormat:@"%qi", value];
+        char dest[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+        NSUInteger length = [CCUtil longToBytes:dest input:value];
+        _value = [NSData dataWithBytes:dest length:length];
         self.literalBase = CCLiteralBaseLong;
         [self willInitType];
     }
@@ -109,7 +127,10 @@
 {
     if ((self = [super init]))
     {
-        _value = [[NSString alloc] initWithFormat:@"%@", value ? @"true" : @"false"];
+//        _value = [[NSString alloc] initWithFormat:@"%@", value ? @"true" : @"false"];
+        char dest[1] = {0};
+        NSUInteger length = [CCUtil boolToBytes:dest input:value];
+        _value = [NSData dataWithBytes:dest length:length];
         self.literalBase = CCLiteralBaseBool;
         [self willInitType];
     }
@@ -121,11 +142,11 @@
     if ((self = [super init]))
     {
         __autoreleasing NSError *error = nil;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value
-                                                           options:NSJSONWritingPrettyPrinted
-                                                             error:&error];
-        _value = [[NSString alloc] initWithData:jsonData
-                                       encoding:NSUTF8StringEncoding];
+        _value = [NSJSONSerialization dataWithJSONObject:value
+                                                 options:NSJSONWritingPrettyPrinted
+                                                   error:&error];
+//        _value = [[NSString alloc] initWithData:jsonData
+//                                       encoding:NSUTF8StringEncoding];
         self.literalBase = CCLiteralBaseJSON;
         [self willInitType];
     }
@@ -137,11 +158,11 @@
     if ((self = [super init]))
     {
         __autoreleasing NSError *error = nil;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value
-                                                           options:NSJSONWritingPrettyPrinted
-                                                             error:&error];
-        _value = [[NSString alloc] initWithData:jsonData
-                                       encoding:NSUTF8StringEncoding];
+        _value = [NSJSONSerialization dataWithJSONObject:value
+                                                 options:NSJSONWritingPrettyPrinted
+                                                   error:&error];
+//        _value = [[NSString alloc] initWithData:jsonData
+//                                       encoding:NSUTF8StringEncoding];
         self.literalBase = CCLiteralBaseJSON;
         [self willInitType];
     }
@@ -152,7 +173,10 @@
 {
     if ((self = [super init]))
     {
-        _value = [NSString stringWithFormat:@"%.2f", value];
+//        _value = [NSString stringWithFormat:@"%.2f", value];
+        char dest[4] = {0, 0, 0, 0};
+        NSUInteger length = [CCUtil floatToBytes:dest input:value];
+        _value = [NSData dataWithBytes:dest length:length];
         self.literalBase = CCLiteralBaseFloat;
         [self willInitType];
     }
@@ -163,8 +187,22 @@
 {
     if ((self = [super init]))
     {
-        _value = [NSString stringWithFormat:@"%.2f", value];
+//        _value = [NSString stringWithFormat:@"%.2f", value];
+        char dest[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+        NSUInteger length = [CCUtil doubleToBytes:dest input:value];
+        _value = [NSData dataWithBytes:dest length:length];
         self.literalBase = CCLiteralBaseDouble;
+        [self willInitType];
+    }
+    return self;
+}
+//------------------------------------------------------------------------------
+- (id)initWithBin:(NSData *)value
+{
+    if ((self = [super init]))
+    {
+        _value = [NSData dataWithData:value];
+        self.literalBase = CCLiteralBaseBin;
         [self willInitType];
     }
     return self;
@@ -174,7 +212,8 @@
 {
     if ((self = [super init]))
     {
-        _value = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//        _value = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        _value = [NSData dataWithData:data];
         self.literalBase = literal;
         [self willInitType];
     }
@@ -191,46 +230,123 @@
     // Nothing
 }
 //------------------------------------------------------------------------------
-- (NSString *)getValueAsString
+- (NSData *)getValue
 {
     return _value;
 }
 //------------------------------------------------------------------------------
+- (NSString *)getValueAsString
+{
+    return [[NSString alloc] initWithData:_value encoding:NSUTF8StringEncoding];
+}
+//------------------------------------------------------------------------------
 - (int)getValueAsInt
 {
-    return [_value intValue];
+//    return [_value intValue];
+
+    // 检查数据
+    if (_value.length < 4)
+    {
+        return 0;
+    }
+
+    char *buf = malloc(sizeof(char) * _value.length);
+    memcpy(buf, _value.bytes, _value.length);
+    int result = [CCUtil bytesToInt:buf];
+    free(buf);
+
+    return result;
 }
 //------------------------------------------------------------------------------
 - (unsigned int)getValueAsUInt
 {
-    return [_value intValue];
+//    return [_value intValue];
+
+    // 检查数据
+    if (_value.length < 4)
+    {
+        return 0;
+    }
+
+    char *buf = malloc(sizeof(char) * _value.length);
+    memcpy(buf, _value.bytes, _value.length);
+    int result = [CCUtil bytesToInt:buf];
+    free(buf);
+
+    return result;
 }
 //------------------------------------------------------------------------------
 - (long)getValueAsLong
 {
-    return [_value longLongValue];
+//    return [NSNumber numberWithLongLong:[_value longLongValue]].longValue;
+
+    // 检查数据
+    if (_value.length < 8)
+    {
+        return 0;
+    }
+
+    char *buf = malloc(sizeof(char) * _value.length);
+    memcpy(buf, _value.bytes, _value.length);
+    long long result = [CCUtil bytesToLong:buf];
+    free(buf);
+
+    return [NSNumber numberWithLongLong:result].longValue;
 }
 //------------------------------------------------------------------------------
 - (unsigned long)getValueAsULong
 {
-    return [_value longLongValue];
+//    return [NSNumber numberWithLongLong:[_value longLongValue]].unsignedLongValue;
+
+    // 检查数据
+    if (_value.length < 8)
+    {
+        return 0;
+    }
+
+    char *buf = malloc(sizeof(char) * _value.length);
+    memcpy(buf, _value.bytes, _value.length);
+    long long result = [CCUtil bytesToLong:buf];
+    free(buf);
+
+    return [NSNumber numberWithLongLong:result].unsignedLongValue;
 }
 //------------------------------------------------------------------------------
 - (long long)getValueAsLongLong
 {
-    return [_value longLongValue];
+//    return [_value longLongValue];
+
+    // 检查数据
+    if (_value.length < 8)
+    {
+        return 0;
+    }
+
+    char *buf = malloc(sizeof(char) * _value.length);
+    memcpy(buf, _value.bytes, _value.length);
+    long long result = [CCUtil bytesToLong:buf];
+    free(buf);
+
+    return result;
 }
 //------------------------------------------------------------------------------
 - (BOOL)getValueAsBoolean
 {
-    return [_value isEqualToString:@"true"] ? TRUE : FALSE;
+//    return [_value isEqualToString:@"true"] ? TRUE : FALSE;
+
+    char *buf = malloc(sizeof(char) * _value.length);
+    memcpy(buf, _value.bytes, _value.length);
+    BOOL result = [CCUtil bytesToBool:buf];
+    free(buf);
+
+    return result;
 }
 //------------------------------------------------------------------------------
 - (NSDictionary *)getValueAsDictionary
 {
     __autoreleasing NSError *error = nil;
-    NSData *jsonData = [_value dataUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *ret = [NSJSONSerialization JSONObjectWithData:jsonData
+//    NSData *jsonData = [_value dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *ret = [NSJSONSerialization JSONObjectWithData:_value
                                                         options:NSJSONReadingAllowFragments
                                                           error:&error];
     return ret;
@@ -239,8 +355,8 @@
 - (NSArray *)getValueAsArray
 {
     __autoreleasing NSError *error = nil;
-    NSData *jsonData = [_value dataUsingEncoding:NSUTF8StringEncoding];
-    NSArray *ret = [NSJSONSerialization JSONObjectWithData:jsonData
+//    NSData *jsonData = [_value dataUsingEncoding:NSUTF8StringEncoding];
+    NSArray *ret = [NSJSONSerialization JSONObjectWithData:_value
                                                    options:NSJSONReadingAllowFragments
                                                      error:&error];
     return ret;
@@ -248,12 +364,38 @@
 //------------------------------------------------------------------------------
 - (float)getValueAsFloat
 {
-    return [_value floatValue];
+//    return [_value floatValue];
+
+    // 检查数据
+    if (_value.length < 4)
+    {
+        return 0.0f;
+    }
+
+    char *buf = malloc(sizeof(char) * _value.length);
+    memcpy(buf, _value.bytes, _value.length);
+    float result = [CCUtil bytesToFloat:buf];
+    free(buf);
+
+    return result;
 }
 //------------------------------------------------------------------------------
 - (double)getValueAsDouble
 {
-    return [_value doubleValue];
+//    return [_value doubleValue];
+
+    // 检查数据
+    if (_value.length < 8)
+    {
+        return 0.0f;
+    }
+
+    char *buf = malloc(sizeof(char) * _value.length);
+    memcpy(buf, _value.bytes, _value.length);
+    double result = [CCUtil bytesToDouble:buf];
+    free(buf);
+
+    return result;
 }
 
 @end

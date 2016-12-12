@@ -52,6 +52,8 @@ typedef enum _CCMessageErrorCode
     CCMessageErrorConnectFailed = 300,
     /// 连接超时。
     CCMessageErrorConnectTimeout = 301,
+    /// 连接正常结束
+    CCMessageErrorConnectEnd = 305,
 
     /// 写数据超时。
     CCMessageErrorWriteTimeout = 401,
@@ -94,7 +96,7 @@ typedef enum _CCMessageErrorCode
 {
 @protected
     id<CCMessageHandler> _delegate;
-    
+
 @protected
     char *_headMark;
     size_t _headLength;
@@ -124,9 +126,5 @@ typedef enum _CCMessageErrorCode
 /** 向指定的会话写入消息。
  */
 - (void)write:(CCSession *)session message:(CCMessage *)message;
-
-/** 从指定的会话读取消息。
- */
-- (void)read:(CCMessage *)message session:(CCSession *)session;
 
 @end

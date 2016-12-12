@@ -101,10 +101,5 @@
 {
     // Nothing
 }
-//------------------------------------------------------------------------------
-- (void)read:(CCMessage *)message session:(CCSession *)session
-{
-    // Nothing
-}
 
 @end

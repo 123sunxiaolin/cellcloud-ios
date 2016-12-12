@@ -85,7 +85,7 @@
                       "| __| __| | | |    | __| | |   | | | _ \\\n"\
                       "| |_| _|| |_| |_   | |_| |_| | | | | | |\n"\
                       "|___|___|___|___|  |___|___|___|___|___/\n\n"\
-                      "Copyright (c) 2009,2014 Cell Cloud Team, www.cellcloud.net\n"\
+                      "Copyright (c) 2009,2016 Cell Cloud Team, www.cellcloud.net\n"\
                       "-----------------------------------------------------------------------\n"
                       , [CCVersion major]
                       , [CCVersion minor]

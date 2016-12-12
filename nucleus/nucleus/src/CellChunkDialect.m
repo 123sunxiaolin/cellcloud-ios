@@ -37,6 +37,7 @@
 @synthesize sign = _sign;
 @synthesize chunkIndex = _chunkIndex;
 @synthesize chunkNum = _chunkNum;
+@synthesize data = _data;
 @synthesize length = _length;
 @synthesize totalLength = _totalLength;
 
@@ -72,7 +73,7 @@
         _totalLength = totalLength;
         _chunkIndex = chunkIndex;
         _chunkNum = chunkNum;
-        _data = [data base64EncodedStringWithOptions:0];
+        _data = [NSData dataWithData:data];
         _length = length;
 
         self.infectant = NO;
@@ -91,7 +92,7 @@
         _totalLength = totalLength;
         _chunkIndex = chunkIndex;
         _chunkNum = chunkNum;
-        _data = [data base64EncodedStringWithOptions:0];
+        _data = [NSData dataWithData:data];
         _length = length;
 
         self.infectant = NO;
@@ -137,7 +138,7 @@
     [primitive commit:[CCSubjectStuff stuffWithString:_sign]];
     [primitive commit:[CCSubjectStuff stuffWithInt:_chunkIndex]];
     [primitive commit:[CCSubjectStuff stuffWithInt:_chunkNum]];
-    [primitive commit:[CCSubjectStuff stuffWithString:_data]];
+    [primitive commit:[CCSubjectStuff stuffWithData:_data]];
     [primitive commit:[CCSubjectStuff stuffWithInt:_length]];
     [primitive commit:[CCSubjectStuff stuffWithLong:_totalLength]];
 
@@ -150,7 +151,7 @@
     _sign = [(CCSubjectStuff *)[list objectAtIndex:0] getValueAsString];
     _chunkIndex = [(CCSubjectStuff *)[list objectAtIndex:1] getValueAsInt];
     _chunkNum = [(CCSubjectStuff *)[list objectAtIndex:2] getValueAsInt];
-    _data = [(CCSubjectStuff *)[list objectAtIndex:3] getValueAsString];
+    _data = [(CCSubjectStuff *)[list objectAtIndex:3] getValue];
     _length = [(CCSubjectStuff *)[list objectAtIndex:4] getValueAsInt];
     _totalLength = [(CCSubjectStuff *)[list objectAtIndex:5] getValueAsLong];
 }

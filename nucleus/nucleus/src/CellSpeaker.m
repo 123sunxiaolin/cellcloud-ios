@@ -251,10 +251,13 @@
         {
             [_connector disconnect];
         }
+        else
+        {
+            // 没有连接则直接清空
+            [_identifierList removeAllObjects];
+        }
 
         _connector = nil;
-
-        [_identifierList removeAllObjects];
 
         self.state = CCSpeakerStateHangUp;
     }
@@ -610,7 +613,11 @@
         [[CCTalkService sharedSingleton].listener quitted:celletIdentifier tag:[_remoteTag getAsString]];
     }
 
-    [[_connector getSession] deactiveSecretKey];
+    CCSession *session = [_connector getSession];
+    if (nil != session)
+    {
+        [session deactiveSecretKey];
+    }
 }
 //------------------------------------------------------------------------------
 - (void)fireFailed:(CCTalkServiceFailure *)failure
@@ -702,7 +709,18 @@
 {
     [CCLogger d:@"errorOccurred - %d - %p", errorCode, session];
 
-    if (errorCode == CCMessageErrorConnectTimeout)
+    if (errorCode == CCMessageErrorConnectEnd)
+    {
+        // 连接结束
+        [CCLogger i:@"Connect end."];
+
+        // 通知退出
+        for (NSString *identifier in _identifierList)
+        {
+            [self fireQuitted:identifier];
+        }
+    }
+    else if (errorCode == CCMessageErrorConnectTimeout)
     {
         CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc]
                                          initWithSource:CCFailureCallFailed

@@ -89,5 +89,10 @@
 {
     return [[CCAdverbialStuff alloc] initWithDouble:value];
 }
+//------------------------------------------------------------------------------
++ (CCAdverbialStuff *)stuffWithData:(NSData *)value
+{
+    return [[CCAdverbialStuff alloc] initWithBin:value];
+}
 
 @end
