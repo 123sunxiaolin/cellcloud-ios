@@ -177,14 +177,17 @@
 
     if (nil != identifiers)
     {
-        for (NSString *identifier in identifiers)
+        @synchronized (_identifierList)
         {
-            if ([_identifierList containsObject:identifier])
+            for (NSString *identifier in identifiers)
             {
-                continue;
+                if ([_identifierList containsObject:identifier])
+                {
+                    continue;
+                }
+                
+                [_identifierList addObject:identifier];
             }
-
-            [_identifierList addObject:identifier];
         }
     }
 
@@ -254,7 +257,9 @@
         else
         {
             // 没有连接则直接清空
-            [_identifierList removeAllObjects];
+            @synchronized (_identifierList) {
+                [_identifierList removeAllObjects];
+            }
         }
 
         _connector = nil;
@@ -537,19 +542,22 @@
     // 包格式：Cellet标识串|标签
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        for (NSString *identifier in _identifierList)
+        @synchronized (_identifierList)
         {
-            char ptag[] = TPT_REQUEST;
-            CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:3 major:1 minor:0];
-
-            [packet appendSubsegment:[identifier dataUsingEncoding:NSUTF8StringEncoding]];
-            [packet appendSubsegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
-
-            NSData *data = [CCPacket pack:packet];
-            if (nil != data)
+            for (NSString *identifier in _identifierList)
             {
-                CCMessage *message = [CCMessage messageWithData:data];
-                [session write:message];
+                char ptag[] = TPT_REQUEST;
+                CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:3 major:1 minor:0];
+                
+                [packet appendSubsegment:[identifier dataUsingEncoding:NSUTF8StringEncoding]];
+                [packet appendSubsegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
+                
+                NSData *data = [CCPacket pack:packet];
+                if (nil != data)
+                {
+                    CCMessage *message = [CCMessage messageWithData:data];
+                    [session write:message];
+                }
             }
         }
     });
@@ -569,9 +577,12 @@
 
     if (nil != [CCTalkService sharedSingleton].listener)
     {
-        for (NSString *celletIdentifier in _identifierList)
+        @synchronized (_identifierList)
         {
-            [[CCTalkService sharedSingleton].listener contacted:celletIdentifier tag:[_remoteTag getAsString]];
+            for (NSString *celletIdentifier in _identifierList)
+            {
+                [[CCTalkService sharedSingleton].listener contacted:celletIdentifier tag:[_remoteTag getAsString]];
+            }
         }
     }
 
@@ -686,9 +697,12 @@
     self.state = CCSpeakerStateHangUp;
 
     // 通知退出
-    for (NSString *identifier in _identifierList)
+    @synchronized (_identifierList)
     {
-        [self fireQuitted:identifier];
+        for (NSString *identifier in _identifierList)
+        {
+            [self fireQuitted:identifier];
+        }
     }
 }
 //------------------------------------------------------------------------------
@@ -715,9 +729,12 @@
         [CCLogger i:@"Connect end."];
 
         // 通知退出
-        for (NSString *identifier in _identifierList)
+        @synchronized (_identifierList)
         {
-            [self fireQuitted:identifier];
+            for (NSString *identifier in _identifierList)
+            {
+                [self fireQuitted:identifier];
+            }
         }
     }
     else if (errorCode == CCMessageErrorConnectTimeout)
