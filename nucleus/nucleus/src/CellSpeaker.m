@@ -729,13 +729,12 @@
         [CCLogger i:@"Connect end."];
 
         // 通知退出
-        @synchronized (_identifierList)
+        NSArray *array = [NSArray arrayWithArray:_identifierList];
+        for (NSString *identifier in _identifierList)
         {
-            for (NSString *identifier in _identifierList)
-            {
-                [self fireQuitted:identifier];
-            }
+            [self fireQuitted:identifier];
         }
+        array = nil;
     }
     else if (errorCode == CCMessageErrorConnectTimeout)
     {
