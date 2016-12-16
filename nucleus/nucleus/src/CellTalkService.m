@@ -236,7 +236,7 @@ static CCTalkService *sharedInstance = nil;
 //------------------------------------------------------------------------------
 - (BOOL)call:(NSArray *)identifiers hostAddress:(CCInetAddress *)address
 {
-    CCTalkCapacity *capacity = [[CCTalkCapacity alloc]init];
+    CCTalkCapacity *capacity = [[CCTalkCapacity alloc] init];
     return [self call:identifiers hostAddress:address capacity:capacity];
 }
 //------------------------------------------------------------------------------

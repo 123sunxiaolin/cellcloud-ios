@@ -257,7 +257,8 @@
         else
         {
             // 没有连接则直接清空
-            @synchronized (_identifierList) {
+            @synchronized (_identifierList)
+            {
                 [_identifierList removeAllObjects];
             }
         }
@@ -697,13 +698,12 @@
     self.state = CCSpeakerStateHangUp;
 
     // 通知退出
-    @synchronized (_identifierList)
+    NSArray *array = [NSArray arrayWithArray:_identifierList];
+    for (NSString *identifier in array)
     {
-        for (NSString *identifier in _identifierList)
-        {
-            [self fireQuitted:identifier];
-        }
+        [self fireQuitted:identifier];
     }
+    array = nil;
 }
 //------------------------------------------------------------------------------
 - (void)messageReceived:(CCSession *)session message:(CCMessage *)message

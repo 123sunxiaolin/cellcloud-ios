@@ -82,7 +82,7 @@
 //------------------------------------------------------------------------------
 + (NSData *)serialize:(CCTalkCapacity *)capacity
 {
-    NSString *str = [[NSString alloc] initWithFormat:@"1|%@|%d|%.0f"
+    NSString *str = [[NSString alloc] initWithFormat:@"2|%@|%d|%.0f|150"
                      , capacity.secure ? @"Y" : @"N"
                      , capacity.retryAttempts
                      , capacity.retryInterval * 1000];
