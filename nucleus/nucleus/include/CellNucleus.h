@@ -54,4 +54,12 @@
  */
 - (void)shutdown;
 
+/** 休眠内核。
+ */
+- (void)sleep;
+
+/** 唤醒内核。
+ */
+- (void)wakeup;
+
 @end

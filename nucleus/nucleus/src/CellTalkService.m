@@ -111,6 +111,8 @@ static CCTalkService *sharedInstance = nil;
 - (void)shutdown
 {
     [self stopDaemon];
+
+    [[CCDialectEnumerator sharedSingleton] shutdownAll];
 }
 
 #pragma mark - Common Methods
@@ -143,8 +145,6 @@ static CCTalkService *sharedInstance = nil;
         [_daemonTimer invalidate];
         _daemonTimer = nil;
     }
-    
-    [[CCDialectEnumerator sharedSingleton] shutdownAll];
 }
 //------------------------------------------------------------------------------
 - (void)handleDaemonTimer:(NSTimer *)timer

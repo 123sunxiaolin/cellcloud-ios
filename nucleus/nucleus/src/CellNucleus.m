@@ -143,6 +143,20 @@ static CCNucleus *sharedInstance = nil;
     [[CCTalkService sharedSingleton] shutdown];
 }
 //------------------------------------------------------------------------------
+- (void)sleep
+{
+    [CCLogger d:@"*-*-* Cell Sleep *-*-*"];
+
+    [[CCTalkService sharedSingleton] stopDaemon];
+}
+//------------------------------------------------------------------------------
+- (void)wakeup
+{
+    [CCLogger d:@"*-*-* Cell Wakeup *-*-*"];
+
+    [[CCTalkService sharedSingleton] startDaemon];
+}
+//------------------------------------------------------------------------------
 - (void)setBackgroundActiveEnabled:(BOOL)enabled
 {
     if (enabled)
