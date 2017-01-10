@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -48,9 +48,9 @@
 {
 @private
     char _tag[PSL_TAG + 1];
-    UInt16 _major;
-    UInt16 _minor;
-    UInt16 _sn;
+    uint _major;
+    uint _minor;
+    uint _sn;
 
     NSData *_body;
     NSMutableArray *_subsegments;
@@ -58,23 +58,30 @@
 
 /**
  */
-- (id)initWithTag:(char *)tag sn:(UInt16)sn
-            major:(UInt16)major minor:(UInt16)minor;
+- (id)initWithTag:(char *)tag sn:(uint)sn
+            major:(uint)major minor:(uint)minor;
 
 /**
  */
-- (UInt16)getTag:(char *)tag;
+- (uint)getTag:(char *)tag;
 /**
  */
 - (BOOL)compareTag:(const char *)other;
 
 /**
  */
-- (void)setVersion:(UInt16)major minor:(UInt16)minor;
+- (uint)getMajor;
+/**
+ */
+- (uint)getMinor;
 
 /**
  */
-- (void)setSN:(UInt16)sn;
+- (void)setVersion:(uint)major minor:(uint)minor;
+
+/**
+ */
+- (void)setSN:(uint)sn;
 
 /**
  */
@@ -90,6 +97,10 @@
 /**
  */
 - (NSData *)getSubsegment:(NSUInteger)index;
+
+/**
+ */
+- (NSUInteger)numSubsegments;
 
 
 #pragma mark Pack/Unpack Methods

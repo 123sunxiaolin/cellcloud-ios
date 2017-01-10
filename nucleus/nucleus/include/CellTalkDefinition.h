@@ -72,15 +72,10 @@
 #define TPT_HEARTBEAT_B4 'B'
 #define TPT_HEARTBEAT {TPT_B1, TPT_B2, TPT_HEARTBEAT_B3, TPT_HEARTBEAT_B4}
 
-// 挂起指定的 Cellet 服务
-//#define TPT_SUSPEND_B3 'S'
-//#define TPT_SUSPEND_B4 'U'
-//#define TPT_SUSPEND {TPT_B1, TPT_B2, TPT_SUSPEND_B3, TPT_SUSPEND_B4}
-
-// 恢复指定的 Cellet 服务
-//#define TPT_RESUME_B3 'R'
-//#define TPT_RESUME_B4 'E'
-//#define TPT_RESUME {TPT_B1, TPT_B2, TPT_RESUME_B3, TPT_RESUME_B4}
+// 快速握手
+#define TPT_QUICK_B3 'Q'
+#define TPT_QUICK_B4 'K'
+#define TPT_QUICK {TPT_B1, TPT_B2, TPT_QUICK_B3, TPT_QUICK_B4}
 
 
 /// 状态码

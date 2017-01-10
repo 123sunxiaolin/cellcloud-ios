@@ -36,7 +36,7 @@
     if ((self = [super init]))
     {
         memset(_tag, 0x0, sizeof(_tag));
-        _major = 0;
+        _major = 1;
         _minor = 0;
         _sn = 1;
     }
@@ -44,7 +44,7 @@
     return self;
 }
 //------------------------------------------------------------------------------
-- (id)initWithTag:(char *)tag sn:(UInt16)sn major:(UInt16)major minor:(UInt16)minor
+- (id)initWithTag:(char *)tag sn:(uint)sn major:(uint)major minor:(uint)minor
 {
     if ((self = [super init]))
     {
@@ -59,7 +59,7 @@
     return self;
 }
 //------------------------------------------------------------------------------
-- (UInt16)getTag:(char *)tag
+- (uint)getTag:(char *)tag
 {
     memcpy(tag, _tag, PSL_TAG);
     return PSL_TAG;
@@ -67,7 +67,7 @@
 //------------------------------------------------------------------------------
 - (BOOL)compareTag:(const char *)other
 {
-    for (UInt16 i = 0; i < PSL_TAG; ++i)
+    for (uint i = 0; i < PSL_TAG; ++i)
     {
         if (_tag[i] != other[i])
             return FALSE;
@@ -76,13 +76,23 @@
     return TRUE;
 }
 //------------------------------------------------------------------------------
-- (void)setVersion:(UInt16)major minor:(UInt16)minor
+- (uint)getMajor
+{
+    return _major;
+}
+//------------------------------------------------------------------------------
+- (uint)getMinor
+{
+    return _minor;
+}
+//------------------------------------------------------------------------------
+- (void)setVersion:(uint)major minor:(uint)minor
 {
     _major = major;
     _minor = minor;
 }
 //------------------------------------------------------------------------------
-- (void)setSN:(UInt16)sn
+- (void)setSN:(uint)sn
 {
     _sn = sn;
 }
@@ -120,6 +130,16 @@
     }
 
     return [_subsegments objectAtIndex:index];
+}
+//------------------------------------------------------------------------------
+- (NSUInteger)numSubsegments
+{
+    if (nil == _subsegments)
+    {
+        return 0;
+    }
+
+    return _subsegments.count;
 }
 
 
@@ -221,19 +241,19 @@
     // Version
     range = NSMakeRange(PSL_TAG, 2);
     [data getBytes:szBuf range:range];
-    UInt16 minor = atoi(szBuf);
+    uint minor = atoi(szBuf);
 
     memset(szBuf, 0x0, sizeof(szBuf));
     range = NSMakeRange(PSL_TAG + 2, 2);
     [data getBytes:szBuf range:range];
-    UInt16 major = atoi(szBuf);
+    uint major = atoi(szBuf);
 
     // SN
     memset(szBuf, 0x0, sizeof(szBuf));
     range = NSMakeRange(PSL_TAG + PSL_VERSION, PSL_SN);
     [data getBytes:szBuf range:range];
-    UInt16 sn = atoi(szBuf);
-    
+    uint sn = atoi(szBuf);
+
     NSUInteger cursor = PSL_TAG + PSL_VERSION + PSL_SN;
     if (cursor > data.length)
     {

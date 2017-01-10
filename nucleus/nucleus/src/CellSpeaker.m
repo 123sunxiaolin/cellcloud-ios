@@ -67,6 +67,9 @@
 /// 处理质询命令
 - (void)processInterrogate:(CCPacket *)packet session:(CCSession *)session;
 
+/// 处理快速握手
+- (void)processQuick:(CCPacket *)packet session:(CCSession *)session;
+
 /// 处理进行完校验后操作
 - (void)processCheck:(CCPacket *)packet session:(CCSession *)session;
 
@@ -81,6 +84,9 @@
 
 /// 协商能力
 - (void)requestConsult;
+
+/// 请求 Quick 握手
+- (void)requestQuick:(CCPacket *)packet session:(CCSession *)session;
 
 ///
 - (void)fireContacted:(NSString *)celletIdentifier;
@@ -338,6 +344,10 @@
     {
         [self processDialogue:packet session:session];
     }
+    else if (tag[2] == TPT_QUICK_B3 && tag[3] == TPT_QUICK_B4)
+    {
+        [self processQuick:packet session:session];
+    }
     else if (tag[2] == TPT_REQUEST_B3 && tag[3] == TPT_REQUEST_B4)
     {
         [self processRequest:packet session:session];
@@ -352,7 +362,16 @@
     }
     else if (tag[2] == TPT_INTERROGATE_B3 && tag[3] == TPT_INTERROGATE_B4)
     {
-        [self processInterrogate:packet session:session];
+        if ([packet getMajor] == 1 && [packet getMinor] == 1)
+        {
+            [CCLogger d:@"Use 'QUICK' handshake"];
+
+            [self requestQuick:packet session:session];
+        }
+        else
+        {
+            [self processInterrogate:packet session:session];
+        }
     }
 }
 //------------------------------------------------------------------------------
@@ -386,6 +405,73 @@
     {
         CCMessage *message = [CCMessage messageWithData:data];
         [session write:message];
+    }
+}
+//------------------------------------------------------------------------------
+- (void)processQuick:(CCPacket *)packet session:(CCSession *)session
+{
+    // 包格式：状态码|源标签|能力描述序列化数据|CelletIdentifiers
+
+    // 返回码
+    NSData *data = [packet getSubsegment:0];
+    char sc[4] = {0x0};
+    [data getBytes:sc length:data.length];
+
+    char success[] = CCTS_SUCCESS;
+    if (sc[0] == success[0] && sc[1] == success[1]
+        && sc[2] == success[2] && sc[3] == success[3])
+    {
+        NSData *tagdata = [packet getSubsegment:1];
+        char tag[64] = {0x0};
+        [tagdata getBytes:tag length:tagdata.length];
+
+        // 设置对端标签
+        _remoteTag = [[CCNucleusTag alloc] initWithString:[[NSString alloc] initWithFormat:@"%s", tag]];
+
+        // 更新能力
+        CCTalkCapacity *newCapacity = [CCTalkCapacity deserialize:[packet getSubsegment:2]];
+        if (nil != newCapacity)
+        {
+            if (nil == self.capacity)
+            {
+                self.capacity = newCapacity;
+            }
+            else
+            {
+                self.capacity.secure = newCapacity.secure;
+                self.capacity.retryAttempts = newCapacity.retryAttempts;
+                self.capacity.retryInterval = newCapacity.retryInterval;
+            }
+        }
+
+        // 变更状态
+        self.state = CCSpeakerStateCalled;
+
+        for (NSUInteger i = 3, size = [packet numSubsegments]; i < size; ++i)
+        {
+            NSString *identifier = [[NSString alloc] initWithData:[packet getSubsegment:i] encoding:NSUTF8StringEncoding];
+            [CCLogger d:@"Cellet %@ has called at %@:%d", identifier,
+                        [[session getAddress] getHost], [[session getAddress] getPort]];
+
+            // 调用回调
+            [self fireContacted:identifier];
+        }
+    }
+    else
+    {
+        // 变更状态
+        self.state = CCSpeakerStateHangUp;
+        
+        CCTalkServiceFailure *failure = [[CCTalkServiceFailure alloc]
+                                         initWithSource:CCFailureNotFoundCellet
+                                         file:__FILE__
+                                         line:__LINE__
+                                         function:__FUNCTION__];
+        failure.sourceCelletIdentifiers = _identifierList;
+        [self fireFailed:failure];
+        
+        // 关闭连接
+        [_connector disconnect];
     }
 }
 //------------------------------------------------------------------------------
@@ -562,6 +648,56 @@
             }
         }
     });
+}
+//------------------------------------------------------------------------------
+- (void)requestQuick:(CCPacket *)packet session:(CCSession *)session
+{
+    char ciphertext[32] = {0x0};
+    NSData *ctData = [packet getSubsegment:0];
+    [ctData getBytes:ciphertext length:ctData.length];
+    char key[16] = {0x0};
+    NSData *kData = [packet getSubsegment:1];
+    [kData getBytes:key length:kData.length];
+
+    // 保存密钥
+    _secretKey = nil;
+    _secretKey = [[NSData alloc] initWithBytes:key length:kData.length];
+
+    // 解密
+    char plaintext[32] = {0x0};
+    int plen = [[CCCryptology sharedSingleton] simpleDecrypt:plaintext
+                                                        text:ciphertext length:(int)ctData.length key:key];
+
+    // 协商能力
+    if (nil == self.capacity)
+    {
+        self.capacity = [[CCTalkCapacity alloc] init];
+    }
+
+    // 回送数据进行快速握手
+    // 包格式：明文|源标签|能力描述序列化数据|CelletIdentifiers
+    char tag[] = TPT_QUICK;
+    CCPacket *response = [[CCPacket alloc] initWithTag:tag sn:2 major:1 minor:0];
+    [response appendSubsegment:[NSData dataWithBytes:plaintext length:plen]];
+    [response appendSubsegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
+    [response appendSubsegment:[CCTalkCapacity serialize:self.capacity]];
+
+    @synchronized (_identifierList)
+    {
+        for (NSString *identifier in _identifierList)
+        {
+            [response appendSubsegment:[identifier dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+    }
+
+    NSData *data = [CCPacket pack:response];
+    if (nil != data)
+    {
+        CCMessage *message = [CCMessage messageWithData:data];
+        [session write:message];
+    }
+
+    response = nil;
 }
 //------------------------------------------------------------------------------
 - (void)handleContactedTimer:(NSTimer *)timer
