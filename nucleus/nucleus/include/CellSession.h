@@ -30,6 +30,13 @@
  */
 @interface CCSession : NSObject
 
+/**
+ * 发送数据时的超时时间，单位：秒。
+ */
+@property (nonatomic, assign) NSTimeInterval writeTimeout;
+
+@property (nonatomic, strong) CCMessage *lastMessage;
+
 /** 标准初始化。
  */
 - (id)initWithService:(CCMessageService *)service address:(CCInetAddress *)address;

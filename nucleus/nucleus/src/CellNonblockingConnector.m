@@ -208,11 +208,11 @@
         memcpy(buf + _headLength + message.length, _tailMark, _tailLength);
         NSData *data = [NSData dataWithBytes:buf length:_headLength + _tailLength + message.length];
         free(buf);
-        [_asyncSocket writeData:data withTimeout:60 tag:[message.tag longValue]];
+        [_asyncSocket writeData:data withTimeout:session.writeTimeout tag:[message.tag longValue]];
     }
     else
     {
-        [_asyncSocket writeData:message.data withTimeout:60 tag:[message.tag longValue]];
+        [_asyncSocket writeData:message.data withTimeout:session.writeTimeout tag:[message.tag longValue]];
     }
 
     // 回调消息发送
@@ -242,6 +242,8 @@
     {
         [_delegate sessionDestroyed:_session];
     }
+
+    [_writeQueue removeAllObjects];
 }
 //------------------------------------------------------------------------------
 - (void)fireSessionOpened
@@ -495,15 +497,29 @@
 }
 //------------------------------------------------------------------------------
 - (NSTimeInterval)socket:(GCDAsyncSocket *)sock
-shouldTimeoutReadWithTag:(long)tag
+shouldTimeoutWriteWithTag:(long)tag
                  elapsed:(NSTimeInterval)elapsed
                bytesDone:(NSUInteger)length
 {
+    NSString *key = [[NSNumber numberWithLong:tag] stringValue];
+    CCMessage *message = [_writeQueue objectForKey:key];
+    if (nil != message)
+    {
+        // 回调写数据超时
+        _session.lastMessage = message;
+        [self fireErrorOccurred:CCMessageErrorWriteTimeout];
+
+        // 删除
+        [_writeQueue removeObjectForKey:key];
+    }
+
+    key = nil;
+
     return 0;
 }
 //------------------------------------------------------------------------------
 - (NSTimeInterval)socket:(GCDAsyncSocket *)sock
-shouldTimeoutWriteWithTag:(long)tag
+shouldTimeoutReadWithTag:(long)tag
                  elapsed:(NSTimeInterval)elapsed
                bytesDone:(NSUInteger)length
 {

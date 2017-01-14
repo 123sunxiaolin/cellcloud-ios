@@ -309,7 +309,7 @@
 //------------------------------------------------------------------------------
 - (BOOL)isCalled
 {
-    return self.state == CCSpeakerStateCalled;
+    return (self.state == CCSpeakerStateCalled) && [_connector isConnected];
 }
 //------------------------------------------------------------------------------
 - (BOOL)heartbeat

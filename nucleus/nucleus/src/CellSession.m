@@ -43,6 +43,9 @@
 
 @implementation CCSession
 
+@synthesize writeTimeout = _writeTimeout;
+@synthesize lastMessage = _lastMessage;
+
 //------------------------------------------------------------------------------
 - (id)initWithService:(CCMessageService *)service address:(CCInetAddress *)address
 {
@@ -51,6 +54,7 @@
         _service = service;
         _address = address;
         _id = [CCUtil randomLong];
+        _writeTimeout = 5.0;
         _secretKey = NULL;
         _keyLength = 0;
     }
@@ -66,6 +70,8 @@
         _secretKey = NULL;
         _keyLength = 0;
     }
+
+    _lastMessage = nil;
 }
 //------------------------------------------------------------------------------
 - (long)getId
