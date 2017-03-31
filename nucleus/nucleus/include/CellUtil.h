@@ -50,6 +50,7 @@
  */
 + (NSTimeInterval)convertDataToTimeInterval:(NSData *)data;
 
++ (unsigned int)shortToBytes:(char *)output input:(short)input;
 
 + (unsigned int)intToBytes:(char *)output input:(int)input;
 
@@ -60,6 +61,8 @@
 + (unsigned int)doubleToBytes:(char *)output input:(double)input;
 
 + (unsigned int)boolToBytes:(char *)output input:(BOOL)input;
+
++ (short)bytesToShort:(char *)input;
 
 + (int)bytesToInt:(char *)input;
 

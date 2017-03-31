@@ -289,10 +289,10 @@
 
         // 封装数据包
         char ptag[] = TPT_DIALOGUE;
-        CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:99 major:1 minor:0];
-        [packet appendSubsegment:stream];
-        [packet appendSubsegment:[[[CCNucleus sharedSingleton].tag getAsString] dataUsingEncoding:NSUTF8StringEncoding]];
-        [packet appendSubsegment:[identifier dataUsingEncoding:NSUTF8StringEncoding]];
+        CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:99 major:2 minor:0];
+        [packet appendSegment:stream];
+        [packet appendSegment:[[[CCNucleus sharedSingleton].tag getAsString] dataUsingEncoding:NSUTF8StringEncoding]];
+        [packet appendSegment:[identifier dataUsingEncoding:NSUTF8StringEncoding]];
 
         NSData *data = [CCPacket pack:packet];
         if (nil != data)
@@ -322,7 +322,7 @@
     }
     // 心跳包（无包体）
     char ptag[] = TPT_HEARTBEAT;
-    CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:9 major:1 minor:0];
+    CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:9 major:2 minor:0];
     NSData *data = [CCPacket pack:packet];
     if (nil != data)
     {
@@ -379,10 +379,10 @@
 {
     // 包格式：密文|密钥
     char ciphertext[32] = {0x0};
-    NSData *ctData = [packet getSubsegment:0];
+    NSData *ctData = [packet getSegment:0];
     [ctData getBytes:ciphertext length:ctData.length];
     char key[16] = {0x0};
-    NSData *kData = [packet getSubsegment:1];
+    NSData *kData = [packet getSegment:1];
     [kData getBytes:key length:kData.length];
 
     // 保存密钥
@@ -396,9 +396,9 @@
 
     // 回送数据进行服务器验证
     char tag[] = TPT_CHECK;
-    CCPacket *response = [[CCPacket alloc] initWithTag:tag sn:2 major:1 minor:0];
-    [response appendSubsegment:[NSData dataWithBytes:plaintext length:plen]];
-    [response appendSubsegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
+    CCPacket *response = [[CCPacket alloc] initWithTag:tag sn:2 major:2 minor:0];
+    [response appendSegment:[NSData dataWithBytes:plaintext length:plen]];
+    [response appendSegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
 
     NSData *data = [CCPacket pack:response];
     if (nil != data)
@@ -413,7 +413,7 @@
     // 包格式：状态码|源标签|能力描述序列化数据|CelletIdentifiers
 
     // 返回码
-    NSData *data = [packet getSubsegment:0];
+    NSData *data = [packet getSegment:0];
     char sc[4] = {0x0};
     [data getBytes:sc length:data.length];
 
@@ -421,7 +421,7 @@
     if (sc[0] == success[0] && sc[1] == success[1]
         && sc[2] == success[2] && sc[3] == success[3])
     {
-        NSData *tagdata = [packet getSubsegment:1];
+        NSData *tagdata = [packet getSegment:1];
         char tag[64] = {0x0};
         [tagdata getBytes:tag length:tagdata.length];
 
@@ -429,7 +429,7 @@
         _remoteTag = [[CCNucleusTag alloc] initWithString:[[NSString alloc] initWithFormat:@"%s", tag]];
 
         // 更新能力
-        CCTalkCapacity *newCapacity = [CCTalkCapacity deserialize:[packet getSubsegment:2]];
+        CCTalkCapacity *newCapacity = [CCTalkCapacity deserialize:[packet getSegment:2]];
         if (nil != newCapacity)
         {
             if (nil == self.capacity)
@@ -439,17 +439,17 @@
             else
             {
                 self.capacity.secure = newCapacity.secure;
-                self.capacity.retryAttempts = newCapacity.retryAttempts;
-                self.capacity.retryInterval = newCapacity.retryInterval;
+                self.capacity.retry = newCapacity.retry;
+                self.capacity.retryDelay = newCapacity.retryDelay;
             }
         }
 
         // 变更状态
         self.state = CCSpeakerStateCalled;
 
-        for (NSUInteger i = 3, size = [packet numSubsegments]; i < size; ++i)
+        for (NSUInteger i = 3, size = [packet numSegments]; i < size; ++i)
         {
-            NSString *identifier = [[NSString alloc] initWithData:[packet getSubsegment:i] encoding:NSUTF8StringEncoding];
+            NSString *identifier = [[NSString alloc] initWithData:[packet getSegment:i] encoding:NSUTF8StringEncoding];
             [CCLogger d:@"Cellet %@ has called at %@:%d", identifier,
                         [[session getAddress] getHost], [[session getAddress] getPort]];
 
@@ -478,7 +478,7 @@
 - (void)processCheck:(CCPacket *)packet session:(CCSession *)session
 {
     // 包格式：成功码|内核标签
-    NSData *tagdata = [packet getSubsegment:1];
+    NSData *tagdata = [packet getSegment:1];
     char tag[64] = {0x0};
     [tagdata getBytes:tag length:tagdata.length];
 
@@ -496,7 +496,7 @@
     // 失败格式：请求方标签|失败码
 
     // 返回码
-    NSData *data = [packet getSubsegment:1];
+    NSData *data = [packet getSegment:1];
     char sc[4] = {0x0};
     [data getBytes:sc length:data.length];
     
@@ -504,7 +504,7 @@
     if (sc[0] == success[0] && sc[1] == success[1]
         && sc[2] == success[2] && sc[3] == success[3])
     {
-        NSString *identifier = [[NSString alloc] initWithData:[packet getSubsegment:2] encoding:NSUTF8StringEncoding];
+        NSString *identifier = [[NSString alloc] initWithData:[packet getSegment:2] encoding:NSUTF8StringEncoding];
         [CCLogger d:@"Cellet %@ has called at %@:%d", identifier,
             [[session getAddress] getHost], [[session getAddress] getPort]];
 
@@ -535,8 +535,8 @@
 - (void)processDialogue:(CCPacket *)packet session:(CCSession *)session
 {
     // 包格式：原语序列|Cellet
-    NSData *data = [packet getSubsegment:0];
-    NSString *celletIdentifier = [[NSString alloc] initWithData:[packet getSubsegment:1] encoding:NSUTF8StringEncoding];
+    NSData *data = [packet getSegment:0];
+    NSString *celletIdentifier = [[NSString alloc] initWithData:[packet getSegment:1] encoding:NSUTF8StringEncoding];
 
     CCPrimitive *primitive = [CCPrimitive read:data andTag:[_remoteTag getAsString]];
     if (nil != primitive)
@@ -572,7 +572,7 @@
 {
     // 包格式：源标签|能力描述序列化串
 
-    CCTalkCapacity *newCapacity = [CCTalkCapacity deserialize:[packet getSubsegment:1]];
+    CCTalkCapacity *newCapacity = [CCTalkCapacity deserialize:[packet getSegment:1]];
     if (nil == newCapacity)
     {
         // 请求 Cellet
@@ -589,15 +589,15 @@
     else
     {
         self.capacity.secure = newCapacity.secure;
-        self.capacity.retryAttempts = newCapacity.retryAttempts;
-        self.capacity.retryInterval = newCapacity.retryInterval;
+        self.capacity.retry = newCapacity.retry;
+        self.capacity.retryDelay = newCapacity.retryDelay;
     }
 
     [CCLogger w:@"Talk capacity has changed from '%@' : secure=%d attempts=%d delay=%f"
          , self.remoteTag
          , newCapacity.secure
-         , newCapacity.retryAttempts
-         , newCapacity.retryInterval];
+         , newCapacity.retry
+         , newCapacity.retryDelay];
 
     // 请求 Cellet
     [self requestCellets:session];
@@ -612,9 +612,9 @@
     
     // 包格式：源标签|能力描述序列化数据
     char ptag[] = TPT_CONSULT;
-    CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:4 major:1 minor:0];
-    [packet appendSubsegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
-    [packet appendSubsegment:[CCTalkCapacity serialize:self.capacity]];
+    CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:4 major:2 minor:0];
+    [packet appendSegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
+    [packet appendSegment:[CCTalkCapacity serialize:self.capacity]];
     
     NSData *data = [CCPacket pack:packet];
     if (nil != data)
@@ -634,10 +634,10 @@
             for (NSString *identifier in _identifierList)
             {
                 char ptag[] = TPT_REQUEST;
-                CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:3 major:1 minor:0];
+                CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:3 major:2 minor:0];
                 
-                [packet appendSubsegment:[identifier dataUsingEncoding:NSUTF8StringEncoding]];
-                [packet appendSubsegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
+                [packet appendSegment:[identifier dataUsingEncoding:NSUTF8StringEncoding]];
+                [packet appendSegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
                 
                 NSData *data = [CCPacket pack:packet];
                 if (nil != data)
@@ -653,10 +653,10 @@
 - (void)requestQuick:(CCPacket *)packet session:(CCSession *)session
 {
     char ciphertext[32] = {0x0};
-    NSData *ctData = [packet getSubsegment:0];
+    NSData *ctData = [packet getSegment:0];
     [ctData getBytes:ciphertext length:ctData.length];
     char key[16] = {0x0};
-    NSData *kData = [packet getSubsegment:1];
+    NSData *kData = [packet getSegment:1];
     [kData getBytes:key length:kData.length];
 
     // 保存密钥
@@ -677,16 +677,16 @@
     // 回送数据进行快速握手
     // 包格式：明文|源标签|能力描述序列化数据|CelletIdentifiers
     char tag[] = TPT_QUICK;
-    CCPacket *response = [[CCPacket alloc] initWithTag:tag sn:2 major:1 minor:0];
-    [response appendSubsegment:[NSData dataWithBytes:plaintext length:plen]];
-    [response appendSubsegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
-    [response appendSubsegment:[CCTalkCapacity serialize:self.capacity]];
+    CCPacket *response = [[CCPacket alloc] initWithTag:tag sn:2 major:2 minor:0];
+    [response appendSegment:[NSData dataWithBytes:plaintext length:plen]];
+    [response appendSegment:[[[CCNucleus sharedSingleton] getTagAsString] dataUsingEncoding:NSUTF8StringEncoding]];
+    [response appendSegment:[CCTalkCapacity serialize:self.capacity]];
 
     @synchronized (_identifierList)
     {
         for (NSString *identifier in _identifierList)
         {
-            [response appendSubsegment:[identifier dataUsingEncoding:NSUTF8StringEncoding]];
+            [response appendSegment:[identifier dataUsingEncoding:NSUTF8StringEncoding]];
         }
     }
 

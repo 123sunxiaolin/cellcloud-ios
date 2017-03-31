@@ -126,6 +126,22 @@
 //------------------------------------------------------------------------------
 - (void)initTestData
 {
+    char tag[4] = {'X', 'I', 'A', 'O'};
+    CCPacket * packet = [[CCPacket alloc] initWithTag:tag sn:1 major:2 minor:0];
+    NSString * s1 = [CCUtil randomString:8];
+    [packet appendSegment:[s1 dataUsingEncoding:NSUTF8StringEncoding]];
+
+    NSData * data = [CCPacket pack:packet];
+
+    NSLog(@"length: %ld", [data length]);
+
+    CCPacket *sp = [CCPacket unpack:data];
+    NSLog(@"tag: %d", [sp compareTag:tag]);
+
+    NSData *ss1 = [sp getSegment:0];
+    NSString *seg1 = [[NSString alloc] initWithData:ss1 encoding:NSUTF8StringEncoding];
+    NSLog(@"segment1: %d", [s1 isEqualToString:seg1]);
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
         , ^{
             _helper = [[TestHelper alloc] init];
@@ -345,7 +361,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
             , ^{
                 // 连接 Cellet 服务
-                CCInetAddress *address = [[CCInetAddress alloc] initWithAddress:@"127.0.0.1" port:7000];
+                CCInetAddress *address = [[CCInetAddress alloc] initWithAddress:@"127.0.0.1" port:8000];
                 [[CCTalkService sharedSingleton] call:[NSArray arrayWithObjects:@"Dummy", nil] hostAddress:address];
             });
 }

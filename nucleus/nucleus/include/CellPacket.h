@@ -26,20 +26,30 @@
 
 #include "CellPrerequisites.h"
 
-// 包段数据长度定义。
+// 1.x 版包段数据长度定义
 #define PSL_TAG 4
 #define PSL_VERSION 4
 #define PSL_SN 4
-#define PSL_BODY_LENGTH 8
-#define PSL_SUBSEGMENT_NUM 4
-#define PSL_SUBSEGMENT_LENGTH 8
+#define PSL_PAYLOAD_LENGTH 8
+#define PSL_SEGMENT_NUM 4
+#define PSL_SEGMENT_LENGTH 8
 
-// 最大包体长度。
-#define PACKET_MAX_BODYLENGTH 262144
+// 1.x 版最大包体长度。
+#define MAX_PAYLOAD_LENGTH 262144
 
-#define PSL_BODYLENGTH_STRINGLENGTH (PSL_BODY_LENGTH + 1)
-#define PSL_SUBSEGMENTNUM_STRINGLENGTH (PSL_SUBSEGMENT_NUM + 1)
-#define PSL_SUBSEGMENTLENGTH_STRINGLENGTH (PSL_SUBSEGMENT_LENGTH + 1)
+// 1.x 版字段长度定义
+#define PSL_PAYLOADLENGTH_STRINGLENGTH (PSL_BODY_LENGTH + 1)
+#define PSL_SEGMENTNUM_STRINGLENGTH (PSL_SEGMENT_NUM + 1)
+#define PSL_SEGMENTLENGTH_STRINGLENGTH (PSL_SEGMENT_LENGTH + 1)
+
+
+// 2.x 版定义
+#define PFB_VERSION 1
+#define PFB_RES 1
+#define PFB_TAG 4
+#define PFB_SN 2
+#define PFB_SEGMENT_NUM 2
+#define PFB_SEGMENT_LENGTH 4
 
 
 /** 数据包。
@@ -47,60 +57,52 @@
 @interface CCPacket : NSObject
 {
 @private
-    char _tag[PSL_TAG + 1];
-    uint _major;
-    uint _minor;
-    uint _sn;
+    char _tag[PFB_TAG];
+    short _major;
+    short _minor;
+    short _sn;
 
-    NSData *_body;
-    NSMutableArray *_subsegments;
+    NSMutableArray *_segments;
 }
 
 /**
  */
-- (id)initWithTag:(char *)tag sn:(uint)sn
-            major:(uint)major minor:(uint)minor;
+- (id)initWithTag:(char *)tag sn:(short)sn
+            major:(short)major minor:(short)minor;
 
 /**
  */
-- (uint)getTag:(char *)tag;
+- (int)getTag:(char *)tag;
 /**
  */
 - (BOOL)compareTag:(const char *)other;
 
 /**
  */
-- (uint)getMajor;
+- (short)getMajor;
 /**
  */
-- (uint)getMinor;
+- (short)getMinor;
 
 /**
  */
-- (void)setVersion:(uint)major minor:(uint)minor;
+- (short)getSequenceNumber;
 
 /**
  */
-- (void)setSN:(uint)sn;
+- (int)getPayloadLength;
 
 /**
  */
-- (void)setBody:(NSData *)data;
-/**
- */
-- (NSData *)getBody;
+- (void)appendSegment:(NSData *)data;
 
 /**
  */
-- (void)appendSubsegment:(NSData *)data;
+- (NSData *)getSegment:(NSUInteger)index;
 
 /**
  */
-- (NSData *)getSubsegment:(NSUInteger)index;
-
-/**
- */
-- (NSUInteger)numSubsegments;
+- (NSUInteger)numSegments;
 
 
 #pragma mark Pack/Unpack Methods

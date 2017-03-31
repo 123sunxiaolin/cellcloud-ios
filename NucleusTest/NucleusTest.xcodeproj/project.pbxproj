@@ -124,10 +124,10 @@
 				44A8E7391658D5A00045026C /* TestHelper.m */,
 				448404D01615FFA700D94AB5 /* ViewController.h */,
 				448404D11615FFA700D94AB5 /* ViewController.m */,
-				447F321B161713710019234D /* Cell Cloud */,
-				448404BC1615FFA700D94AB5 /* Supporting Files */,
 				EEEC781C1B414D9900B5851D /* FileManager.h */,
 				EEEC781D1B414D9900B5851D /* FileManager.m */,
+				447F321B161713710019234D /* Cell Cloud */,
+				448404BC1615FFA700D94AB5 /* Supporting Files */,
 			);
 			path = NucleusTest;
 			sourceTree = "<group>";

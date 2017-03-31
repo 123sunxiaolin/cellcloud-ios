@@ -27,9 +27,14 @@
 #import "CellVersion.h"
 
 #define CC_MAJOR 1
-#define CC_MINOR 5
-#define CC_REVISION 4
-#define CC_NAME @"Journey"
+
+#define CC_MINOR 6
+
+#define CC_REVISION 0
+
+#define CC_NAME @"Xi"
+
+#define CC_VERSION_NUMBER 160
 
 @implementation CCVersion
 
@@ -52,6 +57,11 @@
 + (NSString *)name
 {
     return CC_NAME;
+}
+//------------------------------------------------------------------------------
++ (int)versionNumber
+{
+    return CC_VERSION_NUMBER;
 }
 
 @end

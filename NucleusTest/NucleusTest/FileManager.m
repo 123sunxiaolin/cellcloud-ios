@@ -71,19 +71,17 @@ andCelletIdentifier:(NSString *)identifier
         return NO;
     }
     
-    //TODO 断点续传
+    // TODO 断点续传
     int chunkNum = (fileLength <= CHUNK_SIZE) ? 1 : (int)floor(fileLength / CHUNK_SIZE);
     if (fileLength > CHUNK_SIZE && fileLength % CHUNK_SIZE != 0)
     {
         chunkNum += 1;
     }
-    
-    //SegmentSet
-    
+
     // 生成 Tracker
     NSString *tracker = [NSString stringWithFormat:@"%@,%@",sender, receiver];
     
-    long len = 0;
+    int len = 0;
     long processed = 0;
     int chunkIndex = 0;
     for (int i = 0; i < chunkNum; ++i)
@@ -93,7 +91,7 @@ andCelletIdentifier:(NSString *)identifier
         {
             if ((i + 1) * CHUNK_SIZE > file.length)
             {
-                len = file.length - i * CHUNK_SIZE;
+                len = (int)(file.length - i * CHUNK_SIZE);
                 subData = [file subdataWithRange:NSMakeRange(i * CHUNK_SIZE, len)];
             }
             else
@@ -124,9 +122,9 @@ andCelletIdentifier:(NSString *)identifier
     NSFileManager *fm = [NSFileManager defaultManager];
     NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *path = [documentPath stringByAppendingPathComponent:fileName];
-    
-    NSData *tmp = [[NSData alloc] initWithBase64EncodedString:dialect.data options:0];
-    [_fileData appendData:tmp];
+
+    //NSData *tmp = dialect.data;//[[NSData alloc] initWithBase64EncodedString:dialect.data options:0];
+    [_fileData appendData:dialect.data];
 
     long processed = 0;
     long total = dialect.totalLength;

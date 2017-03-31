@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -33,21 +33,27 @@
  */
 @interface CCTalkCapacity : NSObject
 
+/// 版本
+@property (nonatomic, assign) int version;
+
 /// 是否为加密会话
 @property (nonatomic, assign) BOOL secure;
 
 /// 重复尝试连接的次数
-@property (nonatomic, assign) int retryAttempts;
+@property (nonatomic, assign) int retry;
 
-/// 对话失败时，尝试重新建立会话的操作间隔
-@property (nonatomic, assign) NSTimeInterval retryInterval;
+/// 两次连接中间隔时间，单位毫秒
+@property (nonatomic, assign) NSTimeInterval retryDelay;
+
+/// 版本串号
+@property (nonatomic, assign) int versionNumber;
 
 /**
  * 构造函数
  * @param attemts 最大重连次数。
  * @param interval 重连时间间隔。
  */
-- (id)initWithRetryAttemts:(int)attemts andRetryInterval:(int)interval;
+- (id)initWithRetry:(int)retry andRetryDelay:(int)delay;
 
 /**
  * 构造函数
@@ -55,7 +61,7 @@
  * @param attemts 最大重连次数。
  * @param interval 重连时间间隔。
  */
-- (id)initWithSecure:(BOOL)secure andAttempts:(int)attemts andRetryInterval:(int)interval;
+- (id)initWithSecure:(BOOL)secure andRetry:(int)retry andRetryDelay:(int)delay;
 
 /**
  * 序列化。

@@ -25,6 +25,7 @@
  */
 
 #import "CellTalkCapacity.h"
+#import "CellVersion.h"
 
 @implementation CCTalkCapacity
 
@@ -34,59 +35,98 @@
 {
     if (self = [super init])
     {
+        // 版本
+        self.version = 2;
+
         // 默认不加密
         self.secure = FALSE;
 
-        // 默认重连次数
-        self.retryAttempts = 9;
+        // 重连次数，默认 9 次
+        self.retry = 9;
 
-        // 默认重试间隔：10 秒
-        self.retryInterval = 10;
+        // 重试延迟，默认 10 秒
+        self.retryDelay = 10;
+
+        // 版本串号
+        self.versionNumber = [CCVersion versionNumber];
     }
     return self;
 }
 //------------------------------------------------------------------------------
-- (id)initWithRetryAttemts:(int)attemts andRetryInterval:(int)interval
+- (id)initWithRetry:(int)retry andRetryDelay:(int)delay
 {
     self = [super init];
     if (self)
     {
+        // 版本
+        self.version = 2;
+
+        // 默认不加密
         self.secure = FALSE;
 
-        if (attemts == INT_MAX)
+        // 重试参数
+        if (retry == INT_MAX)
         {
-            self.retryAttempts -= 1;
+            self.retry = retry - 1;
         }
-        self.retryAttempts = attemts;
-        self.retryInterval = interval;
+        else
+        {
+            self.retry = retry;
+        }
+        self.retryDelay = delay;
+
+        // 版本串号
+        self.versionNumber = [CCVersion versionNumber];
     }
     return self;
 }
 //------------------------------------------------------------------------------
-- (id)initWithSecure:(BOOL)secure andAttempts:(int)attemts andRetryInterval:(int)interval
+- (id)initWithSecure:(BOOL)secure andRetry:(int)retry andRetryDelay:(int)delay
 {
     self = [super init];
     if (self)
     {
+        // 版本
+        self.version = 2;
+
+        // 是否加密
         self.secure = secure;
 
-        if (attemts == INT_MAX)
+        if (retry == INT_MAX)
         {
-            self.retryAttempts -= 1;
+            self.retry = retry - 1;
         }
-        self.retryAttempts = attemts;
-        self.retryInterval = interval;
+        else
+        {
+            self.retry = retry;
+        }
+        self.retryDelay = delay;
+
+        // 版本串号
+        self.versionNumber = [CCVersion versionNumber];
     }
     return self;
 }
 //------------------------------------------------------------------------------
 + (NSData *)serialize:(CCTalkCapacity *)capacity
 {
-    NSString *str = [[NSString alloc] initWithFormat:@"2|%@|%d|%.0f|150"
-                     , capacity.secure ? @"Y" : @"N"
-                     , capacity.retryAttempts
-                     , capacity.retryInterval * 1000];
-    return [str dataUsingEncoding:NSUTF8StringEncoding];
+    if (self.version == 1)
+    {
+        NSString *str = [[NSString alloc] initWithFormat:@"1|%@|%d|%.0f"
+                         , capacity.secure ? @"Y" : @"N"
+                         , capacity.retry
+                         , capacity.retryDelay * 1000];
+        return [str dataUsingEncoding:NSUTF8StringEncoding];
+    }
+    else
+    {
+        NSString *str = [[NSString alloc] initWithFormat:@"2|%@|%d|%.0f|%d"
+                         , capacity.secure ? @"Y" : @"N"
+                         , capacity.retry
+                         , capacity.retryDelay * 1000
+                         , capacity.versionNumber];
+        return [str dataUsingEncoding:NSUTF8StringEncoding];
+    }
 }
 //------------------------------------------------------------------------------
 + (CCTalkCapacity *)deserialize:(NSData *)data
@@ -98,17 +138,35 @@
         return nil;
     }
 
-    //NSString *szVersion = [items objectAtIndex:0];
-    NSString *szSecure = [items objectAtIndex:1];
-    NSString *szRetryAttempts = [items objectAtIndex:2];
-    NSString *szRetryInterval = [items objectAtIndex:3];
+    CCTalkCapacity *cap = [[CCTalkCapacity alloc] init];
 
-    CCTalkCapacity *tc = [[CCTalkCapacity alloc] init];
-    tc.secure = [szSecure isEqualToString:@"Y"] ? TRUE : FALSE;
-    tc.retryAttempts = (int) [szRetryAttempts integerValue];
-    tc.retryInterval = ((NSTimeInterval)[szRetryInterval longLongValue]) / 1000.0f;
+    // 版本
+    NSString *szVersion = [items objectAtIndex:0];
+    cap.version = [szVersion intValue];
+    if (cap.version == 1)
+    {
+        NSString *szSecure = [items objectAtIndex:1];
+        NSString *szRetry = [items objectAtIndex:2];
+        NSString *szRetryDelay = [items objectAtIndex:3];
 
-    return tc;
+        cap.secure = [szSecure isEqualToString:@"Y"] ? TRUE : FALSE;
+        cap.retry = [szRetry intValue];
+        cap.retryDelay = ((NSTimeInterval)[szRetryDelay longLongValue]) / 1000.0f;
+    }
+    else if (cap.version == 2)
+    {
+        NSString *szSecure = [items objectAtIndex:1];
+        NSString *szRetry = [items objectAtIndex:2];
+        NSString *szRetryDelay = [items objectAtIndex:3];
+        NSString *szVersionNumber = [items objectAtIndex:4];
+
+        cap.secure = [szSecure isEqualToString:@"Y"] ? TRUE : FALSE;
+        cap.retry = [szRetry intValue];
+        cap.retryDelay = ((NSTimeInterval)[szRetryDelay longLongValue]) / 1000.0f;
+        cap.versionNumber = [szVersionNumber intValue];
+    }
+
+    return cap;
 }
 
 @end

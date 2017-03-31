@@ -172,7 +172,7 @@ static CCTalkService *sharedInstance = nil;
                 if (nil != spr)
                 {
                     // 最大重连次数
-                    if (spr.retryCounts >= spr.capacity.retryAttempts)
+                    if (spr.retryCounts >= spr.capacity.retry)
                     {
                         if (!spr.retryEnd)
                         {
@@ -189,7 +189,7 @@ static CCTalkService *sharedInstance = nil;
                         spr.retryEnd = FALSE;
                     }
                     
-                    if (nil != spr.capacity && _tickTime - spr.timestamp >= spr.capacity.retryInterval)
+                    if (nil != spr.capacity && _tickTime - spr.timestamp >= spr.capacity.retryDelay)
                     {
                         [CCLogger d:@"Retry call cellet at %@:%d"
                          , spr.address.host

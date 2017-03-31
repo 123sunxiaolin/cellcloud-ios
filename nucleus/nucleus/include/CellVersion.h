@@ -46,4 +46,9 @@
  */
 + (NSString *)name;
 
+/**
+ * 版本串号。
+ */
++ (int)versionNumber;
+
 @end

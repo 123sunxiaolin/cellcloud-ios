@@ -85,6 +85,13 @@
     return [[NSString alloc] initWithBytes:data length:length encoding:NSUTF8StringEncoding];
 }
 //------------------------------------------------------------------------------
++ (unsigned int)shortToBytes:(char *)output input:(short)input
+{
+    output[0] = input & 0xff;
+    output[1] = (input & 0xff00) >> 8;
+    return 2;
+}
+//------------------------------------------------------------------------------
 + (unsigned int)intToBytes:(char *)output input:(int)input
 {
     output[0] = input & 0xff;
@@ -125,6 +132,11 @@
 {
     output[0] = input ? 1 : 0;
     return 1;
+}
+//------------------------------------------------------------------------------
++ (short)bytesToShort:(char *)input
+{
+    return (0xff & input[0]) | (0xff00 & (input[1] << 8));
 }
 //------------------------------------------------------------------------------
 + (int)bytesToInt:(char *)input
