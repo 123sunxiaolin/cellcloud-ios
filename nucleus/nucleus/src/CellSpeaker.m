@@ -62,7 +62,7 @@
 }
 
 /// 数据处理入口
-- (void)interpret:(CCSession *)session packet:(CCPacket *)packet;
+- (void)process:(CCSession *)session packet:(CCPacket *)packet;
 
 /// 处理质询命令
 - (void)processInterrogate:(CCPacket *)packet session:(CCSession *)session;
@@ -83,10 +83,10 @@
 - (void)requestCellets:(CCSession *)session;
 
 /// 协商能力
-- (void)requestConsult;
+- (void)respondConsult;
 
-/// 请求 Quick 握手
-- (void)requestQuick:(CCPacket *)packet session:(CCSession *)session;
+/// 应答 Quick 握手
+- (void)respondQuick:(CCPacket *)packet session:(CCSession *)session;
 
 ///
 - (void)fireContacted:(NSString *)celletIdentifier;
@@ -335,7 +335,7 @@
 #pragma mark - Private Method
 
 //------------------------------------------------------------------------------
-- (void)interpret:(CCSession *)session packet:(CCPacket *)packet
+- (void)process:(CCSession *)session packet:(CCPacket *)packet
 {
     char tag[PSL_TAG + 1] = {0x0};
     [packet getTag:tag];
@@ -362,11 +362,12 @@
     }
     else if (tag[2] == TPT_INTERROGATE_B3 && tag[3] == TPT_INTERROGATE_B4)
     {
-        if ([packet getMajor] == 1 && [packet getMinor] == 1)
+        if (([packet getMajor] >= 2)
+            || ([packet getMajor] == 1 && [packet getMinor] >= 1))
         {
             [CCLogger d:@"Use 'QUICK' handshake"];
 
-            [self requestQuick:packet session:session];
+            [self respondQuick:packet session:session];
         }
         else
         {
@@ -486,7 +487,7 @@
     _remoteTag = [[CCNucleusTag alloc] initWithString:[[NSString alloc] initWithFormat:@"%s", tag]];
 
     // 请求进行协商
-    [self requestConsult];
+    [self respondConsult];
 }
 //------------------------------------------------------------------------------
 - (void)processRequest:(CCPacket *)packet session:(CCSession *)session
@@ -603,7 +604,7 @@
     [self requestCellets:session];
 }
 //------------------------------------------------------------------------------
-- (void)requestConsult
+- (void)respondConsult
 {
     if (nil == self.capacity)
     {
@@ -650,7 +651,7 @@
     });
 }
 //------------------------------------------------------------------------------
-- (void)requestQuick:(CCPacket *)packet session:(CCSession *)session
+- (void)respondQuick:(CCPacket *)packet session:(CCSession *)session
 {
     char ciphertext[32] = {0x0};
     NSData *ctData = [packet getSegment:0];
@@ -847,7 +848,7 @@
     CCPacket *packet = [CCPacket unpack:message.data];
     if (nil != packet)
     {
-        [self interpret:session packet:packet];
+        [self process:session packet:packet];
     }   
 }
 //------------------------------------------------------------------------------
