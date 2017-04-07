@@ -178,20 +178,17 @@
     if (CCSpeakerStateCalling == self.state)
     {
         // 正在 Call 返回 false
-        return FALSE;
+        return NO;
     }
 
     if (nil != identifiers)
     {
         @synchronized (_identifierList)
         {
+            [_identifierList removeAllObjects];
+
             for (NSString *identifier in identifiers)
             {
-                if ([_identifierList containsObject:identifier])
-                {
-                    continue;
-                }
-                
                 [_identifierList addObject:identifier];
             }
         }
@@ -200,7 +197,7 @@
     if (_identifierList.count == 0)
     {
         [CCLogger e:@"Can not find any cellets to call in param 'identifiers'."];
-        return FALSE;
+        return NO;
     }
 
     if (nil == _connector)
@@ -235,7 +232,7 @@
 //------------------------------------------------------------------------------
 - (BOOL)recall
 {
-    return [self call:_identifierList];
+    return [self call:nil];
 }
 
 //------------------------------------------------------------------------------

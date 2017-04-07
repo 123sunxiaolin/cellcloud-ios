@@ -242,14 +242,26 @@ static CCTalkService *sharedInstance = nil;
 //------------------------------------------------------------------------------
 - (BOOL)call:(NSArray *)identifiers hostAddress:(CCInetAddress *)address capacity:(CCTalkCapacity *)capacity
 {
+    __block BOOL contains = YES;
+
     for (CCSpeaker *speaker in _speakers)
     {
         for (NSString *identifier in identifiers)
         {
-            if ([speaker.identifiers containsObject:identifier])
+            contains = YES;
+
+            [speaker.identifiers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj isEqualToString:identifier])
+                {
+                    // 列表里已经有对应的 Cellet，不允许再次 Call
+                    contains = NO;
+                    *stop = YES;
+                }
+            }];
+
+            if (NO == contains)
             {
-                // 列表里已经有对应的 Cellet，不允许再次 Call
-                return FALSE;
+                return NO;
             }
         }
     }
@@ -280,12 +292,20 @@ static CCTalkService *sharedInstance = nil;
 //------------------------------------------------------------------------------
 - (void)hangUp:(NSString *)identifier
 {
-    CCSpeaker *current = nil;
+    __block CCSpeaker *current = nil;
+
     for (CCSpeaker *speaker in _speakers)
     {
-        if ([speaker.identifiers containsObject:identifier])
+        [speaker.identifiers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isEqualToString:identifier])
+            {
+                current = speaker;
+                *stop = YES;
+            }
+        }];
+
+        if (nil != current)
         {
-            current = speaker;
             break;
         }
     }
@@ -300,11 +320,13 @@ static CCTalkService *sharedInstance = nil;
         {
             for (CCSpeaker *speaker in _lostSpeakers)
             {
-                if ([speaker.identifiers containsObject:identifier])
-                {
-                    [_lostSpeakers removeObject:speaker];
-                    break;
-                }
+                [speaker.identifiers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj isEqualToString:identifier])
+                    {
+                        [_lostSpeakers removeObject:speaker];
+                        *stop = YES;
+                    }
+                }];
             }
         }
     }
@@ -317,19 +339,27 @@ static CCTalkService *sharedInstance = nil;
 //------------------------------------------------------------------------------
 - (BOOL)talk:(NSString *)identifier primitive:(CCPrimitive *)primitive
 {
-    CCSpeaker *speaker = nil;
+    __block CCSpeaker *speaker = nil;
+
     for (CCSpeaker *s in _speakers)
     {
-        if ([s.identifiers containsObject:identifier])
+        [s.identifiers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isEqualToString:identifier])
+            {
+                speaker = s;
+                *stop = YES;
+            }
+        }];
+
+        if (nil != speaker)
         {
-            speaker = s;
             break;
         }
     }
 
     if (nil == speaker)
     {
-        return FALSE;
+        return NO;
     }
 
     // 发送原语
@@ -367,13 +397,21 @@ static CCTalkService *sharedInstance = nil;
 //------------------------------------------------------------------------------
 - (BOOL)isCalled:(NSString *)identifier
 {
-    CCSpeaker *speaker = nil;
+    __block CCSpeaker *speaker = nil;
+
     @synchronized(_monitor) {
         for (CCSpeaker *s in _speakers)
         {
-            if ([s.identifiers containsObject:identifier])
+            [s.identifiers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj isEqualToString:identifier])
+                {
+                    speaker = s;
+                    *stop = YES;
+                }
+            }];
+
+            if (nil != speaker)
             {
-                speaker = s;
                 break;
             }
         }
@@ -381,7 +419,7 @@ static CCTalkService *sharedInstance = nil;
 
     if (nil == speaker)
     {
-        return FALSE;
+        return NO;
     }
 
     return [speaker isCalled];
