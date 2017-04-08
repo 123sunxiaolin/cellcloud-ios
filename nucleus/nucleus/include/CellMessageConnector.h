@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,31 +26,57 @@
 
 #import "CellMessageService.h"
 
-/** 消息连接器。
+/**
+ @brief 消息连接器。
+
+ @author Ambrose Xu
  */
 @interface CCMessageConnector : CCMessageService
 
-/// 连接地址。
+/** 连接地址。 */
 @property (nonatomic, strong, readonly) NSString *address;
-/// 连接端口。
+/** 连接端口。 */
 @property (nonatomic, assign, readonly) NSUInteger port;
 
-/** 连接对端消息接收器。 */
+/**
+ @brief 连接指定地址的消息接收器。
+
+ @param address 指定连接地址。
+ @param port 指定连接端口。
+ @return 如果连接成功返回连接的会话，否则返回 @cnil 值。
+ */
 - (CCSession *)connect:(NSString *)address port:(NSUInteger)port;
 
-/** 关闭已建立的连接。 */
+/**
+ @brief 关闭已建立的连接。
+ */
 - (void)disconnect;
 
-/** 设置连接超时。 */
+/**
+ @brief 设置连接超时。
+
+ @param timeout 指定以毫秒为单位的超时时长。
+ */
 - (void)setConnectTimeout:(NSTimeInterval)timeout;
 
-/** 返回对应的会话实例。 */
+/**
+ @brief 获得对应的会话实例。
+
+ @return 返回对应的会话实例。
+ */
 - (CCSession *)getSession;
 
-/** 是否已经连接。 */
+/**
+ @brief 是否已经连接。
+ 
+ @return 如果已经连接返回 @ctrue 。
+ */
 - (BOOL)isConnected;
 
-/** 写数据。
+/**
+ @brief 将指定的消息写入连接通道，发送给已连接的接收器。
+ 
+ @param message 指定待发送的消息。
  */
 - (void)write:(CCMessage *)message;
 

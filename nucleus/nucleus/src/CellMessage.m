@@ -27,19 +27,9 @@
 #import "CellMessage.h"
 #import "CellUtil.h"
 
-@interface CCMessage ()
-{
-@private
-    NSNumber *_tag;
-    NSData *_data;
-    NSUInteger _length;
-}
-
-@end
-
 @implementation CCMessage
 
-@synthesize tag = _tag;
+@synthesize sn = _sn;
 @synthesize data = _data;
 @synthesize length = _length;
 
@@ -53,7 +43,7 @@
 {
     if ((self = [super init]))
     {
-        _tag = [NSNumber numberWithLong:[CCUtil randomLong]];
+        _sn = [NSNumber numberWithLong:[CCUtil randomLong]];
         _data = [[NSData alloc] initWithData:data];
         _length = _data.length;
     }
@@ -65,7 +55,7 @@
 {
     if ((self = [super init]))
     {
-        _tag = [NSNumber numberWithLong:[CCUtil randomLong]];
+        _sn = [NSNumber numberWithLong:[CCUtil randomLong]];
         _data = [[NSData alloc] initWithBytes:bytes length:length];
         _length = length;
     }

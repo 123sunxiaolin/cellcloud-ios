@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2016 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -58,11 +58,13 @@
 /** 发生错误。 */
 - (void)fireErrorOccurred:(CCMessageErrorCode)errorCode;
 
+/** 加密消息。 */
 - (void)encryptMessage:(CCMessage *)message key:(const char *)key keyLength:(int)length;
-
+/** 解密消息。 */
 - (void)decryptMessage:(CCMessage *)message key:(const char *)key keyLength:(int)length;
 
 @end
+
 
 @implementation CCDatagramConnector
 
@@ -172,10 +174,10 @@
     }
 
     // 关联 Tag
-    [_writeQueue setObject:message forKey:[message.tag stringValue]];
+    [_writeQueue setObject:message forKey:[message.sn stringValue]];
 
     // 发送数据
-    [_udpSocket sendData:message.data toHost:self.address port:self.port withTimeout:-1 tag:[message.tag longValue]];
+    [_udpSocket sendData:message.data toHost:self.address port:self.port withTimeout:-1 tag:[message.sn longValue]];
 }
 //------------------------------------------------------------------------------
 - (void)write:(CCMessage *)message

@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2016 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -30,11 +30,15 @@
 #ifndef CellDatagramConnector_h
 #define CellDatagramConnector_h
 
-/** 数据报消息连接器。
+/**
+ @brief 数据报消息连接器。
  */
 @interface CCDatagramConnector : CCMessageConnector <GCDAsyncUdpSocketDelegate>
 
 /**
+ @brief 初始化连接器并指定消息委派。
+ 
+ @param delegate 消息事件委派。
  */
 - (id)init:(id<CCMessageHandler>)delegate;
 

@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -28,16 +28,24 @@
 
 @interface CCLogger : NSObject
 
-/** 记录 DEBUG 等级日志。 */
+/**
+ @brief 记录 DEBUG 等级日志。
+ */
 + (void)d:(NSString *)format, ...;
 
-/** 记录 INFO 等级日志。 */
+/**
+ @brief 记录 INFO 等级日志。
+ */
 + (void)i:(NSString *)format, ...;
 
-/** 记录 WARNING 等级日志。 */
+/**
+ @brief 记录 WARNING 等级日志。
+ */
 + (void)w:(NSString *)format, ...;
 
-/** 记录 ERROR 等级日志。 */
+/**
+ @brief 记录 ERROR 等级日志。
+ */
 + (void)e:(NSString *)format, ...;
 
 @end

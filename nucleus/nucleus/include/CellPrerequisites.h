@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -32,15 +32,23 @@
 
 #pragma mark Servie Protocol
 
-/** 标准服务接口。
- * @author Jiangwei Xu
+/**
+ @brief 标准服务接口。
+
+ @author Ambrose Xu
  */
 @protocol CCService <NSObject>
 
-/** 启动服务。 */
+/**
+ @brief 启动服务。
+ 
+ @return 如果启动成功返回 @ctrue 。
+ */
 - (BOOL)startup;
 
-/** 关闭服务。 */
+/**
+ @brief 关闭服务。
+ */
 - (void)shutdown;
 
 @end

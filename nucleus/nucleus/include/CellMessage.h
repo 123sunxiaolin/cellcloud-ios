@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,29 +26,53 @@
 
 #include "CellPrerequisites.h"
 
-/** 消息描述类。
- * @author Jiangwei Xu
+/**
+ @brief 消息描述类。
+
+ @author Ambrose Xu
  */
 @interface CCMessage : NSObject
 
-@property (nonatomic, strong, readonly) NSNumber* tag;
-@property (nonatomic, strong, readonly) NSData* data;
+/** 消息序号。 */
+@property (nonatomic, strong, readonly) NSNumber *sn;
+/** 消息数据。 */
+@property (nonatomic, strong, readonly) NSData *data;
+/** 消息数据的长度。 */
 @property (nonatomic, assign, readonly) NSUInteger length;
 
-/** 创建指定数据的消息。
+/**
+ @brief 创建指定数据的消息。
  */
 + (CCMessage *)messageWithData:(NSData *)data;
 
-/** 指定数据对象初始化。
+/**
+ @brief 指定数据对象初始化。
+
+ @param data 指定消息数据。
  */
 - (id)initWithData:(NSData *)data;
 
-/** 指定字节数组初始化。
+/**
+ @brief 指定字节数组初始化。
+
+ @param bytes 指定字节数组形式的消息数据。
+ @param length 指定数据长度。
  */
 - (id)initWithBytes:(const void *)bytes length:(NSUInteger)length;
 
+/**
+ @brief 重置消息内的数据。
+
+ @param data 指定消息数据。
+ */
 - (void)resetData:(NSData *)data;
 
+/**
+ @brief 重置消息内的数据。
+
+ @param bytes 指定字节数组形式的消息数据。
+ @param length 指定数据长度。
+ */
 - (void)resetData:(const void *)bytes length:(NSUInteger)length;
 
 @end

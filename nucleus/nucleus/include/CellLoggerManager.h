@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,48 +26,83 @@
 
 #include "CellPrerequisites.h"
 
-/** 日志等级。
+/**
+ @brief 日志等级。
  */
 typedef enum _CCLogLevel
 {
-    /// Debug
+    /// Debug 等级。
     LL_DEBUG = 1,
-    /// Info
+
+    /// Info 等级。
     LL_INFO = 3,
-    /// Warning
+
+    /// Warning 等级。
     LL_WARN = 5,
-    /// Error
+
+    /// Error 等级。
     LL_ERROR = 7
+
 } CCLogLevel;
 
 
-/** 日志事件委派。
+/**
+ @brief 日志事件委派。
  */
 @protocol CCLogDelegate <NSObject>
 
+/**
+ @brief 以 Debug 等级记录日志。
+ @param text 日志文本内容。
+ */
 - (void)logDebug:(NSString *)text;
+
+/**
+ @brief 以 Info 等级记录日志。
+ @param text 日志文本内容。
+ */
 - (void)logInfo:(NSString *)text;
+
+/**
+ @brief 以 Warning 等级记录日志。
+ @param text 日志文本内容。
+ */
 - (void)logWarn:(NSString *)text;
+
+/**
+ @brief 以 Error 等级记录日志。
+ @param text 日志文本内容。
+ */
 - (void)logError:(NSString *)text;
 
 @end // CCLogDelegate
 
 
-/** 日志管理器。
+/**
+ @brief 日志管理器。
  */
 @interface CCLoggerManager : NSObject
 
 @property (strong, nonatomic) id<CCLogDelegate> delegate;
 
-/** 返回单例。
+/**
+ @brief 返回日志管理器的单例。
  */
 + (CCLoggerManager *)sharedSingleton;
 
-/** 记录日志。
+/**
+ @brief 记录日志。
+
+ @param text 日志文本内容。
+ @param level 日志等级。
  */
 - (void)log:(NSString *)text level:(CCLogLevel)level;
 
-/** 记录日志。
+/**
+ @brief 记录日志。
+
+ @param level 日志等级。
+ @param format 日志格式化文本内容。
  */
 - (void)log:(CCLogLevel)level textFormat:(NSString *)format, ...;
 

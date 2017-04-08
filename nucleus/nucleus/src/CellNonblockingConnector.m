@@ -197,7 +197,7 @@
     }
 
     // 关联 Tag
-    [_writeQueue setObject:message forKey:[message.tag stringValue]];
+    [_writeQueue setObject:message forKey:[message.sn stringValue]];
 
     if ([self existDataMark])
     {
@@ -208,11 +208,11 @@
         memcpy(buf + _headLength + message.length, _tailMark, _tailLength);
         NSData *data = [NSData dataWithBytes:buf length:_headLength + _tailLength + message.length];
         free(buf);
-        [_asyncSocket writeData:data withTimeout:session.writeTimeout tag:[message.tag longValue]];
+        [_asyncSocket writeData:data withTimeout:session.writeTimeout tag:[message.sn longValue]];
     }
     else
     {
-        [_asyncSocket writeData:message.data withTimeout:session.writeTimeout tag:[message.tag longValue]];
+        [_asyncSocket writeData:message.data withTimeout:session.writeTimeout tag:[message.sn longValue]];
     }
 
     // 回调消息发送
