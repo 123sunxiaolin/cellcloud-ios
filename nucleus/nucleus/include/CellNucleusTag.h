@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,19 +26,23 @@
 
 #include "CellPrerequisites.h"
 
-/** 内核标签。
+/*!
+ @brief 内核标签。
  */
 @interface CCNucleusTag : NSObject
 
-/** 生成随机 UUID 。
+/*!
+ @brief 使用随机 UUID 初始化标签。
  */
 - (id)initWithRandom;
 
-/** 根据字符串生成。
+/*!
+ @brief 根据 UUID 格式的字符串初始化标签。
  */
 - (id)initWithString:(NSString *)uuid;
 
-/** 返回 UUID 字符串。
+/*!
+ @brief 返回 UUID 的字符串形式。
  */
 - (NSString *)getAsString;
 

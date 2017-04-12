@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -44,9 +44,8 @@
     NSObject *_monitor;
 
     NSMutableArray *_speakers;          /// Speaker 列表
-//    NSMutableDictionary *_speakerMap;   /// Speaker 映射关系
     NSMutableArray *_lostSpeakers;
-    NSUInteger _hbCounts;               /// Speaker 心跳计数
+    NSUInteger _hbCount;               /// Speaker 心跳计数
 }
 
 // 守护定时器处理器。
@@ -78,8 +77,7 @@ static CCTalkService *sharedInstance = nil;
     {
         _monitor = [[NSObject alloc] init];
         _speakers = [NSMutableArray array];
-//        _speakerMap = [NSMutableDictionary dictionary];
-        _hbCounts = 0;
+        _hbCount = 0;
 
         // 添加默认方言工厂
         [[CCDialectEnumerator sharedSingleton] addFactory:[[CCActionDialectFactory alloc] init]];
@@ -152,13 +150,13 @@ static CCTalkService *sharedInstance = nil;
     NSDate *date = [NSDate date];
     _tickTime = date.timeIntervalSince1970;
 
-    ++_hbCounts;
-    if (_hbCounts >= 18)
+    ++_hbCount;
+    if (_hbCount >= 18)
     {
         // 180 秒一次心跳，计数器周期是 10 秒
         [self heartbeat];
         
-        _hbCounts = 0;
+        _hbCount = 0;
     }
 
     @synchronized (_monitor) {
@@ -172,7 +170,7 @@ static CCTalkService *sharedInstance = nil;
                 if (nil != spr)
                 {
                     // 最大重连次数
-                    if (spr.retryCounts >= spr.capacity.retry)
+                    if (spr.retryCount >= spr.capacity.retry)
                     {
                         if (!spr.retryEnd)
                         {
@@ -197,7 +195,7 @@ static CCTalkService *sharedInstance = nil;
                         
                         [discardedItems addObject:spr];
                         
-                        ++spr.retryCounts;
+                        ++spr.retryCount;
                         
                         [spr recall];
                     }
@@ -266,7 +264,7 @@ static CCTalkService *sharedInstance = nil;
         }
     }
 
-    CCSpeaker *speaker = [[CCSpeaker alloc] initWithCapacity:address capacity:capacity];
+    CCSpeaker *speaker = [[CCSpeaker alloc] initWithAddress:address andCapacity:capacity];
     [_speakers addObject:speaker];
 
 //    for (NSString *identifier in identifiers)
@@ -380,7 +378,7 @@ static CCTalkService *sharedInstance = nil;
         }
     }
     
-    CCPrimitive *primitive = [dialect translate];
+    CCPrimitive *primitive = [dialect reconstruct];
     if (nil != primitive)
     {
         BOOL ret = [self talk:identifier primitive:primitive];

@@ -131,9 +131,9 @@
     }
 }
 //------------------------------------------------------------------------------
-- (CCPrimitive *)translate
+- (CCPrimitive *)reconstruct
 {
-    CCPrimitive *primitive = [super translate];
+    CCPrimitive *primitive = [super reconstruct];
 
     [primitive commit:[CCSubjectStuff stuffWithString:_sign]];
     [primitive commit:[CCSubjectStuff stuffWithInt:_chunkIndex]];
@@ -145,7 +145,7 @@
     return primitive;
 }
 //------------------------------------------------------------------------------
-- (void)build:(CCPrimitive *)primitive
+- (void)construct:(CCPrimitive *)primitive
 {
     NSMutableArray *list = primitive.subjects;
     _sign = [(CCSubjectStuff *)[list objectAtIndex:0] getValueAsString];

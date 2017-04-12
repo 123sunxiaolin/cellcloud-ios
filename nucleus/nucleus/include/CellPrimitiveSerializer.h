@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2016 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,15 +26,20 @@
 
 #import "CellPrerequisites.h"
 
+/*!
+ @brief 原语序列化器。
+ 
+ @author Ambrose Xu
+ */
 @interface CCPrimitiveSerializer : NSObject
 
-/**
- * 序列化。
+/*!
+ @brief 序列化。
  */
 + (NSData *)serialize:(CCPrimitive *)primitive;
 
-/**
- * 反序列化。
+/*!
+ @brief 反序列化。
  */
 + (CCPrimitive *)deserialize:(NSData *)dataStream andTag:(NSString *)tag;
 

@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
+ Copyright (c) 2009-2017 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -30,105 +30,156 @@
 
 typedef void (^action_block_t)(CCActionDialect*);
 
-/**
- * 动作执行委派。
- *
- * @author Jiangwei Xu
+/*!
+ @brief 动作执行委派。
+
+ @author Ambrose Xu
  */
 @protocol CCActionDelegate <NSObject>
 
-/**
- * 执行动作时被线程回调的执行方法。
+/*!
+ @brief 执行动作时被线程回调的执行方法。
  */
 - (void)doAction:(CCActionDialect *)dialect;
 
 @end
 
 
-/**
- * 动作方言。
- *
- * @author Jiangwei Xu
+/*!
+ @brief 动作方言。
+
+ @author Ambrose Xu
  */
 @interface CCActionDialect : CCDialect
 
-/// 动作名
+/*! 动作名。 */
 @property (nonatomic, strong) NSString *action;
-/// 自定义上下文
+/*! 自定义上下文。 */
 @property (nonatomic, strong) id<NSObject> customContext;
 
-/**
- * 指定动作的跟踪器。
+/*!
+ @brief 指定动作的跟踪器初始化。
+ 
+ @param tracker 指定追踪器。
  */
 - (id)initWithTracker:(NSString *)tracker;
 
-/**
- * 指定动作名称。
+/*!
+ @brief 指定动作名和追踪器初始化。
+ 
+ @param action 指定动作名称。
  */
 - (id)initWithAction:(NSString *)action;
 
-/**
- * 添加动作键值对参数。
+/*!
+ @brief 指定动作名和追踪器初始化。
+ 
+ @param action 指定动作名称。
+ @param tracker 指定追踪器。
+ */
+- (id)initWithAction:(NSString *)action andTracker:(NSString *)tracker;
+
+/*!
+ @brief 添加动作参数键值对。
+
+ @param name 参数名。
+ @param value 参数值。
  */
 - (void)appendParam:(NSString *)name stringValue:(NSString *)value;
 
-/**
- * 添加动作键值对参数。
+/*!
+ @brief 添加动作参数键值对。
+ 
+ @param name 参数名。
+ @param value 参数值。
  */
 - (void)appendParam:(NSString *)name intValue:(int)value;
 
-/**
- * 添加动作键值对参数。
+/*!
+ @brief 添加动作参数键值对。
+ 
+ @param name 参数名。
+ @param value 参数值。
  */
 - (void)appendParam:(NSString *)name longValue:(long)value;
 
-/**
- * 添加动作键值对参数。
+/*!
+ @brief 添加动作参数键值对。
+ 
+ @param name 参数名。
+ @param value 参数值。
  */
 - (void)appendParam:(NSString *)name longlongValue:(long long)value;
 
-/**
- * 添加动作键值对参数。
+/*!
+ @brief 添加动作参数键值对。
+ 
+ @param name 参数名。
+ @param value 参数值。
  */
 - (void)appendParam:(NSString *)name boolValue:(BOOL)value;
 
-/**
- * 添加动作键值对参数。
+/*!
+ @brief 添加动作参数键值对。
+ 
+ @param name 参数名。
+ @param value 参数值。
  */
 - (void)appendParam:(NSString *)name json:(NSDictionary *)value;
 
-/**
- * 返回指定名称的参数值。
+/*!
+ @brief 获得指定名称的字符串型参数值。
+
+ @param name 指定待查找参数的参数名。
+ @return 返回指定名称的参数值。
  */
 - (NSString *)getParamAsString:(NSString *)name;
 
-/**
- * 返回指定名称的参数值。
+/*!
+ @brief 获得指定名称的整数类型参数值。
+
+ @param name 指定待查找参数的参数名。
+ @return 返回指定名称的参数值。
  */
 - (int)getParamAsInt:(NSString *)name;
 
-/**
- * 返回指定名称的参数值。
+/*!
+ @brief 获得指定名称的长整型参数值。
+
+ @param name 指定待查找参数的参数名。
+ @return 返回指定名称的参数值。
  */
 - (long)getParamAsLong:(NSString *)name;
 
-/**
- * 返回指定名称的参数值。
+/*!
+ @brief 获得指定名称的长整型参数值。
+
+ @param name 指定待查找参数的参数名。
+ @return 返回指定名称的参数值。
  */
 - (long long)getParamAsLongLong:(NSString *)name;
 
-/**
- * 返回指定名称的参数值。
+/*!
+ @brief 获得指定名称的布尔型参数值。
+
+ @param name 指定待查找参数的参数名。
+ @return 返回指定名称的参数值。
  */
 - (BOOL)getParamAsBool:(NSString *)name;
 
-/**
- * 返回指定名称的参数值。
+/*!
+ @brief 获得指定名称的 JSON 类型参数值。
+
+ @param name 指定待查找参数的参数名。
+ @return 返回指定名称的参数值。
  */
 - (NSDictionary *)getParamAsJson:(NSString *)name;
 
-/**
- * 判断指定名称的参数是否存在。
+/*!
+ @brief 判断指定名称的参数是否存在。
+
+ @param name 待判断的参数名。
+ @return 如果存在返回 <code>YES</code> 。
  */
 - (BOOL)existParam:(NSString *)name;
 

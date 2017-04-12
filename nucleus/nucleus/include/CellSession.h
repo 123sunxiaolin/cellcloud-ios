@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,54 +26,74 @@
 
 #include "CellPrerequisites.h"
 
-/** 消息会话描述类。
+/*!
+ @brief 消息会话描述。
+ 
+ @author Ambrose Xu
  */
 @interface CCSession : NSObject
 
-/**
- * 发送数据时的超时时间，单位：秒。
- */
+/*! 发送数据时的超时时间，单位：秒。 */
 @property (nonatomic, assign) NSTimeInterval writeTimeout;
 
+/*! 最近一次处理的消息。 */
 @property (nonatomic, strong) CCMessage *lastMessage;
 
-/** 标准初始化。
+/*!
+ @brief 指定消息服务实例和地址初始化。
  */
 - (id)initWithService:(CCMessageService *)service address:(CCInetAddress *)address;
 
-/** 返回会话 ID 。
+/*!
+ @brief 返回会话 ID 。
  */
 - (long)getId;
 
-/** 返回消息服务实例。
+/*!
+ @brief 返回消息服务实例。
  */
 - (CCMessageService *)getService;
 
-/** 返回会话的网络地址。
+/*!
+ @brief 返回会话的网络地址。
  */
 - (CCInetAddress *)getAddress;
 
-/** 是否是安全连接。
+/*!
+ @brief 是否是安全连接。
  */
 - (BOOL)isSecure;
 
-/** 激活密钥。
+/*!
+ @brief 使用密钥激活加密模式。
+ 
+ @param key 指定密钥数据。
+ @param keyLength 指定密钥长度。
  */
 - (BOOL)activeSecretKey:(const char *)key keyLength:(int)keyLength;
 
-/** 吊销密钥。
+/*!
+ @brief 吊销密钥，不使用加密模式。
  */
 - (void)deactiveSecretKey;
 
-/** 返回安全密钥。
+/*!
+ @brief 返回安全密钥。
  */
 - (const char *)getSecretKey;
 
-/** 复制密钥，并返回密钥长度。
+/*!
+ @brief 复制密钥，并返回密钥长度。
+ 
+ @param out 接收复制数据的缓存。
+ @return 返回密钥长度。
  */
 - (int)copySecretKey:(char *)out;
 
-/** 写消息。
+/*!
+ @brief 向该会话发送指定的消息。
+ 
+ @param message 指定待发送的消息。
  */
 - (void)write:(CCMessage *)message;
 

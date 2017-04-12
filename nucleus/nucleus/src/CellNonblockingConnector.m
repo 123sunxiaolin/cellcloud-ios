@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -64,8 +64,10 @@
 /** 处理接收数据。 */
 - (void)processReceived:(NSData *)data;
 
+/** 加密消息。 */
 - (void)encryptMessage:(CCMessage *)message key:(const char *)key keyLength:(int)length;
 
+/** 解密消息。 */
 - (void)decryptMessage:(CCMessage *)message key:(const char *)key keyLength:(int)length;
 
 @end
@@ -97,7 +99,7 @@
         [self setDelegate:delegate];
         [self defineDataMark:headMark headLength:headLength
                 tailMark:tailMark tailLength:tailLength];
-        
+
         _timeout = 10.0;
         _blockSize = 16 * 1024;
         _writeQueue = [NSMutableDictionary dictionaryWithCapacity:4];
@@ -230,17 +232,17 @@
 //------------------------------------------------------------------------------
 - (void)fireSessionCreated
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate sessionCreated:_session];
+        [self.delegate sessionCreated:_session];
     }
 }
 //------------------------------------------------------------------------------
 - (void)fireSessionDestroyed
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate sessionDestroyed:_session];
+        [self.delegate sessionDestroyed:_session];
     }
 
     [_writeQueue removeAllObjects];
@@ -248,41 +250,41 @@
 //------------------------------------------------------------------------------
 - (void)fireSessionOpened
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate sessionOpened:_session];
+        [self.delegate sessionOpened:_session];
     }
 }
 //------------------------------------------------------------------------------
 - (void)fireSessionClosed
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate sessionClosed:_session];
+        [self.delegate sessionClosed:_session];
     }
 }
 //------------------------------------------------------------------------------
 - (void)fireMessageReceived:(CCMessage *)message
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate messageReceived:_session message:message];
+        [self.delegate messageReceived:_session message:message];
     }
 }
 //------------------------------------------------------------------------------
 - (void)fireMessageSent:(CCMessage *)message
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate messageSent:_session message:message];
+        [self.delegate messageSent:_session message:message];
     }
 }
 //------------------------------------------------------------------------------
 - (void)fireErrorOccurred:(CCMessageErrorCode)errorCode
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate errorOccurred:errorCode session:_session];
+        [self.delegate errorOccurred:errorCode session:_session];
     }
 }
 

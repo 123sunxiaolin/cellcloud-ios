@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,52 +26,64 @@
 
 #include "CellPrerequisites.h"
 
-/** 内核角色。
+/*!
+ @brief 内核角色定义。
  */
 typedef enum _CCNucleusRole
 {
-    /// 计算节点
+    /*! 计算节点。 */
     CCRoleNode = 0x01,
 
-    /// 存储
-    CCRoleStorage = 0x02,
+    /*! 网关节点。 */
+    CCRoleGate = 0x02,
 
-    /// 网关
-    CCRoleGate = 0x04,
+    /*! 消费端。 */
+    CCRoleConsumer = 0x04
 
-    /// 消费
-    CCRoleConsumer = 0x08
 } CCNucleusRole;
 
 
-/** 内核设备平台类型。
+/*!
+ @brief 内核设备平台类型。
  */
 typedef enum _CCNucleusDevice
 {
-    /// 手机
-    CCDevicePhone = 1,
+    /*! 移动设备。 */
+    CCDeviceMobile = 1,
     
-    /// 平板
+    /*! 平板设备。 */
     CCDeviceTablet = 3,
 
-    /// 台式机
+    /*! 桌面设备。 */
     CCDeviceDesktop = 5,
 
-    /// 服务器
+    /*! 服务器。 */
     CCDeviceServer = 7
+
 } CCNucleusDevice;
 
+
+/*!
+ @brief 内核设备平台类型。
+ */
 @interface CCNucleusConfig : NSObject
 
-@property (assign) CCNucleusRole role;
-@property (assign) CCNucleusDevice device;
+/*! 内核角色定义。 */
+@property (nonatomic, assign) CCNucleusRole role;
+/*! 内核设备类型定义。 */
+@property (nonatomic, assign) CCNucleusDevice device;
 
-/** 初始化。
+/*!
+ @brief 初始化。
  */
 - (id)init;
 
-/** 初始化。
+/*!
+ @brief 指定角色和设备类型进行初始化。
+ 
+ @param role 指定角色定义。
+ @param device 指定设备类型。
  */
-- (id)init:(CCNucleusRole)role device:(CCNucleusDevice)device;
+- (id)initWithRole:(CCNucleusRole)role andDevice:(CCNucleusDevice)device;
 
 @end

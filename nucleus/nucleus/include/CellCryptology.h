@@ -26,19 +26,19 @@
 
 #include "CellPrerequisites.h"
 
-/**
+/*!
  @brief 加解密工具。
  
  @author Ambrose Xu
  */
 @interface CCCryptology : NSObject
 
-/**
+/*!
  @brief 返回 CCCryptology 的单例。
  */
 + (CCCryptology *)sharedSingleton;
 
-/**
+/*!
  @brief 简单数据异或加密。密钥长度必须为 8 位。
 
  @param out 加密后的密文。
@@ -49,7 +49,7 @@
  */
 - (int)simpleEncrypt:(char *)out text:(const char *)text length:(int)length key:(const char *)key;
 
-/**
+/*!
  @brief 简单数据异或解密。密钥长度必须为 8 位。
 
  @param out 解密后的明文。

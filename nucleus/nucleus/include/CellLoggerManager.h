@@ -26,50 +26,50 @@
 
 #include "CellPrerequisites.h"
 
-/**
+/*!
  @brief 日志等级。
  */
 typedef enum _CCLogLevel
 {
-    /// Debug 等级。
+    /*! Debug 等级。 */
     LL_DEBUG = 1,
 
-    /// Info 等级。
+    /*! Info 等级。 */
     LL_INFO = 3,
 
-    /// Warning 等级。
+    /*! Warning 等级。 */
     LL_WARN = 5,
 
-    /// Error 等级。
+    /*! Error 等级。 */
     LL_ERROR = 7
 
 } CCLogLevel;
 
 
-/**
+/*!
  @brief 日志事件委派。
  */
 @protocol CCLogDelegate <NSObject>
 
-/**
+/*!
  @brief 以 Debug 等级记录日志。
  @param text 日志文本内容。
  */
 - (void)logDebug:(NSString *)text;
 
-/**
+/*!
  @brief 以 Info 等级记录日志。
  @param text 日志文本内容。
  */
 - (void)logInfo:(NSString *)text;
 
-/**
+/*!
  @brief 以 Warning 等级记录日志。
  @param text 日志文本内容。
  */
 - (void)logWarn:(NSString *)text;
 
-/**
+/*!
  @brief 以 Error 等级记录日志。
  @param text 日志文本内容。
  */
@@ -78,19 +78,22 @@ typedef enum _CCLogLevel
 @end // CCLogDelegate
 
 
-/**
+/*!
  @brief 日志管理器。
+ 
+ @author Ambrose Xu
  */
 @interface CCLoggerManager : NSObject
 
-@property (strong, nonatomic) id<CCLogDelegate> delegate;
+/*! 日志事件委派。 */
+@property (nonatomic, strong) id<CCLogDelegate> delegate;
 
-/**
+/*!
  @brief 返回日志管理器的单例。
  */
 + (CCLoggerManager *)sharedSingleton;
 
-/**
+/*!
  @brief 记录日志。
 
  @param text 日志文本内容。
@@ -98,7 +101,7 @@ typedef enum _CCLogLevel
  */
 - (void)log:(NSString *)text level:(CCLogLevel)level;
 
-/**
+/*!
  @brief 记录日志。
 
  @param level 日志等级。

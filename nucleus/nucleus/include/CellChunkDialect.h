@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2016 Cell Cloud Team (www.cellcloud.net)
+ Copyright (c) 2009-2017 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -31,62 +31,72 @@
 
 @class CCChunkDialect;
 
-/**
- * 区块方言委派。
- *
- * @author Jiangwei Xu
+/*!
+ @brief 区块方言委派。
  */
 @protocol CCChunkDelegate <NSObject>
 
-/**
- * 区块数据正在处理时回调。
+/*!
+ @brief 区块数据正在处理时回调。
+
+ @param chunkDialect 区块方言。
+ @param target 区块的传送目标。
  */
 - (void)onProgress:(CCChunkDialect *)dialect andTraget:(NSString *)traget;
 
-/**
- * 区块数据处理完成时回调。
+/*!
+ @brief 区块数据处理完成时回调。
+ 
+ @param chunkDialect 区块方言。
+ @param target 区块的传送目标。
  */
 - (void)onCompleted:(CCChunkDialect *)dialect andTarget:(NSString *)target;
 
-/**
- * 区块数据处理失败时回调。
+/*!
+ @brief 区块数据处理失败时回调。
+ 
+ @param chunkDialect 区块方言。
+ @param target 区块的传送目标。
  */
 - (void)onFailed:(CCChunkDialect *)dialect andTarget:(NSString *)target;
 
 @end
 
-/**
- * 块数据方言。
- *
- * @author Jiangwei Xu
+
+/*!
+ @brief 块数据方言。
+
+ @author Ambrose Xu
  */
 @interface CCChunkDialect : CCDialect
 
-/// 代理
+/*! 事件委派。 */
 @property (nonatomic, assign) id<CCChunkDelegate> delegate;
 
-/// 块签名
+/*! 整块记号。用于标记整个块。 */
 @property (nonatomic, strong, readonly) NSString *sign;
-/// 块索引
-@property (nonatomic, assign, readonly) int chunkIndex;
-/// 块总数
-@property (nonatomic, assign, readonly) int chunkNum;
-/// 块数据
-@property (nonatomic, strong, readonly) NSData *data;
-/// 块数据长度
-@property (nonatomic, assign, readonly) int length;
-/// 总长度
+/*! 整块总长度。 */
 @property (nonatomic, assign, readonly) long totalLength;
+/*! 整块总数量。 */
+@property (nonatomic, assign, readonly) int chunkNum;
+/*! 当前块索引。 */
+@property (nonatomic, assign, readonly) int chunkIndex;
+/*! 当前块数据。 */
+@property (nonatomic, strong, readonly) NSData *data;
+/*! 当前块长度。 */
+@property (nonatomic, assign, readonly) int length;
 
-/// 用于标识该区块是否能写入缓存队列
-/// 如果为 true ，表示已经“污染”，不能进入队列，必须直接发送
+/*!
+ 用于标识该区块是否能写入缓存队列。
+ 如果为 <code>YES</code> ，表示已经“污染”，不能进入队列，必须直接发送。
+ */
 @property (nonatomic, assign) BOOL infectant;
 
-///
+// 顺序读操作的索引。
 @property (nonatomic, assign) int readIndex;
 
-/**
- * 指定动作的跟踪器。
+/*!
+ @brief 指定动作的跟踪器初始化。
  */
 - (id)initWithTracker:(NSString *)tracker;
 

@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,20 +27,26 @@
 #include "CellPredicateStuff.h"
 #include "CellTalkDefinition.h"
 
-/**
- * 会话服务故障描述。
- *
- * @author Jiangwei Xu
+/*!
+ @brief 会话服务故障描述。
+
+ @author Ambrose Xu
  */
 @interface CCTalkServiceFailure : NSObject
 
+/*! 故障码。 */
 @property (nonatomic, assign) NSUInteger code;
+/*! 故障原因描述。 */
 @property (nonatomic, strong) NSString *reason;
+/*! 故障详细描述。 */
 @property (nonatomic, strong) NSString *description;
+/*! 故障源的原始描述信息。 */
 @property (nonatomic, strong) NSString *sourceDescription;
+/*! 故障源的 Cellet 标识列表。 */
 @property (nonatomic, strong) NSArray *sourceCelletIdentifiers;
 
-/** 
+/*!
+ @brief 指定故障来源进行初始化。
  */
 - (id)initWithSource:(CCTalkFailureCode)code file:(const char*)file line:(int)line function:(const char*)function;
 

@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -46,12 +46,12 @@
     return self;
 }
 //------------------------------------------------------------------------------
-- (CCPrimitive *)translate
+- (CCPrimitive *)reconstruct
 {
     return [[CCPrimitive alloc] initWithDialect:self];
 }
 //------------------------------------------------------------------------------
-- (void)build:(CCPrimitive *)primitive
+- (void)construct:(CCPrimitive *)primitive
 {
     // Nothing
 }

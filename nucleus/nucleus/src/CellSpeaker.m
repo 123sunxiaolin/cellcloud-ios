@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2016 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -88,11 +88,11 @@
 /// 应答 Quick 握手
 - (void)respondQuick:(CCPacket *)packet session:(CCSession *)session;
 
-///
+/// 触发建立连接。
 - (void)fireContacted:(NSString *)celletIdentifier;
-///
+/// 触发关闭连接。
 - (void)fireQuitted:(NSString *)celletIdentifier;
-///
+/// 触发错误发生。
 - (void)fireFailed:(CCTalkServiceFailure *)failure;
 
 @end
@@ -105,7 +105,7 @@
 @synthesize identifiers = _identifierList;
 @synthesize address = _address;
 @synthesize remoteTag = _remoteTag;
-@synthesize retryCounts = _retryCounts;
+@synthesize retryCount = _retryCount;
 @synthesize retryEnd = _retryEnd;
 
 //------------------------------------------------------------------------------
@@ -138,7 +138,7 @@
     return self;
 }
 //------------------------------------------------------------------------------
-- (id)initWithCapacity:(CCInetAddress *)address capacity:(CCTalkCapacity *)capacity
+- (id)initWithAddress:(CCInetAddress *)address andCapacity:(CCTalkCapacity *)capacity
 {
     if ((self = [super init]))
     {
@@ -177,7 +177,7 @@
 {
     if (CCSpeakerStateCalling == self.state)
     {
-        // 正在 Call 返回 false
+        // 正在 Call 返回 NO
         return NO;
     }
 
@@ -278,7 +278,7 @@
         || ![_connector isConnected]
         || self.state != CCSpeakerStateCalled)
     {
-        return FALSE;
+        return NO;
     }
 
     @synchronized(_monitor) {
@@ -297,10 +297,10 @@
             CCMessage *message = [CCMessage messageWithData:data];
             [_connector write:message];
 
-            return TRUE;
+            return YES;
         }
 
-        return FALSE;
+        return NO;
     }
 }
 //------------------------------------------------------------------------------
@@ -315,8 +315,9 @@
         || ![_connector isConnected]
         || self.state != CCSpeakerStateCalled)
     {
-        return FALSE;
+        return NO;
     }
+
     // 心跳包（无包体）
     char ptag[] = TPT_HEARTBEAT;
     CCPacket *packet = [[CCPacket alloc] initWithTag:ptag sn:9 major:2 minor:0];
@@ -326,7 +327,7 @@
         CCMessage *message = [CCMessage messageWithData:data];
         [_connector write:message];
     }
-    return TRUE;
+    return YES;
 }
 
 #pragma mark - Private Method

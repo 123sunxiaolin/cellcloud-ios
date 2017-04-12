@@ -52,66 +52,105 @@
 #define PFB_SEGMENT_LENGTH 4
 
 
-/** 数据包。
+/*!
+ @brief 数据包。
+ 
+ @author Ambrose Xu
  */
 @interface CCPacket : NSObject
 {
 @private
+    /// 包标签。
     char _tag[PFB_TAG];
+    /// 包的主版本号。
     short _major;
+    /// 包的副版本号。
     short _minor;
+    /// 包序号。
     short _sn;
 
+    /// 存储包字段的数组。
     NSMutableArray *_segments;
 }
 
-/**
+/*!
+ @brief 指定包标签、包序号和包版本初始化。
+ 
+ @param tag 包的标签。
+ @param sn 包的序号。
+ @param major 包的主版本号。
+ @param minor 包的副版本号。
  */
 - (id)initWithTag:(char *)tag sn:(short)sn
             major:(short)major minor:(short)minor;
 
-/**
+/*!
+ @brief 获得包的标签。
+ 
+ @param tag 输出参数，存储包标签数据。
+ @return 返回包标签数据的长度。
  */
 - (int)getTag:(char *)tag;
-/**
+
+/*!
+ @brief 比较该包的标签和指定的标签。
+ 
+ @param other 待比较的标签数据。
+ @return 如果包标签与指定的标签相同返回 <code>YES</code> 。
  */
 - (BOOL)compareTag:(const char *)other;
 
-/**
+/*!
+ @brief 获得主版本号。
  */
 - (short)getMajor;
-/**
+
+/*!
+ @brief 获得副版本号。
  */
 - (short)getMinor;
 
-/**
+/*!
+ @brief 获得包序号。
  */
 - (short)getSequenceNumber;
 
-/**
+/*!
+ @brief 获得包的有效负载长度。
+ 
+ @return 返回包的有效负载数据的长度。如果返回 <code>0</code> 说明该包只有包头，没有携带负载数据。
  */
 - (int)getPayloadLength;
 
-/**
+/*!
+ @brief 向数据包追加新的数据段。
+ 
+ @param data 指定追加的数据。
  */
 - (void)appendSegment:(NSData *)data;
 
-/**
+/*!
+ @brief 获得指定索引的数据段数据。
+ 
+ @param index 指定索引。
  */
 - (NSData *)getSegment:(NSUInteger)index;
 
-/**
+/*!
+ @brief 返回数据包内的数据段数量。
  */
 - (NSUInteger)numSegments;
 
 
 #pragma mark Pack/Unpack Methods
 
-/**
+/*!
+ @brief 将数据包打包为字节数据流。
  */
 + (NSData *)pack:(CCPacket *)packet;
 
-/**
+/*!
+ @brief 将字节数据流解包为数据包对象。
  */
 + (CCPacket *)unpack:(NSData *)data;
 

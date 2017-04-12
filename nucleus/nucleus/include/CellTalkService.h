@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,114 +27,177 @@
 #include "CellPrerequisites.h"
 #include "CellTalkDefinition.h"
 
-/**
- * 会话监听器。
- *
- * @author Jiangwei Xu
+/*!
+ @brief 会话监听器。
+
+ @author Ambrose Xu
  */
 @protocol CCTalkListener <NSObject>
 @optional
-/** 与内核进行会话。
+/*!
+ @brief 当收到来自服务器的数据时该函数被调用。
+ 
+ @param identifier 该数据来源的 Cellet 的标识。
+ @param primitive 接收到的原语数据。
  */
 - (void)dialogue:(NSString *)identifier primitive:(CCPrimitive *)primitive;
 
-/** 与对端内核建立连接。
+/*!
+ @brief 当终端成功与指定的 Cellet 建立连接时该函数被调用。
+
+ @param identifier 建立连接的 Cellet 的标识。
+ @param tag Cellet 的内核标签。
  */
 - (void)contacted:(NSString *)identifier tag:(NSString *)tag;
 
-/** 与对端内核断开连接。
+/*!
+ @brief 当终端与 Cellet 的连接断开时该函数被调用。
+
+ @param identifier 断开连接的 Cellet 的标识。
+ @param tag Cellet 的内核标签。
  */
 - (void)quitted:(NSString *)identifier tag:(NSString *)tag;
 
-/** 发生错误。
+/*!
+ @brief 当发生连接错误时该函数被调用。
+
+ @param failure 错误描述。
  */
 - (void)failed:(CCTalkServiceFailure *)failure;
 
 @end
 
-/**
- * 会话代理。
- *
- * @author Jiangwei Xu
+/*!
+ @brief 会话代理。
+
+ @author Ambrose Xu
  */
 @protocol CCTalkDelegate <NSObject>
 
-/** 发送回调。
+/*!
+ @brief 当准备执行数据发送时调用此函数。
+
+ @param identifier 发送目标标识。
+ @param dialect 发送的方言。
+ @return 如果返回 <code>NO</code> 则劫持事件，阻止事件回调发生。
  */
 - (BOOL)doTalk:(NSString *)identifier withDialect:(CCDialect *)dialect;
 
-/** 已经发送回调。
+/*!
+ @brief 当完成数据发送时调用此函数。
+
+ @param identifier 发送目标标识。
+ @param dialect 发送的方言。
  */
 - (void)didTalk:(NSString *)identifier withDialect:(CCDialect *)dialect;
 
-/** 接收回调。
+/*!
+ @brief 当准备执行对话数据送达时调用此函数。
+
+ @param identifier 目标标识。
+ @param dialect 方言数据。
+ @return 如果返回 <code>NO</code> 则劫持事件，阻止事件回调发生。
  */
 - (BOOL)doDialogue:(NSString *)identifier withDialect:(CCDialect *)dialect;
 
-/** 已经接收回调。
+/*!
+ @brief 当完成对话数据送达时调用此函数。
+
+ @param identifier 目标标识。
+ @param dialect 方言数据。
  */
 - (void)didDialogue:(NSString *)identifier withDialect:(CCDialect *)dialect;
 
 @end
 
 
-/**
- * 会话服务。
- *
- * @author Jiangwei Xu
+/*!
+ @brief 会话服务。
+
+ @author Ambrose Xu
  */
 @interface CCTalkService : NSObject <CCService>
 
-/// 会话监听器
+/*! 会话监听器。 */
 @property (nonatomic, strong) id<CCTalkListener> listener;
 
-/// 会话代理
+/*! 会话代理。 */
 @property (nonatomic, assign) id<CCTalkDelegate> delegate;
 
-/** 返回单例。
+/*!
+ @brief 返回会话服务的单例。
  */
 + (CCTalkService *)sharedSingleton;
 
-/** 启动守护任务。 */
+/**
+ @brief 启动守护任务。
+ */
 - (void)startDaemon;
 
-/** 启动后台守护任务 */
-- (void)backgroundKeepAlive;
-
-/** 停止守护任务。 */
+/**
+ @brief 停止守护任务。
+ */
 - (void)stopDaemon;
 
 /**
- * 申请指定的 Cellet 服务。
+ @brief 启动后台守护任务。
+ */
+- (void)backgroundKeepAlive;
+
+/*!
+ @brief 向指定的 Cellet 发起会话请求。
+
+ @param identifiers 指定要进行会话的 Cellet 标识名列表。
+ @param address 指定服务器地址及端口。
+ @return 返回是否成功发起请求。
  */
 - (BOOL)call:(NSArray *)identifiers hostAddress:(CCInetAddress *)address;
 
-/**
- * 申请指定的 Cellet 服务。
+/*!
+ @brief 向指定的 Cellet 发起会话请求。
+
+ @param identifiers 指定要进行会话的 Cellet 标识名列表。
+ @param address 指定服务器地址及端口。
+ @param capacity 指定能力协商。
+ @return 返回是否成功发起请求。
  */
 - (BOOL)call:(NSArray *)identifiers hostAddress:(CCInetAddress *)address capacity:(CCTalkCapacity *)capacity;
 
-/**
- * 挂断指定的 Cellet 服务。
+/*!
+ @brief 挂断 Cellet 会话服务。
+
+ @param identifier 指定需挂断的 Cellet 标识符。
  */
 - (void)hangUp:(NSString *)identifier;
 
-/**
- * 向 Cellet 发送原语。
+/*!
+ @brief 向指定 Cellet 发送原语。
+
+ @param identifier 指定目标 Cellet 的标识。
+ @param primitive 指定需发送的原语。
+ @return 返回是否成功处理了发送请求。
  */
 - (BOOL)talk:(NSString *)identifier primitive:(CCPrimitive *)primitive;
 
-/**
- * 向 Cellet 发送方言。
+/*!
+ @brief 向指定 Cellet 发送方言。
+
+ @param identifier 指定目标 Cellet 的标识。
+ @param dialect 指定需发送的方言。
+ @return 返回是否成功处理了发送请求。
  */
 - (BOOL)talk:(NSString *)identifier dialect:(CCDialect *)dialect;
 
-/**
- * 是否已经与 Cellet 建立服务。
+/*!
+ @brief 是否已经与 Cellet 建立服务。
+
+ @param identifier 指定待判断的 Cellet 标识。
+ @return 如果已经建立服务返回 <code>YES</code> 。
  */
 - (BOOL)isCalled:(NSString *)identifier;
 
-/** 标记指定 Speaker 为连接丢失。
+/*!
+ @brief 标记指定 Speaker 为连接丢失。
  */
 - (void)markLostSpeaker:(CCSpeaker *)speaker;
 

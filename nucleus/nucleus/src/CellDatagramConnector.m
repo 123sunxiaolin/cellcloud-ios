@@ -192,57 +192,57 @@
 //------------------------------------------------------------------------------
 - (void)fireSessionCreated
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate sessionCreated:_session];
+        [self.delegate sessionCreated:_session];
     }
 }
 //------------------------------------------------------------------------------
 - (void)fireSessionDestroyed
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate sessionDestroyed:_session];
+        [self.delegate sessionDestroyed:_session];
     }
 }
 //------------------------------------------------------------------------------
 - (void)fireSessionOpened
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate sessionOpened:_session];
+        [self.delegate sessionOpened:_session];
     }
 }
 //------------------------------------------------------------------------------
 - (void)fireSessionClosed
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate sessionClosed:_session];
+        [self.delegate sessionClosed:_session];
     }
 }
 //------------------------------------------------------------------------------
 - (void)fireMessageReceived:(CCMessage *)message
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate messageReceived:_session message:message];
+        [self.delegate messageReceived:_session message:message];
     }
 }
 //------------------------------------------------------------------------------
 - (void)fireMessageSent:(CCMessage *)message
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate messageSent:_session message:message];
+        [self.delegate messageSent:_session message:message];
     }
 }
 //------------------------------------------------------------------------------
 - (void)fireErrorOccurred:(CCMessageErrorCode)errorCode
 {
-    if (nil != _delegate)
+    if (nil != self.delegate)
     {
-        [_delegate errorOccurred:errorCode session:_session];
+        [self.delegate errorOccurred:errorCode session:_session];
     }
 }
 //------------------------------------------------------------------------------

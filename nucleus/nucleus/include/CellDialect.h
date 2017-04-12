@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,26 +26,38 @@
 
 #include "CellPrerequisites.h"
 
-/**
- * 原语方言。
- *
- * @author Jiangwei Xu
+/*!
+ @brief 原语方言。
+
+ @author Ambrose Xu
  */
 @interface CCDialect : NSObject
 
+/*! 方言名。 */
 @property (nonatomic, strong) NSString *name;
+/*! 追踪器。 */
 @property (nonatomic, strong) NSString *tracker;
+/*! 标签。 */
 @property (nonatomic, strong) NSString *ownerTag;
+/*! Cellet 标识。 */
 @property (nonatomic, strong) NSString *celletIdentifier;
 
+/*!
+ @brief 指定方言名和追踪器初始化。
+ 
+ @param name 指定方言名称。
+ @param tracker 指定方言追踪器。
+ */
 - (id)initWithName:(NSString *)name tracker:(NSString *)tracker;
 
-/** 翻译原语为方言。
+/*!
+ @brief 将原语重构为方言。
  */
-- (CCPrimitive *)translate;
+- (CCPrimitive *)reconstruct;
 
-/** 从原语构建方言。
+/*!
+ @brief 从原语构建方言。
  */
-- (void)build:(CCPrimitive *)primitive;
+- (void)construct:(CCPrimitive *)primitive;
 
 @end

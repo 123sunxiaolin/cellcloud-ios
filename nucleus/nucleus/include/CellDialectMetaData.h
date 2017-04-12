@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,18 +26,33 @@
 
 #include "CellPrerequisites.h"
 
-/** 方言元数据。
- * @author Jiangwei Xu
+/*!
+ @brief 方言元数据。
+
+ @author Ambrose Xu
  */
 @interface CCDialectMetaData : NSObject
 
+/*! 标识方言的唯一字符串标识符。 */
 @property (nonatomic, strong, readonly) NSString *name;
+/*! 方言文本描述。 */
 @property (nonatomic, strong, readonly) NSString *description;
 
-- (id)initWithName:(NSString *)name description:(NSString *)desc;
+/*!
+ @brief 指定方言名和描述初始化。
 
-/** 使用指定名称和描述构建 Meta Data
+ @param name 指定方言名称。
+ @param description 指定方言描述信息。
  */
-+ (CCDialectMetaData *)metaDataWithName:(NSString *)name description:(NSString *)desc;
+- (id)initWithName:(NSString *)name description:(NSString *)description;
+
+
+/*!
+ @brief 使用指定名称和描述构建 Meta Data
+
+ @param name 指定方言名称。
+ @param description 指定方言描述信息。
+ */
++ (CCDialectMetaData *)metaDataWithName:(NSString *)name description:(NSString *)description;
 
 @end

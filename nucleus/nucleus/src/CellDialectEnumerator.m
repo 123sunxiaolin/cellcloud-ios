@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -111,11 +111,11 @@ static CCDialectEnumerator *sharedInstance = nil;
     CCDialectFactory *fact = [_factories objectForKey:dialect.name];
     if (nil == fact)
     {
-        //返回YES,不劫持
+        // 返回YES,不劫持
         return YES;
     }
     
-    //回调返回
+    // 回调返回
     return [fact onTalk:identifier andDialect:dialect];
 }
 
@@ -131,10 +131,10 @@ static CCDialectEnumerator *sharedInstance = nil;
     CCDialectFactory *fact = [_factories objectForKey:dialect.name];
     if (nil == fact)
     {
-        //返回YES,不劫持
+        // 返回YES,不劫持
         return YES;
     }
-    //回调返回
+    // 回调返回
     return [fact onDialogue:identifier andDialect:dialect];
 }
 

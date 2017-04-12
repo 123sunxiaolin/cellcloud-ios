@@ -235,30 +235,6 @@
     });
 }
 //------------------------------------------------------------------------------
-- (void)suspended:(NSString *)identifier tag:(NSString *)tag
-        timestamp:(NSTimeInterval)timestamp mode:(CCSuspendMode)mode
-{
-    [CCLogger d:@"suspended : identifier=%@ tag=%@", identifier, tag];
-}
-//------------------------------------------------------------------------------
-- (void)resumed:(NSString *)identifier tag:(NSString *)tag
-      timestamp:(NSTimeInterval)timestamp primitive:(CCPrimitive *)primitive
-{
-    [CCLogger d:@"resumed : identifier=%@ tag=%@", identifier, tag];
-    
-    int index = [[primitive.complements objectAtIndex:0] getValueAsInt];
-    CCPrimitive *expected = [_helper.primitives objectAtIndex:index];
-    CCPrimitive *actual = primitive;
-
-    char result[8] = {0x0};
-    if ([_helper assertPrimitive:expected actual:actual])
-        memcpy(result, "true", 4);
-    else
-        memcpy(result, "false", 5);
-    
-    [CCLogger i:@"Result (%d): %s", ++_helper.counts, result];
-}
-//------------------------------------------------------------------------------
 - (void)failed:(CCTalkServiceFailure *)failure
 {
     [CCLogger d:@"failed - Code:%d - Reason:%@ - Desc:%@", failure.code, failure.reason, failure.description];

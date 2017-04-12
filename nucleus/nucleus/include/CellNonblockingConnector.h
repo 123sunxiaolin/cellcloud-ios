@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,11 +27,21 @@
 #import "CellMessageConnector.h"
 #import "GCDAsyncSocket.h"
 
-/** 非阻塞消息连接器。
+/*!
+ @brief 非阻塞消息连接器。
+ 
+ @author Ambrose Xu
  */
 @interface CCNonblockingConnector : CCMessageConnector <GCDAsyncSocketDelegate>
 
-/** 使用数据掩码初始化。
+/*!
+ @brief 使用数据记号初始化。
+ 
+ @param delegate 消息事件委派。
+ @param headMark 数据报文头。
+ @param headLength 数据报文头的长度。
+ @param tailMark 数据报文尾。
+ @param tailLength 数据报文尾的长度。
  */
 - (id)init:(id<CCMessageHandler>)delegate
         headMark:(char *)headMark headLength:(size_t)headLength

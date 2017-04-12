@@ -30,12 +30,14 @@
 #ifndef CellDatagramConnector_h
 #define CellDatagramConnector_h
 
-/**
+/*!
  @brief 数据报消息连接器。
+ 
+ @author Ambrose Xu
  */
 @interface CCDatagramConnector : CCMessageConnector <GCDAsyncUdpSocketDelegate>
 
-/**
+/*!
  @brief 初始化连接器并指定消息委派。
  
  @param delegate 消息事件委派。

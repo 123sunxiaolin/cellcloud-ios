@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,28 +26,47 @@
 
 #include "CellPrerequisites.h"
 
+/*!
+ @brief 方言工厂。
+
+ @author Ambrose Xu
+ */
 @interface CCDialectFactory : NSObject
 
-/** 返回元数据。
+/*!
+ @brief 返回元数据。
  */
 - (CCDialectMetaData *)getMetaData;
 
-/** 创建方言。
+/*!
+ @brief 创建方言。
+ 
+ @param tracker 指定该方言的追踪器。
  */
 - (CCDialect *)create:(NSString *)tracker;
 
 
-/** 关闭。
+/*!
+ @brief 关闭工厂。
  */
 - (void)shutdown;
 
-/** 发送回调。
+/*!
+ @brief 当发送方言时此方法被回调。
+
+ @param identifier 目标 Cellet 标识。
+ @param dialect 被发送的方言。
+ @return 返回 <code>NO</code> 表示工厂截获该方言，将不被送入发送队列。
  */
 - (BOOL)onTalk:(NSString *)identifier andDialect:(CCDialect *)dialect;
 
-/** 接收回调。
+/*!
+ @brief 当收到对应的方言时此方法被回调。
+
+ @param identifier 来源 Cellet 标识。
+ @param dialect 接收到的方言。
+ @return 返回 <code>NO</code> 表示工厂截获该方言，将不调用监听器通知 dialogue 事件发生。
  */
 - (BOOL)onDialogue:(NSString *)identifier andDialect:(CCDialect *)dialect;
-
 
 @end

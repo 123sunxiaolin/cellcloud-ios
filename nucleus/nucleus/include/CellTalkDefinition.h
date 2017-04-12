@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2014 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -84,66 +84,23 @@
 #define CCTS_FAILURE_NOCELLET {'0', '0', '1', '0'}
 
 
-/**
- * 挂起状态模式。
- */
-typedef enum _CCSuspendMode
-{
-    /** 主动挂起。 */
-    CCSuspendModeInitative = 10,
-
-    /** 被动挂起。 */
-    CCSuspendModePassive = 20
-
-} CCSuspendMode;
-
-
-/**
- * 会话故障码。
+/*!
+ @brief 会话故障码。
  */
 typedef enum _CCTalkFailureCode
 {
-    /// 未找到指定的 Cellet，不触发自动重连
+    /*! 未找到指定的 Cellet，不触发自动重连。 */
     CCFailureNotFoundCellet = 1000,
 
-    /// Call 失败
+    /*! Call 失败。 */
     CCFailureCallFailed = 2000,
 
-    /// 会话连接意外断开
+    /*! 会话连接意外断开。 */
     CCFailureTalkLost = 3000,
 
-    /// 重试次数达到上限，不触发自动重连
+    /*! 重试次数达到上限，不触发自动重连。 */
     CCFailureRetryEnd = 4000
 
 } CCTalkFailureCode;
 
-
-/** 会话状态码。
- */
-/*typedef enum _CCTalkStatusCode
-{
-    // 正确处理完成请求
-    CCTalkStatusOk = 100,
-
-    // 连接失败
-    CCTalkStatusConnectFailed = 201,
-
-    // 连接超时
-    CCTalkStatusConnectTimeout = 202,
-    
-    /// 未找到指定的 Cellet
-    CCTalkStatusNotFoundCellet = 300,
-    
-    // 没有正确设置标示
-    CCTalkStatusNoIdentifier = 701,
-    
-    // 没有正确设置服务器地址
-    CCTalkStatusNoAddress = 702,
-    
-    // 未知状态
-    CCTalkStatusUnknown = 900,
-    
-} CCTalkStatusCode;*/
-
 #endif // CellTalkDefinition_h
-

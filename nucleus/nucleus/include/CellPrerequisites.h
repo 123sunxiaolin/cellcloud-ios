@@ -32,21 +32,21 @@
 
 #pragma mark Servie Protocol
 
-/**
+/*!
  @brief 标准服务接口。
 
  @author Ambrose Xu
  */
 @protocol CCService <NSObject>
 
-/**
+/*!
  @brief 启动服务。
  
- @return 如果启动成功返回 @ctrue 。
+ @return 如果启动成功返回 <code>YES</code> 。
  */
 - (BOOL)startup;
 
-/**
+/*!
  @brief 关闭服务。
  */
 - (void)shutdown;

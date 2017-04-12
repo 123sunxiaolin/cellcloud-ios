@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
+ Copyright (c) 2009-2017 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,28 +26,33 @@
 
 #include "CellPrerequisites.h"
 
-/** 版本描述。
+/*!
+ @brief Nucleus 版本描述。
  */
 @interface CCVersion : NSObject
 
-/** 返回主版本号。
+/*!
+ @brief 返回主版本号。
  */
 + (int)major;
 
-/** 返回副版本号。
+/*!
+ @brief 返回副版本号。
  */
 + (int)minor;
 
-/** 返回修订号。
+/*!
+ @brief 返回修订号。
  */
 + (int)revision;
 
-/** 返回版本名。
+/*!
+ @brief 返回版本名。
  */
 + (NSString *)name;
 
-/**
- * 版本串号。
+/*!
+ @brief 返回版本串号。
  */
 + (int)versionNumber;
 
