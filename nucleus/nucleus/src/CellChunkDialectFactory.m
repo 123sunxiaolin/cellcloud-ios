@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2016 Cell Cloud Team (www.cellcloud.net)
+ Copyright (c) 2009-2017 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -225,7 +225,7 @@
 }
 
 //------------------------------------------------------------------------------
-- (int)read:(NSString *)sign withIndex:(int)index withData:(NSMutableData *)outPut;
+- (int)read:(NSString *)sign withIndex:(int)index withData:(NSMutableData *)output;
 {
     if (index < 0)
     {
@@ -240,14 +240,14 @@
         int len = cd.length;
 
         // 清空
-        if (outPut.length > 0)
+        if (output.length > 0)
         {
-            [outPut resetBytesInRange:NSMakeRange(0, outPut.length)];
-            [outPut setLength:0];
+            [output resetBytesInRange:NSMakeRange(0, output.length)];
+            [output setLength:0];
         }
 
         // 填充数据
-        [outPut appendData:buf];
+        [output appendData:buf];
 
         return len;
     }

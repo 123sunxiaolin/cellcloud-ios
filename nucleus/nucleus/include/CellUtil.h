@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2016 Cell Cloud Team - www.cellcloud.net
+ Copyright (c) 2009-2017 Cell Cloud Team - www.cellcloud.net
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,52 +26,99 @@
 
 #include "CellPrerequisites.h"
 
-/** 辅助类。
+/*!
+ @brief 辅助函数库。
+ 
+ @author Ambrose Xu
  */
 @interface CCUtil : NSObject
 
-/** 返回当前系统绝对时间值。单位：秒。
+/*!
+ @brief 返回当前系统绝对时间值。单位：秒。
  */
 + (NSTimeInterval)currentTimeInterval;
 
-/** 返回当前系统绝对时间值。单位：毫秒。
+/*!
+ @brief 返回当前系统绝对时间值。单位：毫秒。
  */
 + (int64_t)currentTimeMillis;
 
-/** 返回随机数。
+/*!
+ @brief 生成随机数。
  */
 + (long)randomLong;
 
-/** 返回随机字符串
+/*!
+ @brief 生成指定长度的随机字符串。
+ 
+ @param length 指定字符串长度。
+ @return 返回生成的字符串。
  */
 + (NSString *)randomString:(int)length;
 
-/** 转换 NSData 为 NSTimeInterval
+/*!
+ @brief 转换 NSData 为 NSTimeInterval，即绝对时间。
  */
 + (NSTimeInterval)convertDataToTimeInterval:(NSData *)data;
 
+/*!
+ @brief short 型转字节流。
+ */
 + (unsigned int)shortToBytes:(char *)output input:(short)input;
 
+/*!
+ @brief int 型转字节流。
+ */
 + (unsigned int)intToBytes:(char *)output input:(int)input;
 
+/*!
+ @brief long long 型转字节流。
+ */
 + (unsigned int)longToBytes:(char *)output input:(long long)input;
 
+/*!
+ @brief float 型转字节流。
+ */
 + (unsigned int)floatToBytes:(char *)output input:(float)input;
 
+/*!
+ @brief double 型转字节流。
+ */
 + (unsigned int)doubleToBytes:(char *)output input:(double)input;
 
+/*!
+ @brief BOOL 型转字节流。
+ */
 + (unsigned int)boolToBytes:(char *)output input:(BOOL)input;
 
+/*!
+ @brief 字节流转 short 型。
+ */
 + (short)bytesToShort:(char *)input;
 
+/*!
+ @brief 字节流转 int 型。
+ */
 + (int)bytesToInt:(char *)input;
 
+/*!
+ @brief 字节流转 long long 型。
+ */
 + (long long)bytesToLong:(char *)input;
 
+/*!
+ @brief 字节流转 float 型。
+ */
 + (float)bytesToFloat:(char *)input;
 
+/*!
+ @brief 字节流转 double 型。
+ */
 + (double)bytesToDouble:(char *)input;
 
+/*!
+ @brief 字节流转 BOOL 型。
+ */
 + (BOOL)bytesToBool:(char *)input;
 
 @end

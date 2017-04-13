@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2016 Cell Cloud Team (www.cellcloud.net)
+ Copyright (c) 2009-2017 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,27 +26,51 @@
 
 #import "CellDialectFactory.h"
 
-/**
- * 块数据传输方言工厂。
- *
- * @author Jiangwei Xu
+/*!
+ @brief 块数据传输方言工厂。
+
+ @author Ambrose Xu
  */
 @interface CCChunkDialectFactory : CCDialectFactory
 
+/*!
+ @brief 写入数据到缓存区。
+
+ @param chunk 指定待写入数据的区块。
+ */
 - (void)write:(CCChunkDialect *)chunk;
 
+/*!
+ @brief 检查指定记号的区块是否接收完成。
+
+ @param sign 指定待检查的区块记号。
+ @return 如果已经接收了整个区块返回 <code>YES</code> 。
+ */
 - (BOOL)checkCompleted:(NSString *)sign;
 
-- (int)read:(NSString *)sign withIndex:(int)index withData:(NSMutableData *)outPut;
+/*!
+ @brief 读取指定标记区块在指定索引位置的数据。
 
+ @param sign 指定区块的标记。
+ @param index 指定区块的索引。
+ @param output 指定输出的数据。
+ @return 返回读取的数据长度。
+ */
+- (int)read:(NSString *)sign withIndex:(int)index withData:(NSMutableData *)output;
+
+/*!
+ @brief 从内存中清空指定记号的所有区块。
+ 
+ @param sign 指定待清空的记号。
+ */
 - (void)clear:(NSString *)sign;
 
 @end
 
 
 
-/**
- * 内部缓存。
+/*!
+ @brief 内部缓存。
  */
 @interface Cache : NSObject
 
@@ -71,8 +95,8 @@
 
 
 
-/**
- * 发送清单。
+/*!
+ @brief 发送清单。
  */
 @interface ChunkList : NSObject
 

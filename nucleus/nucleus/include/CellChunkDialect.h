@@ -96,32 +96,93 @@
 @property (nonatomic, assign) int readIndex;
 
 /*!
- @brief 指定动作的跟踪器初始化。
+ @brief 指定跟踪器初始化。
+ 
+ @param tracker 指定追踪器。
  */
 - (id)initWithTracker:(NSString *)tracker;
 
+/*!
+ @brief 指定区块信息初始化。
+ 
+ @param sign 指定整块的记号。
+ @param totalLength 指定整块的总长度。
+ @param chunkIndex 指定当前块索引。
+ @param chunkNum 指定总块数量。
+ @param data 指定当前块数据。
+ @param length 指定当前块的数据长度。
+ */
 - (id)initWithSign:(NSString *)sign totalLength:(long)totalLength chunkIndex:(int)chunkIndex
           chunkNum:(int)chunkNum data:(NSData *)data length:(int)length;
 
+/*!
+ @brief 指定区块信息初始化。
+ 
+ @param tracker 指定追踪器。
+ @param sign 指定整块的记号。
+ @param totalLength 指定整块的总长度。
+ @param chunkIndex 指定当前块索引。
+ @param chunkNum 指定总块数量。
+ @param data 指定当前块数据。
+ @param length 指定当前块的数据长度。
+ */
 - (id)initWithTracker:(NSString *)tracker sign:(NSString *)sign totalLength:(long)totalLength
            chunkIndex:(int)chunkIndex chunkNum:(int)chunkNum data:(NSData *)data length:(int)length;
 
+/**
+ @brief 触发正在处理数据事件。
+ */
 - (void)fireProgress:(NSString *)target;
 
+/**
+ @brief 触发整块数据块接收完成事件。
+ */
 - (void)fireCompleted:(NSString *)target;
 
+/**
+ @brief 触发发生故障事件。
+ */
 - (void)fireFailed:(NSString *)target;
 
+/*!
+ @brief 此块所属记号的区块是否全部接收完毕。
+ 
+ @return 如果整个区块数据接收完毕返回 <code>YES</code> 。
+ */
 - (BOOL)hasCompleted;
 
+/*!
+ @brief 此区块是否是最后一个区块。
+
+ @return 如果是最后一个区块返回 <code>YES</code> 。
+ */
 - (BOOL)isLast;
 
+/*!
+ @brief 读取指定块的数据。
+
+ @param index 指定读取区块的索引。
+ @param buffer 指定接收读取数据的数组。
+ @return 返回读取数据的长度，如果读取失败返回 <code>-1</code> 。
+ */
 - (int)read:(int)index andData:(NSMutableData *)buffer;
 
+/*!
+ @brief 自动计数方式依次读取区块数据。
+
+ @param buffer 指定接收读取数据的数组。
+ @return 返回读取数据的长度，如果读取失败返回 <code>-1</code> 。
+ */
 - (int)read:(NSMutableData *)buffer;
 
+/*!
+ @brief 重置读数据索引。
+ */
 - (void)resetRead;
 
+/*!
+ 清空此区块所属记号的整块数据。
+ */
 - (void)clearAll;
 
 @end

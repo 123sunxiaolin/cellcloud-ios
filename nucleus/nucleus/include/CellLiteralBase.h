@@ -2,7 +2,7 @@
  ------------------------------------------------------------------------------
  This source file is part of Cell Cloud.
  
- Copyright (c) 2009-2015 Cell Cloud Team (www.cellcloud.net)
+ Copyright (c) 2009-2017 Cell Cloud Team (www.cellcloud.net)
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,41 +27,44 @@
 #ifndef CellLiteralBase_h
 #define CellLiteralBase_h
 
+/*!
+ @brief 原语语素字面义定义。
+ */
 typedef enum _CCLiteralBase
 {
-    /// 字符串类型。
+    /*! 字符串类型。 */
     CCLiteralBaseString = 1,
 
-    /// 整数型。
+    /*! 整数型。 */
     CCLiteralBaseInt,
 
-    /// 无符号整数型。
+    /*! 无符号整数型。 */
     CCLiteralBaseUInt,
 
-    /// 长整型。
+    /*! 长整型。 */
     CCLiteralBaseLong,
 
-    /// 无符号长整型。
+    /*! 无符号长整型。 */
     CCLiteralBaseULong,
 
-    /// 布尔型。
+    /*! 布尔型。 */
     CCLiteralBaseBool,
 
-    /// 浮点型。
+    /*! 浮点型。 */
     CCLiteralBaseFloat,
 
-    /// 双精浮点型。
+    /*! 双精浮点型。 */
     CCLiteralBaseDouble,
 
-    /// JSON 类型。
+    /*! JSON 类型。 */
     CCLiteralBaseJSON,
 
-    /// 二进制类型
+    /*! 二进制类型。 */
     CCLiteralBaseBin,
 
-    /// XML 类型。
+    /*! XML 类型。 */
     CCLiteralBaseXML
-    
+
 } CCLiteralBase;
 
 #endif // CellLiteralBase_h
