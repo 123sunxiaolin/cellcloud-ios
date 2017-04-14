@@ -181,13 +181,15 @@
 //------------------------------------------------------------------------------
 - (BOOL)call:(NSArray *)identifiers
 {
-    if (CCSpeakerStateCalling == self.state)
-    {
-        // 正在 Call 返回 NO
-        return NO;
+    @synchronized (_monitor) {
+        if (CCSpeakerStateCalling == self.state)
+        {
+            // 正在 Call 返回 NO
+            return NO;
+        }
     }
 
-    if (nil != identifiers)
+    if (nil != identifiers && identifiers.count > 0)
     {
         @synchronized (_identifierList)
         {
@@ -199,6 +201,10 @@
             }
         }
     }
+    else
+    {
+        [CCLogger d:@"Parameter 'identifiers' is nil or size is 0"];
+    }
 
     if (_identifierList.count == 0)
     {
@@ -206,37 +212,39 @@
         return NO;
     }
 
-    if (nil == _connector)
-    {
-        char head[4] = {0x20, 0x10, 0x11, 0x10};
-        char tail[4] = {0x19, 0x78, 0x10, 0x04};
-        _connector = [[CCNonblockingConnector alloc] init:self
-                                                 headMark:head
-                                               headLength:4
-                                                 tailMark:tail
-                                               tailLength:4];
-    }
-    else
-    {
-        if ([_connector isConnected])
+    @synchronized (_monitor) {
+        if (nil == _connector)
         {
-            [_connector disconnect];
+            char head[4] = {0x20, 0x10, 0x11, 0x10};
+            char tail[4] = {0x19, 0x78, 0x10, 0x04};
+            _connector = [[CCNonblockingConnector alloc] init:self
+                                                     headMark:head
+                                                   headLength:4
+                                                     tailMark:tail
+                                                   tailLength:4];
         }
+        else
+        {
+            if ([_connector isConnected])
+            {
+                [_connector disconnect];
+            }
+        }
+
+        self.state = CCSpeakerStateHangUp;
+
+        CCSession *session = [_connector connect:_address.host port:_address.port];
+        if (nil != session)
+        {
+            // 变更状态
+            self.state = CCSpeakerStateCalling;
+
+            _heartbeatPing = 0;
+            _heartbeatPong = 0;
+        }
+
+        return (nil != session);
     }
-
-    self.state = CCSpeakerStateHangUp;
-
-    CCSession *session = [_connector connect:_address.host port:_address.port];
-    if (nil != session)
-    {
-        // 变更状态
-        self.state = CCSpeakerStateCalling;
-
-        _heartbeatPing = 0;
-        _heartbeatPong = 0;
-    }
-
-    return (nil != session);
 }
 //------------------------------------------------------------------------------
 - (BOOL)recall
@@ -260,28 +268,30 @@
 //------------------------------------------------------------------------------
 - (void)hangUp
 {
-    if (nil != _connector)
-    {
-        if ([_connector isConnected])
+    @synchronized (_monitor) {
+        if (nil != _connector)
         {
-            [_connector disconnect];
-        }
-        else
-        {
-            // 没有连接则直接清空
-            @synchronized (_identifierList)
+            if ([_connector isConnected])
             {
-                [_identifierList removeAllObjects];
+                [_connector disconnect];
             }
+            else
+            {
+                // 没有连接则直接清空
+                @synchronized (_identifierList)
+                {
+                    [_identifierList removeAllObjects];
+                }
+            }
+
+            _connector = nil;
+
+            self.state = CCSpeakerStateHangUp;
         }
 
-        _connector = nil;
-
-        self.state = CCSpeakerStateHangUp;
+        _heartbeatPing = 0;
+        _heartbeatPong = 0;
     }
-
-    _heartbeatPing = 0;
-    _heartbeatPong = 0;
 }
 //------------------------------------------------------------------------------
 - (BOOL)speak:(NSString *)identifier primitive:(CCPrimitive *)primitive
