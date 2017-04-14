@@ -110,6 +110,14 @@ typedef enum _CCSpeakerState
 - (BOOL)isCalled;
 
 /*!
+ @brief 是否已经调用了 Cellet 。
+ 
+ @param latency 指定以毫秒为单位的测试心跳的时间行程。
+ @return 如果已经调用了 Cellet 返回 <code>YES</code> 。
+ */
+- (BOOL)isCalledWithLatency:(int64_t)latency;
+
+/*!
  @brief 向 Cellet 发送原语。
  
  @param identifier 指定接收数据的 Cellet 标识。

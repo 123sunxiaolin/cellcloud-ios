@@ -138,6 +138,8 @@ static CCTalkService *sharedInstance = nil;
 //------------------------------------------------------------------------------
 - (void)stopDaemon
 {
+    _hbCount = 0;
+
     if (nil != _daemonTimer)
     {
         [_daemonTimer invalidate];
@@ -221,10 +223,18 @@ static CCTalkService *sharedInstance = nil;
     {
         for (CCSpeaker *spr in _speakers)
         {
-            [spr heartbeat];
-            [CCLogger d:@"Speaker heartbeat to %@:%d"
-             , spr.address.host
-             , spr.address.port];
+            if ([spr heartbeat])
+            {
+                [CCLogger d:@"Speaker heartbeat to %@:%d"
+                    , spr.address.host
+                    , spr.address.port];
+            }
+            else
+            {
+                [CCLogger w:@"Speaker heartbeat failed - %@:%d"
+                    , spr.address.host
+                    , spr.address.port];
+            }
         }
     }
 }
@@ -421,6 +431,36 @@ static CCTalkService *sharedInstance = nil;
     }
 
     return [speaker isCalled];
+}
+//------------------------------------------------------------------------------
+- (BOOL)isCalled:(NSString *)identifier timeout:(int64_t)timeoutInMillis
+{
+    __block CCSpeaker *speaker = nil;
+
+    @synchronized(_monitor) {
+        for (CCSpeaker *s in _speakers)
+        {
+            [s.identifiers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj isEqualToString:identifier])
+                {
+                    speaker = s;
+                    *stop = YES;
+                }
+            }];
+            
+            if (nil != speaker)
+            {
+                break;
+            }
+        }
+    }
+
+    if (nil == speaker)
+    {
+        return NO;
+    }
+
+    return [speaker isCalledWithLatency:timeoutInMillis];
 }
 //------------------------------------------------------------------------------
 - (void)markLostSpeaker:(CCSpeaker *)speaker

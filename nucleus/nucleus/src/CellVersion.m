@@ -30,7 +30,7 @@
 
 #define CC_MINOR 6
 
-#define CC_REVISION 2
+#define CC_REVISION 3
 
 #define CC_NAME @"Xi"
 

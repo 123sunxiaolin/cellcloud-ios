@@ -47,6 +47,7 @@
 @interface CCSpeaker ()
 {
 @private
+    // Cellet 清单
     NSMutableArray *_identifierList;
 
     CCInetAddress *_address;
@@ -59,6 +60,11 @@
     NSObject *_monitor;
 
     NSTimer *_contactedTimer;
+
+    // 心跳 Ping
+    int64_t _heartbeatPing;
+    // 心跳 Pong
+    int64_t _heartbeatPong;
 }
 
 /// 数据处理入口
@@ -225,6 +231,9 @@
     {
         // 变更状态
         self.state = CCSpeakerStateCalling;
+
+        _heartbeatPing = 0;
+        _heartbeatPong = 0;
     }
 
     return (nil != session);
@@ -270,6 +279,9 @@
 
         self.state = CCSpeakerStateHangUp;
     }
+
+    _heartbeatPing = 0;
+    _heartbeatPong = 0;
 }
 //------------------------------------------------------------------------------
 - (BOOL)speak:(NSString *)identifier primitive:(CCPrimitive *)primitive
@@ -309,6 +321,25 @@
     return (self.state == CCSpeakerStateCalled) && [_connector isConnected];
 }
 //------------------------------------------------------------------------------
+- (BOOL)isCalledWithLatency:(int64_t)latency
+{
+    BOOL ret = [self isCalled];
+
+    if (ret)
+    {
+        if (_heartbeatPing > 0 && _heartbeatPong > 0)
+        {
+            int64_t d = _heartbeatPong - _heartbeatPing;
+            if (d < 0 || d > latency)
+            {
+                ret = NO;
+            }
+        }
+    }
+
+    return ret;
+}
+//------------------------------------------------------------------------------
 - (BOOL)heartbeat
 {
     if (nil == _connector
@@ -324,9 +355,14 @@
     NSData *data = [CCPacket pack:packet];
     if (nil != data)
     {
+        // 计算心跳回包间隔
+        _heartbeatPing = [CCUtil currentTimeMillis];
+        _heartbeatPong = 0;
+
         CCMessage *message = [CCMessage messageWithData:data];
         [_connector write:message];
     }
+
     return YES;
 }
 
@@ -335,12 +371,16 @@
 //------------------------------------------------------------------------------
 - (void)process:(CCSession *)session packet:(CCPacket *)packet
 {
-    char tag[PSL_TAG + 1] = {0x0};
+    char tag[PFB_TAG] = {0x0};
     [packet getTag:tag];
 
     if (tag[2] == TPT_DIALOGUE_B3 && tag[3] == TPT_DIALOGUE_B4)
     {
         [self processDialogue:packet session:session];
+    }
+    else if (tag[2] == TPT_HEARTBEAT_B3 && tag[3] == TPT_HEARTBEAT_B4)
+    {
+        _heartbeatPong = [CCUtil currentTimeMillis];
     }
     else if (tag[2] == TPT_QUICK_B3 && tag[3] == TPT_QUICK_B4)
     {

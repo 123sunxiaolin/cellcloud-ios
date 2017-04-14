@@ -197,6 +197,15 @@
 - (BOOL)isCalled:(NSString *)identifier;
 
 /*!
+ @brief 是否已经与 Cellet 建立服务。
+ 
+ @param identifier 指定待判断的 Cellet 标识。
+ @param timeoutInMillis 指定判断数据超时时间。
+ @return 如果已经建立服务返回 <code>YES</code> 。
+ */
+- (BOOL)isCalled:(NSString *)identifier timeout:(int64_t)timeoutInMillis;
+
+/*!
  @brief 标记指定 Speaker 为连接丢失。
  */
 - (void)markLostSpeaker:(CCSpeaker *)speaker;
