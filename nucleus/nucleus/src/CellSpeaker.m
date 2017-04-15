@@ -615,6 +615,10 @@
             [[CCTalkService sharedSingleton].delegate didDialogue:primitive.celletIdentifier withDialect:primitive.dialect];
         }
     }
+    else
+    {
+        [CCLogger e:@"Can NOT read packet from %@:%d", [session getAddress].host, [session getAddress].port];
+    }
 }
 //------------------------------------------------------------------------------
 - (void)processConsult:(CCPacket *)packet session:(CCSession *)session
