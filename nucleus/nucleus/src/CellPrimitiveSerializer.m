@@ -226,11 +226,11 @@
     CCPrimitive *primitive = [[CCPrimitive alloc] initWithTag:tag];
 
     // FIXME 跳过版本
-    NSData *pridata = [dataStream subdataWithRange:NSMakeRange(7, dataStream.length - 7)];
+    //NSData *pridata = [dataStream subdataWithRange:NSMakeRange(7, dataStream.length - 7)];
 
-    const NSUInteger srcSize = pridata.length;
+    const NSUInteger srcSize = dataStream.length;
     char *src = malloc(srcSize);
-    [pridata getBytes:src length:srcSize];
+    [dataStream getBytes:src length:srcSize];
     int srcCursor = 0;
 
     const int bufSize = BLOCK;
@@ -292,6 +292,7 @@
             buf[bufCursor] = byte;
             ++bufCursor;
             break;
+                
         case PARSE_PHASE_TYPE:
             if (byte == TOKEN_OPERATE_ASSIGN)
             {
@@ -310,6 +311,7 @@
             buf[bufCursor] = byte;
             ++bufCursor;
             break;
+                
         case PARSE_PHASE_LITERAL:
             if (byte == TOKEN_CLOSE_BRACE)
             {
@@ -331,6 +333,29 @@
             buf[bufCursor] = byte;
             ++bufCursor;
             break;
+                
+        case PARSE_PHASE_STUFF:
+            if (byte == TOKEN_OPEN_BRACE)
+            {
+                // 进入解析语素阶段
+                phase = PARSE_PHASE_TYPE;
+            }
+            break;
+                
+        case PARSE_PHASE_VERSION:
+            if (byte == TOKEN_CLOSE_BRACKET)
+            {
+                memset(buf, 0x0, bufSize);
+                bufCursor = 0;
+                
+                phase = PARSE_PHASE_STUFF;
+                continue;
+            }
+            // 记录数据
+            buf[bufCursor] = byte;
+            ++bufCursor;
+            break;
+                
         case PARSE_PHASE_DIALECT:
             if (byte == TOKEN_OPEN_BRACE)
             {
@@ -356,10 +381,17 @@
                 ++bufCursor;
             }
             break;
+                
         default:
             if (byte == TOKEN_OPEN_BRACE)
             {
                 phase = PARSE_PHASE_TYPE;
+                memset(buf, 0x0, bufSize);
+                bufCursor = 0;
+            }
+            else if (byte == TOKEN_OPEN_BRACKET)
+            {
+                phase = PARSE_PHASE_VERSION;
                 memset(buf, 0x0, bufSize);
                 bufCursor = 0;
             }

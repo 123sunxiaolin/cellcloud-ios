@@ -33,6 +33,8 @@
  */
 @interface CCChunkDialectFactory : CCDialectFactory
 
+@property (nonatomic, assign) long long maxCacheMemory;
+
 /*!
  @brief 写入数据到缓存区。
 
@@ -64,6 +66,13 @@
  @param sign 指定待清空的记号。
  */
 - (void)clear:(NSString *)sign;
+
+/*!
+ @brief 清空接收缓存区。
+ 
+ @param force 指定是否同时清空未完成接收的缓存。
+ */
+- (void)cleanup:(BOOL)force;
 
 @end
 

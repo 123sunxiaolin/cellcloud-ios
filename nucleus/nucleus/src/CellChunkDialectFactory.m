@@ -43,7 +43,7 @@
     // 数据发送列表映射
     NSMutableDictionary *_listDic;
 
-    long _cacheMemorySize;
+    long long _cacheMemorySize;
     BOOL _clearRunning;
 }
 
@@ -62,6 +62,8 @@
 
         _cacheMemorySize = 0;
         _clearRunning = NO;
+
+        self.maxCacheMemory = CLEAR_THRESHOLD;
     }
     
     return self;
@@ -162,7 +164,7 @@
     // 更新内存大小
     _cacheMemorySize += chunk.data.length;
 
-    if (_cacheMemorySize > 1024)
+    if (_cacheMemorySize > 1024L)
     {
         [CCLogger i:@"Cache memory size: %ld KB", (long)(_cacheMemorySize / 1024L)];
     }
@@ -171,7 +173,7 @@
         [CCLogger i:@"Cache memory size: %ld Bytes", _cacheMemorySize];
     }
 
-    if (_cacheMemorySize > CLEAR_THRESHOLD)
+    if (_cacheMemorySize > self.maxCacheMemory)
     {
         if (!_clearRunning)
         {
@@ -181,44 +183,54 @@
                 long long time = LONG_LONG_MAX;
                 Cache *selected = nil;
 
-                NSMutableArray *emptyList = [[NSMutableArray alloc]initWithCapacity:2];
-                for (Cache *cache in [_cacheDic allValues])
+                NSMutableArray *emptyList = [[NSMutableArray alloc] initWithCapacity:2];
+                
+                while (_cacheMemorySize > self.maxCacheMemory)
                 {
-                    if ([cache isEmpty])
+                    for (Cache *cache in [_cacheDic allValues])
                     {
-                        [emptyList addObject:cache];
-                        continue;
+                        if ([cache isEmpty])
+                        {
+                            [emptyList addObject:cache];
+                            continue;
+                        }
+                        
+                        long long ft = cache.timestamp;
+                        
+                        if (ft < time)
+                        {
+                            time = ft;
+                            selected = cache;
+                        }
                     }
-
-                    long long ft = cache.timestamp;
-
-                    if (ft < time)
+                    
+                    if (nil != selected)
                     {
-                        time = ft;
-                        selected = cache;
+                        long size = [selected clear];
+                        [_cacheDic removeObjectForKey:selected.sign];
+                        
+                        // 更新内存大小记录
+                        _cacheMemorySize -= size;
+                        
+                        [CCLogger i:@"Cache memory size: %ld KB", (long)(_cacheMemorySize / 1024L)];
                     }
-                }
-
-                if (nil != selected)
-                {
-                    long size = [selected clear];
-                    [_cacheDic removeObjectForKey:selected.sign];
-
-                    // 更新内存大小记录
-                    _cacheMemorySize -= size;
-
-                    [CCLogger i:@"Cache memory size: %ld KB", (long)(_cacheMemorySize / 1024L)];
-                }
-
-                if (0 != emptyList.count)
-                {
-                    for (Cache *cache in emptyList)
+                    
+                    if (0 != emptyList.count)
                     {
-                        [_cacheDic removeObjectForKey:cache.sign];
+                        for (Cache *cache in emptyList)
+                        {
+                            [_cacheDic removeObjectForKey:cache.sign];
+                        }
+                        
+                        [emptyList removeAllObjects];
                     }
+                    
+                    time = LONG_LONG_MAX;
+                    selected = nil;
                 }
 
                 _clearRunning = NO;
+                emptyList = nil;
             });
         }
     }
@@ -284,6 +296,41 @@
     }
 }
 
+//------------------------------------------------------------------------------
+- (void)cleanup:(BOOL)force
+{
+    if (force)
+    {
+        [_cacheDic removeAllObjects];
+        _cacheMemorySize = 0;
+        return;
+    }
+    
+    NSMutableArray *list = [[NSMutableArray alloc] initWithCapacity:2];
+    for (Cache *cache in [_cacheDic allValues])
+    {
+        if ([cache checkCompleted])
+        {
+            [list addObject:cache];
+        }
+    }
+
+    if (0 != list.count)
+    {
+        for (Cache *cache in list)
+        {
+            long size = [cache clear];
+            _cacheMemorySize -= size;
+
+            [_cacheDic removeObjectForKey:cache.sign];
+        }
+
+        [list removeAllObjects];
+    }
+
+    list = nil;
+}
+
 #pragma  mark - Private Method
 //------------------------------------------------------------------------------
 /*- (void)checkAndClearQueue
@@ -345,7 +392,7 @@
 {
     @synchronized (_dataQueue)
     {
-        for (int i = 0; i < _dataQueue.count; ++i)
+        /*for (int i = 0; i < _dataQueue.count; ++i)
         {
             CCChunkDialect *cur = [_dataQueue objectAtIndex:i];
             if (chunk.chunkIndex == cur.chunkIndex)
@@ -354,7 +401,7 @@
                 [_dataQueue setObject:chunk atIndexedSubscript:chunk.chunkIndex];
                 return;
             }
-        }
+        }*/
 
         [_dataQueue setObject:chunk atIndexedSubscript:chunk.chunkIndex];
 
