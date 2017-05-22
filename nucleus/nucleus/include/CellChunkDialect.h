@@ -76,7 +76,7 @@
 /*! 整块记号。用于标记整个块。 */
 @property (nonatomic, strong, readonly) NSString *sign;
 /*! 整块总长度。 */
-@property (nonatomic, assign, readonly) long totalLength;
+@property (nonatomic, assign, readonly) long long totalLength;
 /*! 整块总数量。 */
 @property (nonatomic, assign, readonly) int chunkNum;
 /*! 当前块索引。 */
@@ -85,6 +85,8 @@
 @property (nonatomic, strong, readonly) NSData *data;
 /*! 当前块长度。 */
 @property (nonatomic, assign, readonly) int length;
+/*! 数据传输速率。 */
+@property (nonatomic, assign) long speedInKB;
 
 /*!
  用于标识该区块是否能写入缓存队列。

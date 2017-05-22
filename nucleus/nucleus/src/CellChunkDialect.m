@@ -40,6 +40,7 @@
 @synthesize data = _data;
 @synthesize length = _length;
 @synthesize totalLength = _totalLength;
+@synthesize speedInKB = _speedInKB;
 
 - (id)init
 {
@@ -47,6 +48,8 @@
     {
         _sign = nil;
         _chunkIndex = -1;
+        
+        _speedInKB = 20;
 
         self.infectant = NO;
         self.readIndex = 0;
@@ -59,6 +62,8 @@
 {
     if (self = [super initWithName:CHUNK_DIALECT_NAME tracker:tracker])
     {
+        _speedInKB = 20;
+        
         self.infectant = NO;
         self.readIndex = 0;
     }
@@ -77,6 +82,8 @@
         _chunkNum = chunkNum;
         _data = [NSData dataWithData:data];
         _length = length;
+        
+        _speedInKB = 20;
 
         self.infectant = NO;
         self.readIndex = 0;
@@ -96,6 +103,8 @@
         _chunkNum = chunkNum;
         _data = [NSData dataWithData:data];
         _length = length;
+        
+        _speedInKB = 20;
 
         self.infectant = NO;
         self.readIndex = 0;

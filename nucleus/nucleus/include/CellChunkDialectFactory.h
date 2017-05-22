@@ -112,6 +112,7 @@
 @property (nonatomic, assign) long long timestamp;
 @property (nonatomic, strong) NSString *target;
 @property (nonatomic, assign) int chunkNum;
+@property (atomic, assign) BOOL running;
 
 - (id)initWithTarget:(NSString *)target andChunkNum:(int)chunkNum;;
 

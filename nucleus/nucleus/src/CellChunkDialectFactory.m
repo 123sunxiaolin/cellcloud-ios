@@ -114,9 +114,14 @@
         // 写入列表
         [list append:chunk];
 
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [list process];
-        });
+        if (!list.running)
+        {
+            list.running = YES;
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                [list process];
+            });
+        }
     }
     else
     {
@@ -124,9 +129,14 @@
         [newList append:chunk];
         [_listDic setObject:newList forKey:chunk.sign];
 
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [newList process];
-        });
+        if (!newList.running)
+        {
+            newList.running = YES;
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                [newList process];
+            });
+        }
     }
 
     return NO;
@@ -470,6 +480,12 @@
 {
     NSInteger _index;
     NSMutableArray *_list;
+    
+    // 单位为毫秒的数据发送间隔
+    int _interval;
+    
+    // 重试次数
+    int _retry;
 }
 
 @end
@@ -479,6 +495,7 @@
 @synthesize timestamp = _timestamp;
 @synthesize target = _target;
 @synthesize chunkNum = _chunkNum;
+@synthesize running = _running;
 
 - (id)initWithTarget:(NSString *)target andChunkNum:(int)chunkNum
 {
@@ -489,7 +506,10 @@
         _target = target;
         _chunkNum = chunkNum;
         _index = -1;
+        _running = NO;
         _list = [[NSMutableArray alloc]initWithCapacity:chunkNum];
+        _interval = 100;
+        _retry = 2;
     }
     return self;
 }
@@ -499,7 +519,22 @@
     // 标识为已污染
     chunk.infectant = YES;
 
-    [_list addObject:chunk];
+    @synchronized (_list) {
+        [_list addObject:chunk];
+    }
+
+    if (chunk.chunkIndex == 0)
+    {
+        double t = (CHUNK_SIZE / 1024.0f) / (chunk.speedInKB + 0.0f) * 1000.0f;
+        if (t >= 10.0f)
+        {
+            _interval = round(t) + 1;
+        }
+        else
+        {
+            _interval = 10;
+        }
+    }
 }
 //------------------------------------------------------------------------------
 - (BOOL)isComplete
@@ -512,8 +547,13 @@
     _timestamp = [CCUtil currentTimeMillis];
     _chunkNum = chunkNum;
     _index = -1;
+    _running = NO;
+    _interval = 100;
+    _retry = 2;
 
-    [_list removeAllObjects];
+    @synchronized (_list) {
+        [_list removeAllObjects];
+    }
 }
 //------------------------------------------------------------------------------
 - (void)process
@@ -522,9 +562,11 @@
 
     ++_index;
 
-    if (_index < _list.count)
-    {
-        chunk = [_list objectAtIndex:_index];
+    @synchronized (_list) {
+        if (_index < _list.count)
+        {
+            chunk = [_list objectAtIndex:_index];
+        }
     }
 
     if (nil != chunk)
@@ -536,6 +578,15 @@
             if (_index + 1 == _chunkNum)
             {
                 [chunk fireCompleted:_target];
+                
+                _running = NO;
+            }
+            else
+            {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_interval * 1000ll * NSEC_PER_USEC)),
+                               dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                    [self process];
+                });
             }
         }
         else
@@ -544,12 +595,30 @@
             --_index;
 
             [chunk fireFailed:_target];
+            
+            _running = NO;
         }
     }
     else
     {
         // 修正索引
         --_index;
+        
+        if (_retry > 0)
+        {
+            // 未找到数据，重试
+            
+            --_retry;
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_interval * 1000ll * NSEC_PER_USEC)),
+                       dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                           [self process];
+                       });
+        }
+        else
+        {
+            _running = NO;
+        }
     }
 }
 
