@@ -167,10 +167,17 @@
     _totalLength = [(CCSubjectStuff *)[list objectAtIndex:5] getValueAsLong];
 }
 //------------------------------------------------------------------------------
+- (NSArray *)cancel
+{
+    CCChunkDialectFactory *factory =
+        (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton] getFactory:CHUNK_DIALECT_NAME];
+    return [factory cancel:_sign];
+}
+//------------------------------------------------------------------------------
 - (BOOL)hasCompleted
 {
     CCChunkDialectFactory *factory =
-            (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
+            (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton] getFactory:CHUNK_DIALECT_NAME];
     return [factory checkCompleted:_sign];
 }
 //------------------------------------------------------------------------------
@@ -182,7 +189,7 @@
 - (int)read:(int)index andData:(NSMutableData *)buffer
 {
     CCChunkDialectFactory *factory =
-            (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
+            (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton] getFactory:CHUNK_DIALECT_NAME];
     return [factory read:_sign withIndex:index withData:buffer];
 }
 //------------------------------------------------------------------------------
@@ -194,7 +201,7 @@
     }
     
     CCChunkDialectFactory *factory =
-            (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
+            (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton] getFactory:CHUNK_DIALECT_NAME];
     int length = [factory read:_sign withIndex:_readIndex withData:buffer];
     ++_readIndex;
     return length;
@@ -208,7 +215,7 @@
 - (void)clearAll
 {
     CCChunkDialectFactory *factory =
-            (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton]getFactory:CHUNK_DIALECT_NAME];
+            (CCChunkDialectFactory *)[[CCDialectEnumerator sharedSingleton] getFactory:CHUNK_DIALECT_NAME];
     [factory clear:_sign];
 }
 

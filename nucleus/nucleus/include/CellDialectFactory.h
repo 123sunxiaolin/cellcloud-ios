@@ -45,11 +45,20 @@
  */
 - (CCDialect *)create:(NSString *)tracker;
 
-
 /*!
  @brief 关闭工厂。
  */
 - (void)shutdown;
+
+/*!
+ @brief 休眠工厂。
+ */
+- (void)sleep;
+
+/*!
+ @brief 唤醒工厂。
+ */
+- (void)wakeup;
 
 /*!
  @brief 当发送方言时此方法被回调。

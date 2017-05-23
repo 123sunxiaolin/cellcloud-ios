@@ -131,20 +131,25 @@
 - (id)initWithTracker:(NSString *)tracker sign:(NSString *)sign totalLength:(long)totalLength
            chunkIndex:(int)chunkIndex chunkNum:(int)chunkNum data:(NSData *)data length:(int)length;
 
-/**
+/*!
  @brief 触发正在处理数据事件。
  */
 - (void)fireProgress:(NSString *)target;
 
-/**
+/*!
  @brief 触发整块数据块接收完成事件。
  */
 - (void)fireCompleted:(NSString *)target;
 
-/**
+/*!
  @brief 触发发生故障事件。
  */
 - (void)fireFailed:(NSString *)target;
+
+/*!
+ @brief 取消当前记号对应的所有区块的发送。
+ */
+- (NSArray *)cancel;
 
 /*!
  @brief 此块所属记号的区块是否全部接收完毕。

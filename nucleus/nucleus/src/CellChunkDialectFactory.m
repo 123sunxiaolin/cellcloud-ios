@@ -152,6 +152,19 @@
     return YES;
 }
 //------------------------------------------------------------------------------
+- (NSArray *)cancel:(NSString *)sign
+{
+    ChunkList *list = (ChunkList *)[_listDic objectForKey:sign];
+    if (nil == list)
+    {
+        return nil;
+    }
+    
+    [_listDic removeObjectForKey:sign];
+    
+    return [list getList];
+}
+//------------------------------------------------------------------------------
 - (void)write:(CCChunkDialect *)chunk
 {
     if (chunk.chunkIndex == 0)
@@ -620,6 +633,11 @@
             _running = NO;
         }
     }
+}
+//------------------------------------------------------------------------------
+- (NSArray *)getList
+{
+    return _list;
 }
 
 @end

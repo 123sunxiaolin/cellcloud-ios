@@ -36,6 +36,14 @@
 @property (nonatomic, assign) long long maxCacheMemory;
 
 /*!
+ * @brief 取消正在发送的区块。
+ *
+ * @param sign 指定待检查的区块记号。
+ * @return 返回被取消的区块列表，如果没有找到区块返回 <code>nil</code> 值。
+ */
+- (NSArray *)cancel:(NSString *)sign;
+
+/*!
  @brief 写入数据到缓存区。
 
  @param chunk 指定待写入数据的区块。
@@ -123,5 +131,7 @@
 - (void)reset:(int)chunkNum;
 
 - (void)process;
+
+- (NSArray *)getList;
 
 @end

@@ -75,4 +75,14 @@
  */
 - (void)shutdownAll;
 
+/*!
+ @brief 休眠所有方言工厂。
+ */
+- (void)sleepAll;
+
+/*!
+ @brief 唤醒所有方言工厂。
+ */
+- (void)wakeupAll;
+
 @end

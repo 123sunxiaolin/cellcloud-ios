@@ -92,14 +92,31 @@ static CCDialectEnumerator *sharedInstance = nil;
 //------------------------------------------------------------------------------
 - (void)shutdownAll
 {
-    if (nil != _factories)
+    NSArray *keys = [_factories allKeys];
+    for (NSString *key in keys)
     {
-        NSArray *keys = [_factories allKeys];
-        for (NSString *key in keys)
-        {
-            CCDialectFactory *fact = [_factories objectForKey:key];
-            [fact shutdown];
-        }
+        CCDialectFactory *fact = [_factories objectForKey:key];
+        [fact shutdown];
+    }
+}
+//------------------------------------------------------------------------------
+- (void)sleepAll
+{
+    NSArray *keys = [_factories allKeys];
+    for (NSString *key in keys)
+    {
+        CCDialectFactory *fact = [_factories objectForKey:key];
+        [fact sleep];
+    }
+}
+//------------------------------------------------------------------------------
+- (void)wakeupAll
+{
+    NSArray *keys = [_factories allKeys];
+    for (NSString *key in keys)
+    {
+        CCDialectFactory *fact = [_factories objectForKey:key];
+        [fact wakeup];
     }
 }
 

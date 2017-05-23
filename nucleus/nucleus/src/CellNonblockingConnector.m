@@ -216,9 +216,6 @@
     {
         [_asyncSocket writeData:message.data withTimeout:session.writeTimeout tag:[message.sn longValue]];
     }
-
-    // 回调消息发送
-    //[self fireMessageSent:message];
 }
 //------------------------------------------------------------------------------
 - (void)write:(CCMessage *)message

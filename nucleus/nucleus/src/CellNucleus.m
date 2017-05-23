@@ -30,6 +30,7 @@
 #import "CellTalkService.h"
 #import "CellLogger.h"
 #import "CellVersion.h"
+#import "CellDialectEnumerator.h"
 
 @interface CCNucleus ()
 {
@@ -148,6 +149,8 @@ static CCNucleus *sharedInstance = nil;
     [CCLogger d:@"*-*-* Cell Sleep *-*-*"];
 
     [[CCTalkService sharedSingleton] stopDaemon];
+
+    [[CCDialectEnumerator sharedSingleton] sleepAll];
 }
 //------------------------------------------------------------------------------
 - (void)wakeup
@@ -155,6 +158,8 @@ static CCNucleus *sharedInstance = nil;
     [CCLogger d:@"*-*-* Cell Wakeup *-*-*"];
 
     [[CCTalkService sharedSingleton] startDaemon];
+
+    [[CCDialectEnumerator sharedSingleton] wakeupAll];
 }
 //------------------------------------------------------------------------------
 - (void)setBackgroundActiveEnabled:(BOOL)enabled
