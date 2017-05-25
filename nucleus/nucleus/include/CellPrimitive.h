@@ -53,6 +53,9 @@
 /*! 补语语素清单。 */
 @property (nonatomic, strong, readonly) NSMutableArray *complements;
 
+/*! 版本号。 */
+@property (nonatomic, assign) int version;
+
 /*!
  @brief 使用内核标签初始化。
  

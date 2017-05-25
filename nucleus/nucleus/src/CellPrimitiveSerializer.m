@@ -38,73 +38,96 @@
 #import "CellDialectFactory.h"
 #import "CellLogger.h"
 
-#define PS_MAJOR 2
-#define PS_MINOR 0
-
-#define TOKEN_OPEN_BRACKET '['
-#define TOKEN_CLOSE_BRACKET ']'
-#define TOKEN_OPEN_BRACE '{'
-#define TOKEN_CLOSE_BRACE '}'
-#define TOKEN_OPERATE_ASSIGN '='
+#define TOKEN_OPEN_BRACKET    '['
+#define TOKEN_CLOSE_BRACKET   ']'
+#define TOKEN_OPEN_BRACE      '{'
+#define TOKEN_CLOSE_BRACE     '}'
+#define TOKEN_OPERATE_ASSIGN  '='
 #define TOKEN_OPERATE_DECLARE ':'
-#define TOKEN_AT '@'
-#define TOKEN_ESCAPE '\\'
+#define TOKEN_AT              '@'
+#define TOKEN_ESCAPE          '\\'
 
-#define TOKEN_OPEN_BRACKET_STR "["
-#define TOKEN_CLOSE_BRACKET_STR "]"
-#define TOKEN_OPEN_BRACE_STR "{"
-#define TOKEN_CLOSE_BRACE_STR "}"
-#define TOKEN_OPERATE_ASSIGN_STR "="
+#define TOKEN_OPEN_BRACKET_STR    "["
+#define TOKEN_CLOSE_BRACKET_STR   "]"
+#define TOKEN_OPEN_BRACE_STR      "{"
+#define TOKEN_CLOSE_BRACE_STR     "}"
+#define TOKEN_OPERATE_ASSIGN_STR  "="
 #define TOKEN_OPERATE_DECLARE_STR ":"
-#define TOKEN_AT_STR "@"
-#define TOKEN_ESCAPE_STR "\\"
+#define TOKEN_AT_STR              "@"
+#define TOKEN_ESCAPE_STR          "\\"
 
 #define TOKEN_AT_NSSTRING @"@"
 
-#define STUFFTYPE_SUBJECT "sub"
-#define STUFFTYPE_PREDICATE "pre"
-#define STUFFTYPE_OBJECTIVE "obj"
-#define STUFFTYPE_ADVERBIAL "adv"
+#define STUFFTYPE_SUBJECT     "sub"
+#define STUFFTYPE_PREDICATE   "pre"
+#define STUFFTYPE_OBJECTIVE   "obj"
+#define STUFFTYPE_ADVERBIAL   "adv"
 #define STUFFTYPE_ATTRIBUTIVE "att"
-#define STUFFTYPE_COMPLEMENT "com"
+#define STUFFTYPE_COMPLEMENT  "com"
 
-#define STUFFTYPE_SUBJECT_NSSTRING @"sub"
-#define STUFFTYPE_PREDICATE_NSSTRING @"pre"
-#define STUFFTYPE_OBJECTIVE_NSSTRING @"obj"
-#define STUFFTYPE_ADVERBIAL_NSSTRING @"adv"
+#define STUFFTYPE_SUBJECT_NSSTRING     @"sub"
+#define STUFFTYPE_PREDICATE_NSSTRING   @"pre"
+#define STUFFTYPE_OBJECTIVE_NSSTRING   @"obj"
+#define STUFFTYPE_ADVERBIAL_NSSTRING   @"adv"
 #define STUFFTYPE_ATTRIBUTIVE_NSSTRING @"att"
-#define STUFFTYPE_COMPLEMENT_NSSTRING @"com"
+#define STUFFTYPE_COMPLEMENT_NSSTRING  @"com"
 
-#define LITERALBASE_STRING "string"
-#define LITERALBASE_INT "int"
-#define LITERALBASE_UINT "uint"
-#define LITERALBASE_LONG "long"
-#define LITERALBASE_ULONG "ulong"
-#define LITERALBASE_FLOAT "float"
-#define LITERALBASE_DOUBLE "double"
-#define LITERALBASE_BOOL "bool"
-#define LITERALBASE_JSON "json"
-#define LITERALBASE_BIN "bin"
-#define LITERALBASE_XML "xml"
+#define LITERALBASE_STRING   "string"
+#define LITERALBASE_STRING_M "s"
+#define LITERALBASE_INT      "int"
+#define LITERALBASE_INT_M    "i"
+#define LITERALBASE_UINT     "uint"
+#define LITERALBASE_UINT_M   "ui"
+#define LITERALBASE_LONG     "long"
+#define LITERALBASE_LONG_M   "l"
+#define LITERALBASE_ULONG    "ulong"
+#define LITERALBASE_ULONG_M  "ul"
+#define LITERALBASE_FLOAT    "float"
+#define LITERALBASE_FLOAT_M  "f"
+#define LITERALBASE_DOUBLE   "double"
+#define LITERALBASE_DOUBLE_M "d"
+#define LITERALBASE_BOOL     "bool"
+#define LITERALBASE_BOOL_M   "b"
+#define LITERALBASE_JSON     "json"
+#define LITERALBASE_JSON_M   "j"
+#define LITERALBASE_BIN      "bin"
+#define LITERALBASE_BIN_M    "bn"
+#define LITERALBASE_XML      "xml"
+#define LITERALBASE_XML_M    "x"
 
-#define LITERALBASE_STRING_NSSTRING @"string"
-#define LITERALBASE_INT_NSSTRING @"int"
-#define LITERALBASE_UINT_NSSTRING @"uint"
-#define LITERALBASE_LONG_NSSTRING @"long"
-#define LITERALBASE_ULONG_NSSTRING @"ulong"
-#define LITERALBASE_FLOAT_NSSTRING @"float"
-#define LITERALBASE_DOUBLE_NSSTRING @"double"
-#define LITERALBASE_BOOL_NSSTRING @"bool"
-#define LITERALBASE_JSON_NSSTRING @"json"
-#define LITERALBASE_BIN_NSSTRING @"bin"
-#define LITERALBASE_XML_NSSTRING @"xml"
+#define LITERALBASE_STRING_BYTE  's'
+#define LITERALBASE_INT_BYTE     'i'
+#define LITERALBASE_UINT_BYTE_0  'u'
+#define LITERALBASE_UINT_BYTE_1  'i'
+#define LITERALBASE_LONG_BYTE    'l'
+#define LITERALBASE_ULONG_BYTE_0 'u'
+#define LITERALBASE_ULONG_BYTE_1 'l'
+#define LITERALBASE_FLOAT_BYTE   'f'
+#define LITERALBASE_DOUBLE_BYTE  'd'
+#define LITERALBASE_BOOL_BYTE    'b'
+#define LITERALBASE_JSON_BYTE    'j'
+#define LITERALBASE_BIN_BYTE_0   'b'
+#define LITERALBASE_BIN_BYTE_1   'n'
+#define LITERALBASE_XML_BYTE     'x'
+
+#define LITERALBASE_STRING_NSSTRING   @"string"
+#define LITERALBASE_INT_NSSTRING      @"int"
+#define LITERALBASE_UINT_NSSTRING     @"uint"
+#define LITERALBASE_LONG_NSSTRING     @"long"
+#define LITERALBASE_ULONG_NSSTRING    @"ulong"
+#define LITERALBASE_FLOAT_NSSTRING    @"float"
+#define LITERALBASE_DOUBLE_NSSTRING   @"double"
+#define LITERALBASE_BOOL_NSSTRING     @"bool"
+#define LITERALBASE_JSON_NSSTRING     @"json"
+#define LITERALBASE_BIN_NSSTRING      @"bin"
+#define LITERALBASE_XML_NSSTRING      @"xml"
 
 #define PARSE_PHASE_UNKNOWN 0
 #define PARSE_PHASE_VERSION 1
-#define PARSE_PHASE_TYPE 2
+#define PARSE_PHASE_TYPE    2
 #define PARSE_PHASE_LITERAL 3
-#define PARSE_PHASE_VALUE 4
-#define PARSE_PHASE_STUFF 5
+#define PARSE_PHASE_VALUE   4
+#define PARSE_PHASE_STUFF   5
 #define PARSE_PHASE_DIALECT 6
 
 #define BLOCK 65536
@@ -115,10 +138,10 @@
 + (NSData *)reviseValue:(NSData *)input;
 
 /** 解析类型。 */
-+ (NSData *)parseStuffType:(CCStuffType)stuffType;
++ (int)parseStuffType:(char *)output stuffType:(CCStuffType)stuffType;
 
 /** 解析字面义。 */
-+ (NSData *)parseLiteralBase:(CCLiteralBase)literal;
++ (int)parseLiteralBase:(char *)output literal:(CCLiteralBase)literal v3:(BOOL)v3;
 
 /** 将数据加入原语。 */
 + (void)injectStuff:(CCPrimitive *)primitive type:(NSData *)type value:(NSData *)value literal:(NSData *)literal;
@@ -137,16 +160,25 @@
     原语序列化格式：
     [version]{sutff}...{stuff}[dialect@tracker]
     示例：
-    [00100]{sub=cloud:string}{pre=add:string}[ActionDialect@tracker]
+    [00100]{sub=cloud:string}{pre=2013:int}[ActionDialect@Ambrose]
+    [03]{sub=cloud:s}{pre=2013:i}[ActionDialect@Ambrose]
     */
 
     NSMutableData *stream = [[NSMutableData alloc] init];
     
     // 版本
+    BOOL v3 = (primitive.version == 3);
     char version[8] = {0x0};
-    sprintf(version, "%c%03d%02d%c", TOKEN_OPEN_BRACKET,
-        PS_MAJOR, PS_MINOR, TOKEN_CLOSE_BRACKET);
-    [stream appendBytes:version length:7];
+    if (v3)
+    {
+        sprintf(version, "%c0%d%c", TOKEN_OPEN_BRACKET, 3, TOKEN_CLOSE_BRACKET);
+        [stream appendBytes:version length:4];
+    }
+    else
+    {
+        sprintf(version, "%c%03d%02d%c", TOKEN_OPEN_BRACKET, 2, 0, TOKEN_CLOSE_BRACKET);
+        [stream appendBytes:version length:7];
+    }
 
     // 序列化各语素
     NSMutableArray *stuffs = nil;
@@ -182,20 +214,29 @@
         [list addObject:stuffs];
     }
 
+    char type[4] = {0x0};
+    char literal[8] = {0x0};
+    int length = 0;
+    
     for (NSMutableArray *stuffList in list)
     {
         for (CCStuff *stuff in stuffList)
         {
             [stream appendBytes:TOKEN_OPEN_BRACE_STR length:1];
-            [stream appendData:[CCPrimitiveSerializer parseStuffType:stuff.type]];
+
+            length = [CCPrimitiveSerializer parseStuffType:type stuffType:stuff.type];
+            [stream appendBytes:type length:length];
+
             [stream appendBytes:TOKEN_OPERATE_ASSIGN_STR length:1];
 
-            NSData *vd = [[stuff getValueAsString] dataUsingEncoding:NSUTF8StringEncoding];
-            NSData *rvd = [CCPrimitiveSerializer reviseValue:vd];
-            [stream appendData:rvd];
+            NSData *value = [CCPrimitiveSerializer reviseValue:[stuff getValue]];
+            [stream appendData:value];
 
             [stream appendBytes:TOKEN_OPERATE_DECLARE_STR length:1];
-            [stream appendData:[CCPrimitiveSerializer parseLiteralBase:stuff.literalBase]];
+
+            length = [CCPrimitiveSerializer parseLiteralBase:literal literal:stuff.literalBase v3:v3];
+            [stream appendBytes:literal length:length];
+
             [stream appendBytes:TOKEN_CLOSE_BRACE_STR length:1];
         }
     }
@@ -220,13 +261,11 @@
     原语序列化格式：
     [version]{sutff}...{stuff}[dialect@tracker]
     示例：
-    [00100]{sub=cloud:string}{pre=add:string}[ActionDialect@tracker]
+    [00100]{sub=cloud:string}{pre=2013:int}[ActionDialect@Ambrose]
+    [03]{sub=cloud:s}{pre=2013:i}[ActionDialect@Ambrose]
     */
 
     CCPrimitive *primitive = [[CCPrimitive alloc] initWithTag:tag];
-
-    // FIXME 跳过版本
-    //NSData *pridata = [dataStream subdataWithRange:NSMakeRange(7, dataStream.length - 7)];
 
     const NSUInteger srcSize = dataStream.length;
     char *src = malloc(srcSize);
@@ -345,9 +384,15 @@
         case PARSE_PHASE_VERSION:
             if (byte == TOKEN_CLOSE_BRACKET)
             {
+                // 解析版本结束
+                if (bufCursor > 2)
+                {
+                    primitive.version = 2;
+                }
+                
                 memset(buf, 0x0, bufSize);
                 bufCursor = 0;
-                
+
                 phase = PARSE_PHASE_STUFF;
                 continue;
             }
@@ -441,103 +486,231 @@
     return ret;
 }
 //------------------------------------------------------------------------------
-+ (NSData *)parseStuffType:(CCStuffType)stuffType
++ (int)parseStuffType:(char *)output stuffType:(CCStuffType)stuffType
 {
-    NSData *ret;
+    int length = 0;
+
     switch (stuffType)
     {
     case CCStuffTypeSubject:
-        ret = [NSData dataWithBytes:STUFFTYPE_SUBJECT length:strlen(STUFFTYPE_SUBJECT)];
+        length = strlen(STUFFTYPE_SUBJECT);
+        memcpy(output, STUFFTYPE_SUBJECT, length);
         break;
     case CCStuffTypePredicate:
-        ret = [NSData dataWithBytes:STUFFTYPE_PREDICATE length:strlen(STUFFTYPE_PREDICATE)];
+        length = strlen(STUFFTYPE_PREDICATE);
+        memcpy(output, STUFFTYPE_PREDICATE, length);
         break;
     case CCStuffTypeObjective:
-        ret = [NSData dataWithBytes:STUFFTYPE_OBJECTIVE length:strlen(STUFFTYPE_OBJECTIVE)];
+        length = strlen(STUFFTYPE_OBJECTIVE);
+        memcpy(output, STUFFTYPE_OBJECTIVE, length);
         break;
     case CCStuffTypeAttributive:
-        ret = [NSData dataWithBytes:STUFFTYPE_ATTRIBUTIVE length:strlen(STUFFTYPE_ATTRIBUTIVE)];
+        length = strlen(STUFFTYPE_ATTRIBUTIVE);
+        memcpy(output, STUFFTYPE_ATTRIBUTIVE, length);
         break;
     case CCStuffTypeAdverbial:
-        ret = [NSData dataWithBytes:STUFFTYPE_ADVERBIAL length:strlen(STUFFTYPE_ADVERBIAL)];
+        length = strlen(STUFFTYPE_ADVERBIAL);
+        memcpy(output, STUFFTYPE_ADVERBIAL, length);
         break;
     case CCStuffTypeComplement:
-        ret = [NSData dataWithBytes:STUFFTYPE_COMPLEMENT length:strlen(STUFFTYPE_COMPLEMENT)];
+        length = strlen(STUFFTYPE_COMPLEMENT);
+        memcpy(output, STUFFTYPE_COMPLEMENT, length);
         break;
     default:
         break;
     }
     
-    return ret;
+    return length;
 }
 //------------------------------------------------------------------------------
-+ (NSData *)parseLiteralBase:(CCLiteralBase)literalBase
++ (int)parseLiteralBase:(char *)output literal:(CCLiteralBase)literalBase v3:(BOOL)v3
 {
-    NSData *ret;
+    int length = 0;
     switch (literalBase)
     {
     case CCLiteralBaseString:
-        ret = [NSData dataWithBytes:LITERALBASE_STRING length:strlen(LITERALBASE_STRING)];
+        if (v3)
+        {
+            length = strlen(LITERALBASE_STRING_M);
+            memcpy(output, LITERALBASE_STRING_M, length);
+        }
+        else
+        {
+            length = strlen(LITERALBASE_STRING);
+            memcpy(output, LITERALBASE_STRING, length);
+        }
         break;
     case CCLiteralBaseJSON:
-        ret = [NSData dataWithBytes:LITERALBASE_JSON length:strlen(LITERALBASE_JSON)];
+        if (v3)
+        {
+            length = strlen(LITERALBASE_JSON_M);
+            memcpy(output, LITERALBASE_JSON_M, length);
+        }
+        else
+        {
+            length = strlen(LITERALBASE_JSON);
+            memcpy(output, LITERALBASE_JSON, length);
+        }
         break;
     case CCLiteralBaseInt:
-        ret = [NSData dataWithBytes:LITERALBASE_INT length:strlen(LITERALBASE_INT)];
+        if (v3)
+        {
+            length = strlen(LITERALBASE_INT_M);
+            memcpy(output, LITERALBASE_INT_M, length);
+        }
+        else
+        {
+            length = strlen(LITERALBASE_INT);
+            memcpy(output, LITERALBASE_INT, length);
+        }
         break;
     case CCLiteralBaseUInt:
-        ret = [NSData dataWithBytes:LITERALBASE_UINT length:strlen(LITERALBASE_UINT)];
+        if (v3)
+        {
+            length = strlen(LITERALBASE_UINT_M);
+            memcpy(output, LITERALBASE_UINT_M, length);
+        }
+        else
+        {
+            length = strlen(LITERALBASE_UINT);
+            memcpy(output, LITERALBASE_UINT, length);
+        }
         break;
     case CCLiteralBaseLong:
-        ret = [NSData dataWithBytes:LITERALBASE_LONG length:strlen(LITERALBASE_LONG)];
+        if (v3)
+        {
+            length = strlen(LITERALBASE_LONG_M);
+            memcpy(output, LITERALBASE_LONG_M, length);
+        }
+        else
+        {
+            length = strlen(LITERALBASE_LONG);
+            memcpy(output, LITERALBASE_LONG, length);
+        }
         break;
     case CCLiteralBaseULong:
-        ret = [NSData dataWithBytes:LITERALBASE_ULONG length:strlen(LITERALBASE_ULONG)];
+        if (v3)
+        {
+            length = strlen(LITERALBASE_ULONG_M);
+            memcpy(output, LITERALBASE_ULONG_M, length);
+        }
+        else
+        {
+            length = strlen(LITERALBASE_ULONG);
+            memcpy(output, LITERALBASE_ULONG, length);
+        }
         break;
     case CCLiteralBaseBool:
-        ret = [NSData dataWithBytes:LITERALBASE_BOOL length:strlen(LITERALBASE_BOOL)];
+        if (v3)
+        {
+            length = strlen(LITERALBASE_BOOL_M);
+            memcpy(output, LITERALBASE_BOOL_M, length);
+        }
+        else
+        {
+            length = strlen(LITERALBASE_BOOL);
+            memcpy(output, LITERALBASE_BOOL, length);
+        }
         break;
     case CCLiteralBaseBin:
-        ret = [NSData dataWithBytes:LITERALBASE_BIN length:strlen(LITERALBASE_BIN)];
+        if (v3)
+        {
+            length = strlen(LITERALBASE_BIN_M);
+            memcpy(output, LITERALBASE_BIN_M, length);
+        }
+        else
+        {
+            length = strlen(LITERALBASE_BIN);
+            memcpy(output, LITERALBASE_BIN, length);
+        }
         break;
     case CCLiteralBaseFloat:
-        ret = [NSData dataWithBytes:LITERALBASE_FLOAT length:strlen(LITERALBASE_FLOAT)];
+        if (v3)
+        {
+            length = strlen(LITERALBASE_FLOAT_M);
+            memcpy(output, LITERALBASE_FLOAT_M, length);
+        }
+        else
+        {
+            length = strlen(LITERALBASE_FLOAT);
+            memcpy(output, LITERALBASE_FLOAT, length);
+        }
         break;
     case CCLiteralBaseDouble:
-        ret = [NSData dataWithBytes:LITERALBASE_DOUBLE length:strlen(LITERALBASE_DOUBLE)];
+        if (v3)
+        {
+            length = strlen(LITERALBASE_DOUBLE_M);
+            memcpy(output, LITERALBASE_DOUBLE_M, length);
+        }
+        else
+        {
+            length = strlen(LITERALBASE_DOUBLE);
+            memcpy(output, LITERALBASE_DOUBLE, length);
+        }
         break;
     default:
         break;
     }
-    return ret;
+    return length;
 }
 //------------------------------------------------------------------------------
 + (void)injectStuff:(CCPrimitive *)primitive type:(NSData *)type value:(NSData *)value literal:(NSData *)literal
 {
-    CCLiteralBase literalBase = CCLiteralBaseString;
-    NSString *szLiteral = [[NSString alloc] initWithData:literal encoding:NSUTF8StringEncoding];
-    if ([szLiteral isEqualToString:LITERALBASE_STRING_NSSTRING])
-        literalBase = CCLiteralBaseString;
-    else if ([szLiteral isEqualToString:LITERALBASE_JSON_NSSTRING])
-        literalBase = CCLiteralBaseJSON;
-    else if ([szLiteral isEqualToString:LITERALBASE_INT_NSSTRING])
-        literalBase = CCLiteralBaseInt;
-    else if ([szLiteral isEqualToString:LITERALBASE_LONG_NSSTRING])
-        literalBase = CCLiteralBaseLong;
-    else if ([szLiteral isEqualToString:LITERALBASE_BOOL_NSSTRING])
-        literalBase = CCLiteralBaseBool;
-    else if ([szLiteral isEqualToString:LITERALBASE_BIN_NSSTRING])
-        literalBase = CCLiteralBaseBin;
-    else if ([szLiteral isEqualToString:LITERALBASE_FLOAT_NSSTRING])
-        literalBase = CCLiteralBaseFloat;
-    else if ([szLiteral isEqualToString:LITERALBASE_DOUBLE_NSSTRING])
-        literalBase = CCLiteralBaseDouble;
-    else if ([szLiteral isEqualToString:LITERALBASE_UINT_NSSTRING])
-        literalBase = CCLiteralBaseUInt;
-    else if ([szLiteral isEqualToString:LITERALBASE_ULONG_NSSTRING])
-        literalBase = CCLiteralBaseULong;
+    CCLiteralBase literalBase = CCLiteralBaseBin;
+
+    if (literal.length <= 2)
+    {
+        char * lbbuf = (char *) literal.bytes;
+        
+        if (lbbuf[0] == LITERALBASE_STRING_BYTE)
+            literalBase = CCLiteralBaseString;
+        else if (lbbuf[0] == LITERALBASE_JSON_BYTE)
+            literalBase = CCLiteralBaseJSON;
+        else if (literal.length == 2 && lbbuf[0] == LITERALBASE_BIN_BYTE_0 && lbbuf[1] == LITERALBASE_BIN_BYTE_1)
+            literalBase = CCLiteralBaseBin;
+        else if (lbbuf[0] == LITERALBASE_INT_BYTE)
+            literalBase = CCLiteralBaseInt;
+        else if (lbbuf[0] == LITERALBASE_LONG_BYTE)
+            literalBase = CCLiteralBaseLong;
+        else if (lbbuf[0] == LITERALBASE_BOOL_BYTE)
+            literalBase = CCLiteralBaseBool;
+        else if (lbbuf[0] == LITERALBASE_FLOAT_BYTE)
+            literalBase = CCLiteralBaseFloat;
+        else if (lbbuf[0] == LITERALBASE_DOUBLE_BYTE)
+            literalBase = CCLiteralBaseDouble;
+        else if (literal.length == 2 && lbbuf[0] == LITERALBASE_UINT_BYTE_0 && lbbuf[1] == LITERALBASE_UINT_BYTE_1)
+            literalBase = CCLiteralBaseUInt;
+        else if (literal.length == 2 && lbbuf[0] == LITERALBASE_ULONG_BYTE_0 && lbbuf[1] == LITERALBASE_ULONG_BYTE_1)
+            literalBase = CCLiteralBaseULong;
+        else
+            [CCLogger e:@"Error primitive stuff literal base (v3)"];
+    }
     else
-        [CCLogger e:@"Error primitive stuff literal base"];
+    {
+        NSString *szLiteral = [[NSString alloc] initWithData:literal encoding:NSUTF8StringEncoding];
+        if ([szLiteral isEqualToString:LITERALBASE_STRING_NSSTRING])
+            literalBase = CCLiteralBaseString;
+        else if ([szLiteral isEqualToString:LITERALBASE_JSON_NSSTRING])
+            literalBase = CCLiteralBaseJSON;
+        else if ([szLiteral isEqualToString:LITERALBASE_BIN_NSSTRING])
+            literalBase = CCLiteralBaseBin;
+        else if ([szLiteral isEqualToString:LITERALBASE_INT_NSSTRING])
+            literalBase = CCLiteralBaseInt;
+        else if ([szLiteral isEqualToString:LITERALBASE_LONG_NSSTRING])
+            literalBase = CCLiteralBaseLong;
+        else if ([szLiteral isEqualToString:LITERALBASE_BOOL_NSSTRING])
+            literalBase = CCLiteralBaseBool;
+        else if ([szLiteral isEqualToString:LITERALBASE_FLOAT_NSSTRING])
+            literalBase = CCLiteralBaseFloat;
+        else if ([szLiteral isEqualToString:LITERALBASE_DOUBLE_NSSTRING])
+            literalBase = CCLiteralBaseDouble;
+        else if ([szLiteral isEqualToString:LITERALBASE_UINT_NSSTRING])
+            literalBase = CCLiteralBaseUInt;
+        else if ([szLiteral isEqualToString:LITERALBASE_ULONG_NSSTRING])
+            literalBase = CCLiteralBaseULong;
+        else
+            [CCLogger e:@"Error primitive stuff literal base"];
+    }
 
     NSString *szType = [[NSString alloc] initWithData:type encoding:NSUTF8StringEncoding];
     if ([szType isEqualToString:STUFFTYPE_SUBJECT_NSSTRING])

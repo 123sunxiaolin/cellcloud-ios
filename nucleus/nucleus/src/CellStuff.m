@@ -44,7 +44,6 @@
 {
     if ((self = [super init]))
     {
-//        _value = [NSString stringWithString:value];
         _value = [value dataUsingEncoding:NSUTF8StringEncoding];
         self.literalBase = CCLiteralBaseString;
         [self willInitType];
@@ -56,7 +55,6 @@
 {
     if ((self = [super init]))
     {
-//        _value = [[NSString alloc] initWithFormat:@"%d", value];
         char dest[4] = {0, 0, 0, 0};
         NSUInteger length = [CCUtil intToBytes:dest input:value];
         _value = [NSData dataWithBytes:dest length:length];
@@ -70,7 +68,6 @@
 {
     if ((self = [super init]))
     {
-//        _value = [[NSString alloc] initWithFormat:@"%u", value];
         char dest[4] = {0, 0, 0, 0};
         NSUInteger length =[CCUtil intToBytes:dest input:value];
         _value = [NSData dataWithBytes:dest length:length];
@@ -84,7 +81,6 @@
 {
     if ((self = [super init]))
     {
-//        _value = [[NSString alloc] initWithFormat:@"%ld", value];
         char dest[8] = {0, 0, 0, 0, 0, 0, 0, 0};
         NSUInteger length = [CCUtil longToBytes:dest input:value];
         _value = [NSData dataWithBytes:dest length:length];
@@ -98,7 +94,6 @@
 {
     if ((self = [super init]))
     {
-//        _value = [[NSString alloc] initWithFormat:@"%lu", value];
         char dest[8] = {0, 0, 0, 0, 0, 0, 0, 0};
         NSUInteger length = [CCUtil longToBytes:dest input:value];
         _value = [NSData dataWithBytes:dest length:length];
@@ -112,7 +107,6 @@
 {
     if ((self = [super init]))
     {
-//        _value = [[NSString alloc] initWithFormat:@"%qi", value];
         char dest[8] = {0, 0, 0, 0, 0, 0, 0, 0};
         NSUInteger length = [CCUtil longToBytes:dest input:value];
         _value = [NSData dataWithBytes:dest length:length];
@@ -126,7 +120,6 @@
 {
     if ((self = [super init]))
     {
-//        _value = [[NSString alloc] initWithFormat:@"%@", value ? @"true" : @"false"];
         char dest[1] = {0};
         NSUInteger length = [CCUtil boolToBytes:dest input:value];
         _value = [NSData dataWithBytes:dest length:length];
@@ -144,8 +137,6 @@
         _value = [NSJSONSerialization dataWithJSONObject:value
                                                  options:NSJSONWritingPrettyPrinted
                                                    error:&error];
-//        _value = [[NSString alloc] initWithData:jsonData
-//                                       encoding:NSUTF8StringEncoding];
         self.literalBase = CCLiteralBaseJSON;
         [self willInitType];
     }
@@ -160,8 +151,6 @@
         _value = [NSJSONSerialization dataWithJSONObject:value
                                                  options:NSJSONWritingPrettyPrinted
                                                    error:&error];
-//        _value = [[NSString alloc] initWithData:jsonData
-//                                       encoding:NSUTF8StringEncoding];
         self.literalBase = CCLiteralBaseJSON;
         [self willInitType];
     }
@@ -172,7 +161,6 @@
 {
     if ((self = [super init]))
     {
-//        _value = [NSString stringWithFormat:@"%.2f", value];
         char dest[4] = {0, 0, 0, 0};
         NSUInteger length = [CCUtil floatToBytes:dest input:value];
         _value = [NSData dataWithBytes:dest length:length];
@@ -186,7 +174,6 @@
 {
     if ((self = [super init]))
     {
-//        _value = [NSString stringWithFormat:@"%.2f", value];
         char dest[8] = {0, 0, 0, 0, 0, 0, 0, 0};
         NSUInteger length = [CCUtil doubleToBytes:dest input:value];
         _value = [NSData dataWithBytes:dest length:length];
@@ -211,7 +198,6 @@
 {
     if ((self = [super init]))
     {
-//        _value = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         _value = [NSData dataWithData:data];
         self.literalBase = literal;
         [self willInitType];

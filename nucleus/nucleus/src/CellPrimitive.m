@@ -58,6 +58,7 @@
 @synthesize attributives = _attributiveList;
 @synthesize adverbials = _adverbialList;
 @synthesize complements = _complementList;
+@synthesize version = _version;
 
 //------------------------------------------------------------------------------
 - (id)initWithTag:(NSString *)tag
@@ -65,6 +66,7 @@
     if ((self = [super init]))
     {
         self.ownerTag = tag;
+        _version = 3;
     }
     
     return self;
@@ -75,6 +77,7 @@
     if (self = [super init])
     {
         _dialect = dialect;
+        _version = 3;
     }
     
     return self;
