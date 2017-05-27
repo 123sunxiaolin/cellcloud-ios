@@ -901,7 +901,7 @@
     if (nil != packet)
     {
         [self process:session packet:packet];
-    }   
+    }
 }
 //------------------------------------------------------------------------------
 - (void)messageSent:(CCSession *)session message:(CCMessage *)message

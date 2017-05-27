@@ -258,7 +258,9 @@
             }
         }
 
-        return [NSData dataWithBytes:data length:cursor];
+        NSData * ret = [NSData dataWithBytes:data length:cursor];
+        free(data);
+        return ret;
     }
     else
     {

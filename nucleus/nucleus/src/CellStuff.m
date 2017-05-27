@@ -235,7 +235,7 @@
         return 0;
     }
 
-    char *buf = malloc(sizeof(char) * _value.length);
+    char *buf = malloc(_value.length);
     memcpy(buf, _value.bytes, _value.length);
     int result = [CCUtil bytesToInt:buf];
     free(buf);
@@ -253,7 +253,7 @@
         return 0;
     }
 
-    char *buf = malloc(sizeof(char) * _value.length);
+    char *buf = malloc(_value.length);
     memcpy(buf, _value.bytes, _value.length);
     int result = [CCUtil bytesToInt:buf];
     free(buf);
@@ -271,7 +271,7 @@
         return 0;
     }
 
-    char *buf = malloc(sizeof(char) * _value.length);
+    char *buf = malloc(_value.length);
     memcpy(buf, _value.bytes, _value.length);
     long long result = [CCUtil bytesToLong:buf];
     free(buf);
@@ -289,7 +289,7 @@
         return 0;
     }
 
-    char *buf = malloc(sizeof(char) * _value.length);
+    char *buf = malloc(_value.length);
     memcpy(buf, _value.bytes, _value.length);
     long long result = [CCUtil bytesToLong:buf];
     free(buf);
@@ -307,7 +307,7 @@
         return 0;
     }
 
-    char *buf = malloc(sizeof(char) * _value.length);
+    char *buf = malloc(_value.length);
     memcpy(buf, _value.bytes, _value.length);
     long long result = [CCUtil bytesToLong:buf];
     free(buf);
@@ -319,7 +319,7 @@
 {
 //    return [_value isEqualToString:@"true"] ? TRUE : FALSE;
 
-    char *buf = malloc(sizeof(char) * _value.length);
+    char *buf = malloc(_value.length);
     memcpy(buf, _value.bytes, _value.length);
     BOOL result = [CCUtil bytesToBool:buf];
     free(buf);
@@ -357,7 +357,7 @@
         return 0.0f;
     }
 
-    char *buf = malloc(sizeof(char) * _value.length);
+    char *buf = malloc(_value.length);
     memcpy(buf, _value.bytes, _value.length);
     float result = [CCUtil bytesToFloat:buf];
     free(buf);
@@ -375,7 +375,7 @@
         return 0.0f;
     }
 
-    char *buf = malloc(sizeof(char) * _value.length);
+    char *buf = malloc(_value.length);
     memcpy(buf, _value.bytes, _value.length);
     double result = [CCUtil bytesToDouble:buf];
     free(buf);
