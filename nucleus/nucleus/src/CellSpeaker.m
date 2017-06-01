@@ -60,6 +60,7 @@
     NSObject *_monitor;
 
     NSTimer *_contactedTimer;
+    BOOL _timerStarted;
 
     // 心跳 Ping
     int64_t _heartbeatPing;
@@ -232,6 +233,8 @@
         }
 
         self.state = CCSpeakerStateHangUp;
+        
+        _timerStarted = NO;
 
         CCSession *session = [_connector connect:_address.host port:_address.port];
         if (nil != session)
@@ -755,6 +758,8 @@
 //------------------------------------------------------------------------------
 - (void)handleContactedTimer:(NSTimer *)timer
 {
+    _timerStarted = NO;
+    
     if (self.capacity.secure)
     {
         [[_connector getSession] activeSecretKey:[_secretKey bytes] keyLength:(int)_secretKey.length];
@@ -781,7 +786,14 @@
 //------------------------------------------------------------------------------
 - (void)fireContacted:(NSString *)celletIdentifier
 {
-    NSTimeInterval interval = 0.5f;
+    if (_timerStarted)
+    {
+        return;
+    }
+    
+    _timerStarted = YES;
+    
+    NSTimeInterval interval = 0.1f;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         if (nil != _contactedTimer)
