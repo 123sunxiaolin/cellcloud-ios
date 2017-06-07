@@ -199,6 +199,11 @@
     return [_params objectForKey:name] != nil ? YES : NO;
 }
 //------------------------------------------------------------------------------
+- (BOOL)hasParam:(NSString *)name
+{
+    return [_params objectForKey:name] != nil ? YES : NO;
+}
+//------------------------------------------------------------------------------
 - (void)act:(id<CCActionDelegate>)delegate
 {
     dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),

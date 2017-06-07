@@ -26,6 +26,7 @@
 
 #import "CellPacket.h"
 #import "CellUtil.h"
+#import "CellLogger.h"
 
 /*
  * ------------- 2.X 版本数据格式定义 ------------
@@ -340,8 +341,16 @@
 + (CCPacket *)unpack:(NSData *)data
 {
     char *buf = [data bytes];
+    NSUInteger buflen = data.length;
+    
     if (buf[0] == 2)
     {
+        if (buflen < 2 + PFB_TAG + PFB_SN + PFB_SEGMENT_NUM)
+        {
+            [CCLogger e:@"[Packet] unpack error: data length less than PFB length: %lld", buflen];
+            return nil;
+        }
+
         int cursor = 0;
 
         // 解析版本号
@@ -377,11 +386,27 @@
         {
             // 解析动态数据段长度
             int payloadCursor = cursor + (smn * PFB_SEGMENT_LENGTH);
+            
+            // 检查越界
+            if (payloadCursor > buflen)
+            {
+                [CCLogger e:@"[Packet] unpack payload error: %d - %lld", payloadCursor, buflen];
+                packet = nil;
+                return nil;
+            }
+            
             for (short i = 0; i < smn; ++i)
             {
                 char bLen[PFB_SEGMENT_LENGTH] = { 0 };
                 memcpy(bLen, buf + cursor, PFB_SEGMENT_LENGTH);
                 int len = [CCUtil bytesToInt:bLen];
+
+                if (payloadCursor + len > buflen)
+                {
+                    [CCLogger e:@"[Packet] unpack payload error: %d - %lld", (payloadCursor + len), buflen];
+                    break;
+                }
+
                 char *payload = malloc(len);
                 memcpy(payload, buf + payloadCursor, len);
 
@@ -396,7 +421,6 @@
             }
         }
 
-        
         return packet;
     }
     else

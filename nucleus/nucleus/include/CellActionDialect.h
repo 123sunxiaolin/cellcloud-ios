@@ -183,6 +183,14 @@ typedef void (^action_block_t)(CCActionDialect*);
  */
 - (BOOL)existParam:(NSString *)name;
 
+/*!
+ @brief 判断指定名称的参数是否存在。
+ 
+ @param name 待判断的参数名。
+ @return 如果存在返回 <code>YES</code> 。
+ */
+- (BOOL)hasParam:(NSString *)name;
+
 /**
  * 异步执行动作。
  */
